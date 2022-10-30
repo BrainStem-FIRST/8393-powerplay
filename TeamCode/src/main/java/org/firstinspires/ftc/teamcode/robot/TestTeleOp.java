@@ -75,6 +75,9 @@ public class TestTeleOp extends LinearOpMode {
             } else if (gamepad2.b) {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
             }
+            if(gamepad2.right_trigger > 0.5 && stateMap.get(robot.CONE_CYCLE).equalsIgnoreCase(robot.STATE_COMPLETE)){
+                stateMap.put(robot.CONE_CYCLE, robot.STATE_IN_PROGRESS);
+            }
 
             drive.setWeightedDrivePower(
                     new Pose2d(
