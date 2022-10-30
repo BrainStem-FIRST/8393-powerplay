@@ -15,7 +15,6 @@ public class Extension {
     // Three servos (plus the turret) work together to place cone to desired location
     public ServoImplEx extension;
     public ServoImplEx twoBar;
-    public ServoImplEx grabber;
 
     static final double MM_TO_INCHES = 0.0393700787;
     static final double MINIMUM_CLEARANCE_DISTANCE = 95.875 * MM_TO_INCHES;
@@ -27,23 +26,11 @@ public class Extension {
     public final double TWOBAR_POSITION_HOME    = 0;    // vertical position
     public final double TWOBAR_POSITION_MAX     = 1;    // fully tilted
 
-    public final double GRABBER_POSITION_OPEN   = 0;    // open
-    public final double GRABBER_POSITION_HOLD   = 0.5;  // TODO: measure the actual position when cone in place and replace this value
-    public final double GRABBER_POSITION_CLOSED = 1;    // closed
-
-    public final double EXTENSION_MAX_REACH = 10; // TODO: measure actual value in inches and replace this value
-
-    public final String EXTENSION_DEFAULT_VALUE = "EXTENSION_RETRACTED";
-    public final String EXTENSION_FULL_EXTEND = "EXTENSION_EXTENDED";
-
-    public String getCurrentState(){
-        String state = EXTENSION_DEFAULT_VALUE;
-        double currentPosition = extensionGetPosition();
-        if (currentPosition > 0.8){
-            state = EXTENSION_FULL_EXTEND;
-        }
-        return state;
-    }
+    // extension statemap values
+    public final String SYSTEM_NAME = "EXTENSION"; //statemap key
+    public final String DEFAULT_VALUE = "RETRACTED";
+    public final String FULL_EXTEND = "EXTENDED";
+    public final String TRANSITION_STATE = "TRANSITION";
 
     public double extensionGetPosition(){
         return extension.getPosition();
@@ -54,7 +41,6 @@ public class Extension {
 
         extension = (ServoImplEx) hwMap.servo.get("Extension");
         twoBar = (ServoImplEx) hwMap.servo.get("Two Bar");
-        grabber = (ServoImplEx) hwMap.servo.get("Grabber");
 
         // Scale the operating range of Servos and set initial position
         extension.setPwmRange(new PwmControl.PwmRange(1250,2522));
@@ -63,8 +49,6 @@ public class Extension {
         twoBar.setPwmRange(new PwmControl.PwmRange(1745,2522));
         tiltDown();
 
-        grabber.setPwmRange(new PwmControl.PwmRange(100,2522));
-        grabberOpen();
     }
 
     /************************* EXTENSION ARM UTILITIES **************************/
@@ -93,6 +77,9 @@ public class Extension {
         extension.setPosition (position);
     }
 
+/**************************************************************************************
+    public final double EXTENSION_MAX_REACH = 10; // TODO: measure actual value in inches and replace this value
+
     // Moves the extension arm to its clearing length (if it was not already in clear)
     public void getToClear() {
         if (!isInClear()) {
@@ -106,6 +93,7 @@ public class Extension {
 
         return (currentPosition * EXTENSION_MAX_REACH) >= MINIMUM_CLEARANCE_DISTANCE;
     }
+************************************************************************************/
 
     // Pulls the extension arm to its starting position (it is NOT in clear)
     public void extendHome() {
@@ -117,6 +105,44 @@ public class Extension {
         extension.setPosition(EXTENSION_POSITION_MAX);
     }
 
+    public void setState(String desiredState){
+        String currentState = getCurrentState();
+        telemetry.addData("armCurrentState" , currentState);
+        telemetry.addData("armDesiredState" , desiredState);
+        telemetry.addData("extensionCurrentPosition", extension.getPosition());
+        if(!desiredState.equalsIgnoreCase(currentState)){
+            selectTransition(desiredState);
+        }
+    }
+
+    public String getCurrentState() {
+        String state = TRANSITION_STATE;
+        double currentPosition = extension.getPosition();
+        telemetry.addData("ExtensionCurrentPosition", currentPosition);
+        if(currentPosition<0.2){
+            state = DEFAULT_VALUE;
+        } else if (currentPosition>0.8) {
+            state = FULL_EXTEND;
+        }
+        return state;
+    }
+
+    private void selectTransition(String desiredLevel){
+        switch(desiredLevel) {
+            case DEFAULT_VALUE: {
+                extendHome();
+                break;
+            }
+            case FULL_EXTEND: {
+                extendMax();
+                break;
+            }
+        }
+    }
+
+    public double getExtensionPosition() {
+        return extension.getPosition();
+    }
 
     /************************* TWO-BAR UTILITIES **************************/
 
@@ -130,26 +156,6 @@ public class Extension {
     // No micro adjustments envisioned for the two-bar
     public void tiltDown() {
         twoBar.setPosition(TWOBAR_POSITION_HOME);
-    }
-
-    /************************* GRABBER UTILITIES **************************/
-
-    // Opens the claw
-    public void grabberOpen() {
-        grabber.setPosition(GRABBER_POSITION_OPEN);
-    }
-
-    // Closes the claw down to hold the cone (it is not all the way closed)
-    public void grabberHold() {
-        grabber.setPosition(GRABBER_POSITION_HOLD);
-    }
-
-    // Returns current position of the grabber. 0 is wide open (dropped cone)
-    public double grabberPosition() {
-        return grabber.getPosition();
-    }
-    public double getExtensionPosition(){
-        return extension.getPosition();
     }
 
 }
