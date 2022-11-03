@@ -92,7 +92,7 @@ public class BrainStemRobot {
     }
 
     public void coneCycle() {
-        String grabberDesiredState =  null;
+        String grabberDesiredState =  grabber.OPEN_STATE;
         if (lift.isCollectionHeight()) {
             grabberDesiredState = grabber.CLOSED_STATE;
         } else {

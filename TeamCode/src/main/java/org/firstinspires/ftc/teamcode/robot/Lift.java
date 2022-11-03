@@ -38,7 +38,7 @@ public class Lift {
     public final int LIFT_POSITION_HIGHPOLE = 860;
     public final int LIFT_POSITION_PICKUP = 8;
     public final int LIFT_ADJUSTMENT = -70;
-    public BrainStemRobot robotConstants = null;
+    public BrainStemRobot robotConstants;
 
 
     public final double HARD_STOP_CURRENT_DRAW = 100;
@@ -66,6 +66,7 @@ public class Lift {
     public Lift(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
+        robotConstants  = new BrainStemRobot(hwMap, telemetry, stateMap);
         liftMotor = hwMap.dcMotor.get("Lift");
 
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);

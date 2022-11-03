@@ -34,9 +34,9 @@ public class TestTeleOp extends LinearOpMode {
 
     public void runOpMode() {
 
-        Map<String, String> stateMap = new HashMap<String, String>() {{}};
+        Map<String, String> stateMap = new HashMap<String, String>() {{ }};
         BrainStemRobot robot = new BrainStemRobot(hardwareMap, telemetry, stateMap);
-        //robot.initializeRobotPosition();
+        robot.initializeRobotPosition();
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
@@ -47,7 +47,8 @@ public class TestTeleOp extends LinearOpMode {
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
 
         waitForStart();
-        while (!isStopRequested()) {
+      while (opModeIsActive()) {
+
             setButtons();
 
             if (toggleMap.get(GAMEPAD_1_A_STATE)) {
