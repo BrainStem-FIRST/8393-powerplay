@@ -15,20 +15,30 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
+import java.util.HashMap;
+import java.util.Map;
+
+
 
 public class Grabber {
     private Telemetry telemetry;
     private ServoImplEx grabber;
 
+
     public final String SYSTEM_NAME = "GRABBER";
     public final String OPEN_STATE = "OPEN";
     public final String CLOSED_STATE = "CLOSED";
+    Constants constants = new Constants();
 
     public final double OPEN_VALUE = 0.4;
     public final double CLOSED_VALUE = 0.685;
 
-    public Grabber(HardwareMap hwMap, Telemetry telemetry) {
+    private Map stateMap;
+
+    public Grabber(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
         this.telemetry = telemetry;
+        this.stateMap = stateMap;
+
 
         grabber = (ServoImplEx) hwMap.servo.get("Grabber");
 
@@ -38,19 +48,18 @@ public class Grabber {
     }
 
 
-    public void setState(String position) {
+    public void setState(String position, Lift lift) {
 
         telemetry.addData("GrabberState", position);
-        switch (position) {
-            case OPEN_STATE: {
-                grabber.setPosition(OPEN_VALUE);
-                break;
-            }
-            case CLOSED_STATE: {
-                grabber.setPosition(CLOSED_VALUE);
-                break;
-            }
+        if(((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) && shouldGrab(lift)){
+            grabber.setPosition(CLOSED_VALUE);
+            stateMap.put(constants.CYCLE_GRABBER,constants.STATE_COMPLETE);
         }
+    }
+    public boolean shouldGrab(Lift lift) {
+        boolean tooLow = lift.getPosition() < lift.LIFT_POSITION_GROUND;
+        telemetry.addData("liftTooLow" , tooLow);
+        return tooLow;
     }
 
     /************************* GRABBER UTILITIES **************************/

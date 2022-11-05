@@ -58,18 +58,6 @@ public class TestTeleOp extends LinearOpMode {
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
             }
 
-            if (toggleMap.get(GAMEPAD_1_B_STATE)) {
-                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
-            } else {
-                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-            }
-
-            if (toggleMap.get(GAMEPAD_1_X_STATE)) {
-                stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.PLACEMENT_HEIGHT);
-            } else {
-                stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
-            }
-
             if (gamepad2.x) {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
             } else if (gamepad2.y) {
@@ -77,7 +65,7 @@ public class TestTeleOp extends LinearOpMode {
             } else if (gamepad2.b) {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
             }
-            if(gamepad2.right_trigger > 0.5 && stateMap.get(constants.CONE_CYCLE).equalsIgnoreCase(constants.STATE_COMPLETE)){
+            if(gamepad2.right_trigger > 0.5 && stateMap.get(constants.CONE_CYCLE).equalsIgnoreCase(constants.STATE_NOT_STARTED)){
                 stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
             }
 
@@ -91,7 +79,7 @@ public class TestTeleOp extends LinearOpMode {
 
             drive.update();
 
-//            robot.updateSystems();
+            robot.updateSystems();
 
             telemetry.addData("stateMap", stateMap);
             telemetry.addData("toggleMap", toggleMap);

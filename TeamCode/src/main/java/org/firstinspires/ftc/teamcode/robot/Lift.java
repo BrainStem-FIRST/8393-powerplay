@@ -56,7 +56,7 @@ public class Lift {
     public final String TRANSITION_STATE = "TRANSITION";
     public final int DELIVERY_ADJUSTMENT = -3;
     public final int HEIGHT_TOLERANCE = 5;
-    public final int CYCLE_TOLERANCE = 25;
+    public final int CYCLE_TOLERANCE = 5;
     public final String LIFT_CURRENT_STATE = "LIFT CURRENT STATE";
 
     public static double currentLiftHeight;
@@ -82,44 +82,57 @@ public class Lift {
     }
 
     public void setState() {
-        String currentState = getCurrentState();
-        String level = (String) stateMap.get(LIFT_SYSTEM_NAME);
         String subheight = (String) stateMap.get(LIFT_SUBHEIGHT);
+        String currentState = getCurrentState(subheight);
+        String level = (String) stateMap.get(LIFT_SYSTEM_NAME);
+
         telemetry.addData("liftLevel", level);
         telemetry.addData("liftSubHeight", subheight);
 
         stateMap.put(LIFT_CURRENT_STATE, currentState);
+
         updateConeCycleState();
         telemetry.addData("liftCurrentState", currentState);
-        if (level.equalsIgnoreCase(currentState)) {
-            liftMotor.setPower(0);
-            return;
-        } else {
+
+        if (shouldLiftMove(level, currentState) ) {
             selectTransition(level, subheight, currentState);
+        } else {
+            liftMotor.setPower(0);
         }
+    }
+
+    private boolean shouldLiftMove(String level, String currentState) {
+        return ((String)stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
+                ((String)stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
+                !level.equalsIgnoreCase(currentState);
     }
 
     private void updateConeCycleState() {
         int position = getStateValue();
-        if (isSubheightPlacement()) {
+        if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
+            telemetry.addData("positionValue", position);
+            telemetry.addData("getPosition", getPosition());
+            telemetry.addData("withAdjustment", position + LIFT_ADJUSTMENT);
             if (inHeightTolerance(getPosition(), position + LIFT_ADJUSTMENT)) {
+                telemetry.addData("cycleComplete", true);
                 stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
             }
-        } else{
-            if(inHeightTolerance(getPosition(), position)){
+        } else if(isCycleInProgress(constants.CYCLE_LIFT_UP) && inHeightTolerance(getPosition(), position)){
                 stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
-            }
         }
     }
 
 
-
+    private boolean isCycleInProgress(String cycleName) {
+        return ((String)stateMap.get(cycleName)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
+    }
 
     private boolean isSubheightPlacement(){
         return ((String)stateMap.get(LIFT_SUBHEIGHT)).equalsIgnoreCase(PLACEMENT_HEIGHT);
     }
     private int getStateValue(){
         int position = 0;
+        telemetry.addData("getStateLiftCurrentState", (String)stateMap.get(LIFT_CURRENT_STATE));
         switch((String)stateMap.get(LIFT_CURRENT_STATE)) {
             case LIFT_POLE_HIGH: {
                 position = LIFT_POSITION_HIGHPOLE;
@@ -171,18 +184,18 @@ public class Lift {
         raiseHeightTo(ticks);
     }
 
-    public String getCurrentState() {
+    public String getCurrentState(String subheight) {
         String state = TRANSITION_STATE;
         double currentPosition = getPosition();
         telemetry.addData("CurrentMotorEncoderTicks", liftMotor.getCurrentPosition());
         telemetry.addData("CurrentPosition", currentPosition);
-        if(inHeightTolerance(currentPosition, LIFT_POSITION_GROUND)){
+        if(inHeightTolerance(currentPosition, LIFT_POSITION_GROUND + deliveryHeight(subheight))){
             state = LIFT_POLE_GROUND;
-        } else if (inHeightTolerance(currentPosition, LIFT_POSITION_LOWPOLE)) {
+        } else if (inHeightTolerance(currentPosition, LIFT_POSITION_LOWPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_LOW;
-        } else if (inHeightTolerance(currentPosition, LIFT_POSITION_MIDPOLE)) {
+        } else if (inHeightTolerance(currentPosition, LIFT_POSITION_MIDPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_MEDIUM;
-        } else if (inHeightTolerance(currentPosition, LIFT_POSITION_HIGHPOLE)) {
+        } else if (inHeightTolerance(currentPosition, LIFT_POSITION_HIGHPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_HIGH;
         }
         return state;

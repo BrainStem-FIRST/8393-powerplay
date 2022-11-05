@@ -5,7 +5,8 @@ public class Constants {
     public final String STATE_COMPLETE = "COMPLETE";
     public final String CONE_CYCLE = "CONE CYCLE";
     public final String STATE_NOT_STARTED = "NOT STARTED";
-    public final String CYCLE_LIFT_DOWN = STATE_NOT_STARTED;
-    public final String CYCLE_LIFT_UP = STATE_NOT_STARTED;
-    public final String CYCLE_GRABBER = STATE_NOT_STARTED;
+    public final String CYCLE_LIFT_DOWN = "Cycle Lift Down";
+    public final String CYCLE_LIFT_UP = "Cycle Lift Up";
+    public final String CYCLE_GRABBER = "Cycle Grabber";
+    public final String LIFT_ENCODER_TICKS = "Lift Encoder Ticks";
 }

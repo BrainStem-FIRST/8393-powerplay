@@ -51,10 +51,14 @@ public class BrainStemRobot {
         lift    = new Lift(hwMap, telemetry, stateMap);
         arm     = new Extension(hwMap, telemetry);
         drive   = new SampleMecanumDrive(hwMap);
-        grabber   = new Grabber(hwMap, telemetry);
+        grabber   = new Grabber(hwMap, telemetry, stateMap);
 
-        stateMap.put(constants.CONE_CYCLE, constants.STATE_COMPLETE);
+        stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
+        stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
+        stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
+        stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
 
+        telemetry.addData("stateMap", stateMap);
         telemetry.addData("Robot", " Is Ready");
         telemetry.update();
     }
@@ -76,7 +80,6 @@ public class BrainStemRobot {
             coneCycle();
         } else {
             lift.setState();
-            grabber.setState((String) stateMap.get(grabber.SYSTEM_NAME));
             turret.setState((String) stateMap.get(turret.SYSTEM_NAME), lift);
             arm.setState((String) stateMap.get(arm.SYSTEM_NAME));
         }
@@ -84,19 +87,6 @@ public class BrainStemRobot {
     }
 
     public void coneCycle() {
-        String grabberDesiredState =  grabber.OPEN_STATE;
-        if (lift.isCollectionHeight()) {
-            grabberDesiredState = grabber.CLOSED_STATE;
-        } else {
-            grabberDesiredState = grabber.OPEN_STATE;
-        }
-
-        if(isConeCycleComplete()){
-            stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
-            stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
-            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
-        }
-
         if(startliftDown()) {
             stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_IN_PROGRESS);
             stateMap.put(lift.LIFT_SUBHEIGHT, lift.PLACEMENT_HEIGHT);
@@ -106,13 +96,11 @@ public class BrainStemRobot {
         } else if(startLiftUp()){
             stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_IN_PROGRESS);
             stateMap.put(lift.LIFT_SUBHEIGHT, lift.APPROACH_HEIGHT);
-        }
-
-        if(((String) stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
-                ((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_COMPLETE)){
-            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_IN_PROGRESS);
-            lift.setState();
-            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
+            telemetry.addData("startLiftCycleDown", true);
+        } else if(isConeCycleComplete()){
+            stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
+            stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
+            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
         }
 
         setConeCycleSystems();
@@ -120,16 +108,17 @@ public class BrainStemRobot {
 
     private void setConeCycleSystems() {
         lift.setState();
-        grabber.setState((String) stateMap.get(grabber.SYSTEM_NAME));
+        grabber.setState((String) stateMap.get(grabber.SYSTEM_NAME), lift);
     }
 
     private boolean startLiftUp() {
         return ((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
-                !((String) stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
+                ((String) stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_NOT_STARTED);
     }
 
     private boolean startliftDown() {
-        return (!((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS));
+        return (((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) &&
+                ((String)(stateMap.get(constants.CYCLE_LIFT_DOWN))).equalsIgnoreCase(constants.STATE_NOT_STARTED));
     }
 
     private boolean startGrabberAction() {
