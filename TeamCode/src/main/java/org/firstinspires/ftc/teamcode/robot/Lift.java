@@ -38,7 +38,7 @@ public class Lift {
     public final int LIFT_POSITION_HIGHPOLE = 860;
     public final int LIFT_POSITION_PICKUP = 8;
     public final int LIFT_ADJUSTMENT = -70;
-    public BrainStemRobot robotConstants;
+    Constants constants = new Constants();
 
 
     public final double HARD_STOP_CURRENT_DRAW = 100;
@@ -58,14 +58,6 @@ public class Lift {
     public final int HEIGHT_TOLERANCE = 5;
     public final int CYCLE_TOLERANCE = 25;
     public final String LIFT_CURRENT_STATE = "LIFT CURRENT STATE";
-
-    public final String STATE_IN_PROGRESS = "IN PROGRESS";
-    public final String STATE_COMPLETE = "COMPLETE";
-    public final String CONE_CYCLE = "CONE CYCLE";
-    private final String STATE_NOT_STARTED = "NOT STARTED";
-    public final String CYCLE_LIFT_DOWN = STATE_NOT_STARTED;
-    public final String CYCLE_LIFT_UP = STATE_NOT_STARTED;
-    public final String CYCLE_GRABBER = STATE_NOT_STARTED;
 
     public static double currentLiftHeight;
     private Map stateMap;
@@ -111,11 +103,11 @@ public class Lift {
         int position = getStateValue();
         if (isSubheightPlacement()) {
             if (inHeightTolerance(getPosition(), position + LIFT_ADJUSTMENT)) {
-                stateMap.put(robotConstants.CYCLE_LIFT_DOWN, robotConstants.STATE_COMPLETE);
+                stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
             }
         } else{
             if(inHeightTolerance(getPosition(), position)){
-                stateMap.put(BrainStemRobot.CYCLE_LIFT_UP, robotConstants.STATE_COMPLETE);
+                stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
             }
         }
     }

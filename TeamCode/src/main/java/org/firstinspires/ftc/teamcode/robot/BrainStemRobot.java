@@ -37,9 +37,7 @@ public class BrainStemRobot {
     public SampleMecanumDrive drive;
     public Grabber grabber;
     private Map stateMap;
-
-
-
+    Constants constants = new Constants();
 
 
 
@@ -55,7 +53,7 @@ public class BrainStemRobot {
         drive   = new SampleMecanumDrive(hwMap);
         grabber   = new Grabber(hwMap, telemetry);
 
-        stateMap.put(lift.CONE_CYCLE, lift.STATE_COMPLETE);
+        stateMap.put(constants.CONE_CYCLE, constants.STATE_COMPLETE);
 
         telemetry.addData("Robot", " Is Ready");
         telemetry.update();
@@ -74,7 +72,7 @@ public class BrainStemRobot {
     public void updateSystems() {
         telemetry.addData("robotStateMap" , stateMap);
 
-        if(((String)stateMap.get(lift.CONE_CYCLE)).equalsIgnoreCase(lift.STATE_IN_PROGRESS)){
+        if(((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
             coneCycle();
         } else {
             lift.setState();
@@ -94,26 +92,27 @@ public class BrainStemRobot {
         }
 
         if(isConeCycleComplete()){
-            stateMap.put(lift.CYCLE_LIFT_DOWN, lift.STATE_NOT_STARTED);
-            stateMap.put(lift.CYCLE_GRABBER, lift.STATE_NOT_STARTED);
-            stateMap.put(lift.CYCLE_LIFT_UP,lift.STATE_NOT_STARTED);
+            stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
+            stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
+            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
         }
 
         if(startliftDown()) {
-            stateMap.put(CYCLE_LIFT_DOWN,STATE_IN_PROGRESS);
+            stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_IN_PROGRESS);
             stateMap.put(lift.LIFT_SUBHEIGHT, lift.PLACEMENT_HEIGHT);
         } else if(startGrabberAction()){
-            stateMap.put(CYCLE_GRABBER, STATE_IN_PROGRESS);
+            stateMap.put(constants.CYCLE_GRABBER, constants.STATE_IN_PROGRESS);
 
         } else if(startLiftUp()){
-            stateMap.put(CYCLE_LIFT_UP, STATE_IN_PROGRESS);
+            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_IN_PROGRESS);
             stateMap.put(lift.LIFT_SUBHEIGHT, lift.APPROACH_HEIGHT);
         }
 
-        if(((String) stateMap.get(CYCLE_LIFT_DOWN)).equalsIgnoreCase(STATE_COMPLETE) && ((String)stateMap.get(CYCLE_GRABBER)).equalsIgnoreCase(STATE_COMPLETE)){
-            stateMap.put(CYCLE_LIFT_UP,STATE_IN_PROGRESS);
+        if(((String) stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
+                ((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_COMPLETE)){
+            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_IN_PROGRESS);
             lift.setState();
-            stateMap.put(CYCLE_LIFT_UP, STATE_COMPLETE);
+            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
         }
 
         setConeCycleSystems();
@@ -125,23 +124,23 @@ public class BrainStemRobot {
     }
 
     private boolean startLiftUp() {
-        return ((String) stateMap.get(CYCLE_GRABBER)).equalsIgnoreCase(STATE_COMPLETE) &&
-                !((String) stateMap.get(CYCLE_LIFT_UP)).equalsIgnoreCase(STATE_IN_PROGRESS);
+        return ((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
+                !((String) stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
     }
 
     private boolean startliftDown() {
-        return (!((String) stateMap.get(CYCLE_GRABBER)).equalsIgnoreCase(STATE_IN_PROGRESS));
+        return (!((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS));
     }
 
     private boolean startGrabberAction() {
-        return ((String) stateMap.get(CYCLE_LIFT_DOWN)).equalsIgnoreCase(STATE_COMPLETE) &&
-                !((String) stateMap.get(CYCLE_GRABBER)).equalsIgnoreCase(STATE_IN_PROGRESS);
+        return ((String) stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
+                !((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
     }
 
     private boolean isConeCycleComplete() {
-        return (((String) stateMap.get(CYCLE_LIFT_DOWN)).equalsIgnoreCase(STATE_COMPLETE) &&
-                ((String) stateMap.get(CYCLE_GRABBER)).equalsIgnoreCase(STATE_COMPLETE) &&
-                ((String) stateMap.get(CYCLE_LIFT_UP)).equalsIgnoreCase(STATE_COMPLETE));
+        return (((String) stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
+                ((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
+                ((String) stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_COMPLETE));
     }
 }
 
