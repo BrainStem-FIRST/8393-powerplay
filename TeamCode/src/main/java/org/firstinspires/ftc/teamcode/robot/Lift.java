@@ -59,6 +59,14 @@ public class Lift {
     public final int CYCLE_TOLERANCE = 25;
     public final String LIFT_CURRENT_STATE = "LIFT CURRENT STATE";
 
+    public final String STATE_IN_PROGRESS = "IN PROGRESS";
+    public final String STATE_COMPLETE = "COMPLETE";
+    public final String CONE_CYCLE = "CONE CYCLE";
+    private final String STATE_NOT_STARTED = "NOT STARTED";
+    public final String CYCLE_LIFT_DOWN = STATE_NOT_STARTED;
+    public final String CYCLE_LIFT_UP = STATE_NOT_STARTED;
+    public final String CYCLE_GRABBER = STATE_NOT_STARTED;
+
     public static double currentLiftHeight;
     private Map stateMap;
 
@@ -66,7 +74,6 @@ public class Lift {
     public Lift(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
-        robotConstants  = new BrainStemRobot(hwMap, telemetry, stateMap);
         liftMotor = hwMap.dcMotor.get("Lift");
 
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -108,7 +115,7 @@ public class Lift {
             }
         } else{
             if(inHeightTolerance(getPosition(), position)){
-                stateMap.put(robotConstants.CYCLE_LIFT_UP, robotConstants.STATE_COMPLETE);
+                stateMap.put(BrainStemRobot.CYCLE_LIFT_UP, robotConstants.STATE_COMPLETE);
             }
         }
     }

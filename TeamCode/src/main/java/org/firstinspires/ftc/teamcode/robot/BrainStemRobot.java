@@ -38,13 +38,7 @@ public class BrainStemRobot {
     public Grabber grabber;
     private Map stateMap;
 
-    public final String STATE_IN_PROGRESS = "IN PROGRESS";
-    public final String STATE_COMPLETE = "COMPLETE";
-    public final String CONE_CYCLE = "CONE CYCLE";
-    private final String STATE_NOT_STARTED = "NOT STARTED";
-    public final String CYCLE_LIFT_DOWN = STATE_NOT_STARTED;
-    public final String CYCLE_LIFT_UP = STATE_NOT_STARTED;
-    public final String CYCLE_GRABBER = STATE_NOT_STARTED;
+
 
 
 
@@ -61,7 +55,7 @@ public class BrainStemRobot {
         drive   = new SampleMecanumDrive(hwMap);
         grabber   = new Grabber(hwMap, telemetry);
 
-        stateMap.put(CONE_CYCLE, STATE_COMPLETE);
+        stateMap.put(lift.CONE_CYCLE, lift.STATE_COMPLETE);
 
         telemetry.addData("Robot", " Is Ready");
         telemetry.update();
@@ -80,7 +74,7 @@ public class BrainStemRobot {
     public void updateSystems() {
         telemetry.addData("robotStateMap" , stateMap);
 
-        if(((String)stateMap.get(CONE_CYCLE)).equalsIgnoreCase(STATE_IN_PROGRESS)){
+        if(((String)stateMap.get(lift.CONE_CYCLE)).equalsIgnoreCase(lift.STATE_IN_PROGRESS)){
             coneCycle();
         } else {
             lift.setState();
@@ -100,9 +94,9 @@ public class BrainStemRobot {
         }
 
         if(isConeCycleComplete()){
-            stateMap.put(CYCLE_LIFT_DOWN, STATE_NOT_STARTED);
-            stateMap.put(CYCLE_GRABBER, STATE_NOT_STARTED);
-            stateMap.put(CYCLE_LIFT_UP,STATE_NOT_STARTED);
+            stateMap.put(lift.CYCLE_LIFT_DOWN, lift.STATE_NOT_STARTED);
+            stateMap.put(lift.CYCLE_GRABBER, lift.STATE_NOT_STARTED);
+            stateMap.put(lift.CYCLE_LIFT_UP,lift.STATE_NOT_STARTED);
         }
 
         if(startliftDown()) {
