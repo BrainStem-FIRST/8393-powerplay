@@ -35,9 +35,9 @@ public class Lift {
     public final int LIFT_POSITION_GROUND = 97;
     public final int LIFT_POSITION_LOWPOLE = 380;
     public final int LIFT_POSITION_MIDPOLE = 590;
-    public final int LIFT_POSITION_HIGHPOLE = 860;
+    public final int LIFT_POSITION_HIGHPOLE = 880;
     public final int LIFT_POSITION_PICKUP = 8;
-    public final int LIFT_ADJUSTMENT = -70;
+    public final int LIFT_ADJUSTMENT = -80;
     Constants constants = new Constants();
 
 
@@ -86,13 +86,9 @@ public class Lift {
         String currentState = getCurrentState(subheight);
         String level = (String) stateMap.get(LIFT_SYSTEM_NAME);
 
-        telemetry.addData("liftLevel", level);
-        telemetry.addData("liftSubHeight", subheight);
-
         stateMap.put(LIFT_CURRENT_STATE, currentState);
 
         updateConeCycleState();
-        telemetry.addData("liftCurrentState", currentState);
 
         if (shouldLiftMove(level, currentState) ) {
             selectTransition(level, subheight, currentState);
@@ -110,11 +106,7 @@ public class Lift {
     private void updateConeCycleState() {
         int position = getStateValue();
         if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
-            telemetry.addData("positionValue", position);
-            telemetry.addData("getPosition", getPosition());
-            telemetry.addData("withAdjustment", position + LIFT_ADJUSTMENT);
             if (inHeightTolerance(getPosition(), position + LIFT_ADJUSTMENT)) {
-                telemetry.addData("cycleComplete", true);
                 stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
             }
         } else if(isCycleInProgress(constants.CYCLE_LIFT_UP) && inHeightTolerance(getPosition(), position)){
@@ -132,7 +124,6 @@ public class Lift {
     }
     private int getStateValue(){
         int position = 0;
-        telemetry.addData("getStateLiftCurrentState", (String)stateMap.get(LIFT_CURRENT_STATE));
         switch((String)stateMap.get(LIFT_CURRENT_STATE)) {
             case LIFT_POLE_HIGH: {
                 position = LIFT_POSITION_HIGHPOLE;
@@ -187,8 +178,6 @@ public class Lift {
     public String getCurrentState(String subheight) {
         String state = TRANSITION_STATE;
         double currentPosition = getPosition();
-        telemetry.addData("CurrentMotorEncoderTicks", liftMotor.getCurrentPosition());
-        telemetry.addData("CurrentPosition", currentPosition);
         if(inHeightTolerance(currentPosition, LIFT_POSITION_GROUND + deliveryHeight(subheight))){
             state = LIFT_POLE_GROUND;
         } else if (inHeightTolerance(currentPosition, LIFT_POSITION_LOWPOLE + deliveryHeight(subheight))) {
@@ -211,11 +200,9 @@ public class Lift {
 
     public void raiseHeightTo (int heightInTicks) {
         //raising heights to reach different junctions, so four values
-        telemetry.addData("raiseHeightCalled" , true);
         liftMotor.setTargetPosition(heightInTicks);
         liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftMotor.setPower(1.0);
-        telemetry.addData("MotorPosition", liftMotor.getCurrentPosition());
 
     }
 

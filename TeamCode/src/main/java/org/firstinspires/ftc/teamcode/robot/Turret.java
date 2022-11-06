@@ -48,9 +48,6 @@ public class Turret {
 
     public void setState(String desiredState, Lift lift){
         String currentState = getCurrentState();
-        telemetry.addData("turretCurrentState" , currentState);
-        telemetry.addData("turretDesiredState" , currentState);
-        telemetry.addData("turretMotorPosition", turretMotor.getCurrentPosition());
         if(isLiftTooLow(lift) || desiredState.equalsIgnoreCase(currentState)){
             turretMotor.setPower(0);
             return;
@@ -62,7 +59,6 @@ public class Turret {
 
     public boolean isLiftTooLow(Lift lift) {
         boolean tooLow = lift.getPosition() < LIFT_MIN_HEIGHT_TO_MOVE_TURRET;
-        telemetry.addData("liftTooLow" , tooLow);
         return tooLow;
     }
 
@@ -87,7 +83,6 @@ public class Turret {
 
     public void moveTo (int positionInTicks) {
         //raising heights to reach different junctions, so four values
-        telemetry.addData("turnLiftCalled" , true);
         turretMotor.setTargetPosition(positionInTicks);
         turretMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         turretMotor.setPower(1.0);
@@ -96,8 +91,6 @@ public class Turret {
     public String getCurrentState() {
         String state = TRANSITION_STATE;
         double currentPosition = getPosition();
-        telemetry.addData("CurrentMotorEncoderTicks", turretMotor.getCurrentPosition());
-        telemetry.addData("CurrentPosition", currentPosition);
         if(inTolerance(currentPosition, LEFT_POSITION_VALUE)){
             state = LEFT_POSITION;
         } else if (inTolerance(currentPosition, CENTER_POSITION_VALUE)) {

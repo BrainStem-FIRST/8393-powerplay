@@ -9,4 +9,7 @@ public class Constants {
     public final String CYCLE_LIFT_UP = "Cycle Lift Up";
     public final String CYCLE_GRABBER = "Cycle Grabber";
     public final String LIFT_ENCODER_TICKS = "Lift Encoder Ticks";
+    public final String GRABBER_START_TIME = "GRABBER START TIME";
+    public final int GRABBER_CYCLE_TIME = 500;
+    public final String SYSTEM_TIME = "SYSTEM TIME";
 }

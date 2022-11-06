@@ -58,14 +58,14 @@ public class TestTeleOp extends LinearOpMode {
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
             }
 
-            if (gamepad2.x) {
+            if (gamepad1.x) {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
-            } else if (gamepad2.y) {
+            } else if (gamepad1.y) {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-            } else if (gamepad2.b) {
+            } else if (gamepad1.b) {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
             }
-            if(gamepad2.right_trigger > 0.5 && stateMap.get(constants.CONE_CYCLE).equalsIgnoreCase(constants.STATE_NOT_STARTED)){
+            if(gamepad1.right_trigger > 0.5 && stateMap.get(constants.CONE_CYCLE).equalsIgnoreCase(constants.STATE_NOT_STARTED)){
                 stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
             }
 
@@ -81,7 +81,6 @@ public class TestTeleOp extends LinearOpMode {
 
             robot.updateSystems();
 
-            telemetry.addData("stateMap", stateMap);
             telemetry.addData("toggleMap", toggleMap);
 
             telemetry.update();
