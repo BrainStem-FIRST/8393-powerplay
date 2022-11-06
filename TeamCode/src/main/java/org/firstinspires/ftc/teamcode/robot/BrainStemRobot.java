@@ -86,7 +86,6 @@ public class BrainStemRobot {
 
     public void coneCycle() {
         if(startliftDown()) {
-            stateMap.put(constants.GRABBER_START_TIME, null);
             stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_IN_PROGRESS);
             stateMap.put(lift.LIFT_SUBHEIGHT, lift.PLACEMENT_HEIGHT);
         } else if(startGrabberAction()){
@@ -115,10 +114,7 @@ public class BrainStemRobot {
     }
 
     private boolean startliftDown() {
-        long grabberStartTime = (long) stateMap.get(constants.GRABBER_START_TIME);
-        long grabberEndTime = grabberStartTime + constants.GRABBER_CYCLE_TIME;
-        return (System.currentTimeMillis() > grabberEndTime) &&
-                (((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) &&
+        return (((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) &&
                 ((String)(stateMap.get(constants.CYCLE_LIFT_DOWN))).equalsIgnoreCase(constants.STATE_NOT_STARTED));
     }
 

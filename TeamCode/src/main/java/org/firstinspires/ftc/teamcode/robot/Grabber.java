@@ -52,8 +52,7 @@ public class Grabber {
         if(((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
             if (shouldGrab(lift)) {
                 grabber.setPosition(CLOSED_VALUE);
-            } else if (stateMap.get(constants.GRABBER_START_TIME) == null) {
-                stateMap.put(constants.GRABBER_START_TIME, System.currentTimeMillis());
+            } else {
                 grabber.setPosition(OPEN_VALUE);
             }
 
