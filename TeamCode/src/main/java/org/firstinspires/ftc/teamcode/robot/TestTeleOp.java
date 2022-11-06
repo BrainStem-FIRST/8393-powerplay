@@ -78,9 +78,9 @@ public class TestTeleOp extends LinearOpMode {
 
         drive.setWeightedDrivePower(
                 new Pose2d(
-                        Math.pow(-gamepad1.left_stick_y, 3),
-                        Math.pow(-gamepad1.left_stick_x, 3),
-                        Math.pow(-gamepad1.right_stick_x, 3)
+                        -Math.pow(gamepad1.left_stick_y, 2),
+                        -Math.pow(gamepad1.left_stick_x, 2),
+                        -Math.pow(gamepad1.right_stick_x, 2)
                 )
         );
 
