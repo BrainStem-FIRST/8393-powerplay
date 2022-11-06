@@ -37,7 +37,7 @@ public class Lift {
     public final int LIFT_POSITION_MIDPOLE = 590;
     public final int LIFT_POSITION_HIGHPOLE = 880;
     public final int LIFT_POSITION_PICKUP = 8;
-    public final int LIFT_ADJUSTMENT = -80;
+    public final int LIFT_ADJUSTMENT = -75;
     Constants constants = new Constants();
 
 
@@ -232,6 +232,9 @@ public class Lift {
 
     private boolean inHeightTolerance(double heightPosition, double targetHeight) {
         return (heightPosition > targetHeight - HEIGHT_TOLERANCE) && (heightPosition < targetHeight + HEIGHT_TOLERANCE);
+    }
+    public boolean isLiftUp(){
+        return (getPosition() > LIFT_POSITION_GROUND);
     }
 
 }

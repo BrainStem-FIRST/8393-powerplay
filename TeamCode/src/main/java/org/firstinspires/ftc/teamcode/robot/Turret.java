@@ -23,9 +23,9 @@ public class Turret {
     public final String     RIGHT_POSITION = "RIGHT_STATE";
     public final String     CENTER_POSITION = "CENTER_STATE";
     public final String     TRANSITION_STATE = "TRANSITION_STATE";
-    public final int        LEFT_POSITION_VALUE = 3;
+    public final int        LEFT_POSITION_VALUE = 8;
     public final int        CENTER_POSITION_VALUE = 264;
-    public final int        RIGHT_POSITION_VALUE = 525;
+    public final int        RIGHT_POSITION_VALUE = 500;
     public final int        ANGLE_TOLERANCE = 5;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 75;
 

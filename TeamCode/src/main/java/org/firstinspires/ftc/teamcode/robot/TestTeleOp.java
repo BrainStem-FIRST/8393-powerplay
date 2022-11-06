@@ -20,6 +20,12 @@ public class TestTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_B_IS_PRESSED = "GAMEPAD_1_B_IS_PRESSED";
     private final String GAMEPAD_1_X_STATE = "GAMEPAD_1_X_STATE";
     private final String GAMEPAD_1_X_IS_PRESSED = "GAMEPAD_1_X_IS_PRESSED";
+    private final String GAMEPAD_1_RIGHT_STICK_PRESSED = "GAMEPAD_1_RIGHT_STICK_PRESSED ";
+    private final String GAMEPAD_1_RIGHT_STICK_STATE = "GAMEPAD_1_RIGHT_STICK";
+    private final String GAMEPAD_1_LEFT_STICK_PRESSED = "GAMEPAD_1_LEFT_STICK_PRESSED";
+    private final String GAMEPAD_1_LEFT_STICK_STATE =  "GAMEPAD_1_LEFT_STICK_STATE";
+    private final double SLOWMODE  = 0.5;
+
     Constants constants = new Constants();
 
 
@@ -31,6 +37,10 @@ public class TestTeleOp extends LinearOpMode {
         put(GAMEPAD_1_B_IS_PRESSED, false);
         put(GAMEPAD_1_X_STATE, false);
         put(GAMEPAD_1_X_IS_PRESSED, false);
+        put(GAMEPAD_1_RIGHT_STICK_STATE, false);
+        put(GAMEPAD_1_RIGHT_STICK_PRESSED, false);
+        put(GAMEPAD_1_LEFT_STICK_PRESSED, false);
+        put(GAMEPAD_1_LEFT_STICK_STATE, false);
     }};
 
     public void runOpMode() {
@@ -75,14 +85,26 @@ public class TestTeleOp extends LinearOpMode {
         if(gamepad1.right_trigger > 0.5 && stateMap.get(constants.CONE_CYCLE).equalsIgnoreCase(constants.STATE_NOT_STARTED)){
             stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
         }
+        if(toggleMap.get(GAMEPAD_1_RIGHT_STICK_STATE) && toggleMap.get(GAMEPAD_1_LEFT_STICK_STATE)){
+            drive.setWeightedDrivePower(
+                    new Pose2d(
 
-        drive.setWeightedDrivePower(
-                new Pose2d(
-                        -Math.pow(gamepad1.left_stick_y, 2),
-                        -Math.pow(gamepad1.left_stick_x, 2),
-                        -Math.pow(gamepad1.right_stick_x, 2)
-                )
-        );
+                            (SLOWMODE *-gamepad1.left_stick_y),
+                            (SLOWMODE *-gamepad1.left_stick_x),
+                            (SLOWMODE * -gamepad1.right_stick_x)
+                    )
+            );
+        } else {
+            drive.setWeightedDrivePower(
+                    new Pose2d(
+
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x
+                    )
+            );
+        }
+
 
         drive.update();
 
@@ -98,6 +120,8 @@ public class TestTeleOp extends LinearOpMode {
         toggleButton(GAMEPAD_1_A_STATE, GAMEPAD_1_A_IS_PRESSED, gamepad1.a);
         toggleButton(GAMEPAD_1_B_STATE, GAMEPAD_1_B_IS_PRESSED, gamepad1.b);
         toggleButton(GAMEPAD_1_X_STATE, GAMEPAD_1_X_IS_PRESSED, gamepad1.x);
+        toggleButton(GAMEPAD_1_RIGHT_STICK_STATE, GAMEPAD_1_RIGHT_STICK_PRESSED, gamepad1.right_stick_button);
+        toggleButton(GAMEPAD_1_LEFT_STICK_STATE, GAMEPAD_1_LEFT_STICK_PRESSED, gamepad1.left_stick_button);
     }
 
     private boolean toggleButton(String buttonStateName, String buttonPressName, boolean buttonState) {
