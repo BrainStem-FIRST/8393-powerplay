@@ -50,40 +50,47 @@ public class TestTeleOp extends LinearOpMode {
         waitForStart();
       while (opModeIsActive()) {
 
-            setButtons();
+        setButtons();
 
-            if (toggleMap.get(GAMEPAD_1_A_STATE)) {
-                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
-            } else {
-                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-            }
+        if (toggleMap.get(GAMEPAD_1_A_STATE)) {
+            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+        } else {
+            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
+        }
 
-            if (gamepad1.x) {
-                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
-            } else if (gamepad1.y) {
-                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-            } else if (gamepad1.b) {
-                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
-            }
-            if(gamepad1.right_trigger > 0.5 && stateMap.get(constants.CONE_CYCLE).equalsIgnoreCase(constants.STATE_NOT_STARTED)){
-                stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
-            }
+        if (toggleMap.get(GAMEPAD_1_B_STATE)) {
+            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+        } else {
+            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+        }
 
-            drive.setWeightedDrivePower(
-                    new Pose2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x,
-                            -gamepad1.right_stick_x
-                    )
-            );
 
-            drive.update();
+        if (gamepad1.dpad_left) {
+            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
+        } else if (gamepad1.dpad_up) {
+            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+        } else if (gamepad1.dpad_right) {
+            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
+        }
+        if(gamepad1.right_trigger > 0.5 && stateMap.get(constants.CONE_CYCLE).equalsIgnoreCase(constants.STATE_NOT_STARTED)){
+            stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
+        }
 
-            robot.updateSystems();
+        drive.setWeightedDrivePower(
+                new Pose2d(
+                        -gamepad1.left_stick_y,
+                        -gamepad1.left_stick_x,
+                        -gamepad1.right_stick_x
+                )
+        );
 
-            telemetry.addData("toggleMap", toggleMap);
+        drive.update();
 
-            telemetry.update();
+        robot.updateSystems();
+
+        telemetry.addData("toggleMap", toggleMap);
+
+        telemetry.update();
         }
     }
 

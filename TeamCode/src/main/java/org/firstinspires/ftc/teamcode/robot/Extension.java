@@ -21,7 +21,7 @@ public class Extension {
 
     // Servo Positions
     public final double EXTENSION_POSITION_HOME = 0;    // Fully retracted
-    public final double EXTENSION_POSITION_MAX  = 1;    // Fully extended
+    public final double EXTENSION_POSITION_MAX  = 0.4;    // Fully extended
 
     public final double TWOBAR_POSITION_HOME    = 0;    // vertical position
     public final double TWOBAR_POSITION_MAX     = 1;    // fully tilted
