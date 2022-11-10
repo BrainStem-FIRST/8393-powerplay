@@ -33,9 +33,9 @@ public class Lift {
 
     public final int LIFT_POSITION_RESET = 0;
     public final int LIFT_POSITION_GROUND = 97;
-    public final int LIFT_POSITION_LOWPOLE = 380;
-    public final int LIFT_POSITION_MIDPOLE = 590;
-    public final int LIFT_POSITION_HIGHPOLE = 880;
+    public final int LIFT_POSITION_LOWPOLE = 340;
+    public final int LIFT_POSITION_MIDPOLE = 550;
+    public final int LIFT_POSITION_HIGHPOLE = 840;
     public final int LIFT_POSITION_PICKUP = 8;
     public final int LIFT_ADJUSTMENT = -75;
     Constants constants = new Constants();

@@ -43,10 +43,10 @@ public class Extension {
         twoBar = (ServoImplEx) hwMap.servo.get("Two Bar");
 
         // Scale the operating range of Servos and set initial position
-        extension.setPwmRange(new PwmControl.PwmRange(1250,2522));
+        extension.setPwmRange(new PwmControl.PwmRange(1250,2160));
         extendHome();
 
-        twoBar.setPwmRange(new PwmControl.PwmRange(1745,2522));
+        twoBar.setPwmRange(new PwmControl.PwmRange(1745,2400));
         tiltDown();
 
     }
