@@ -33,6 +33,8 @@ public class RobotTeleOp extends LinearOpMode {
     private boolean leftTriggerPressed = false;
     private final double SLOWMODE  = 0.45;
 
+    private boolean isDriverDriving = true;
+
     Constants constants = new Constants();
 
 
@@ -98,15 +100,32 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
             if (gamepad1.right_bumper) {
+                isDriverDriving = false;
+
                 Trajectory forwardTrajectory = driveCancelable.trajectoryBuilder(driveCancelable.getPoseEstimate())
                         .forward(40)
                         .build();
                 driveCancelable.followTrajectoryAsync(forwardTrajectory);
+
             } else if (gamepad1.left_bumper) {
+                isDriverDriving = false;
+
                 Trajectory reverseTrajectory = driveCancelable.trajectoryBuilder(driveCancelable.getPoseEstimate())
                         .back(40)
                         .build();
                 driveCancelable.followTrajectoryAsync(reverseTrajectory);
+            } else if  (((gamepad1.left_stick_y != 0) || (gamepad1.left_stick_x != 0) || (gamepad1.right_stick_x != 0)) && !isDriverDriving) {
+
+                driveCancelable.breakFollowing();
+
+                driveCancelable.setWeightedDrivePower(
+
+                        new Pose2d(
+                                -gamepad1.left_stick_y,
+                                -gamepad1.left_stick_x,
+                                -gamepad1.right_stick_x
+                        )
+                );
             } else {
                 driveCancelable.setWeightedDrivePower(
 
