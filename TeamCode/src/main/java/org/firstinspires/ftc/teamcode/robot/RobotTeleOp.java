@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,9 +57,8 @@ public class RobotTeleOp extends LinearOpMode {
 
         Map<String, String> stateMap = new HashMap<String, String>() {{ }};
         BrainStemRobot robot = new BrainStemRobot(hardwareMap, telemetry, stateMap);
-
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-        drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        SampleMecanumDriveCancelable driveCancelable = new SampleMecanumDriveCancelable(hardwareMap);
+        driveCancelable.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
         stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
@@ -98,17 +98,18 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
             if (gamepad1.right_bumper) {
-                Trajectory forwardTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
+                Trajectory forwardTrajectory = driveCancelable.trajectoryBuilder(driveCancelable.getPoseEstimate())
                         .forward(40)
                         .build();
-                drive.followTrajectoryAsync(forwardTrajectory);
+                driveCancelable.followTrajectoryAsync(forwardTrajectory);
             } else if (gamepad1.left_bumper) {
-                Trajectory reverseTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
+                Trajectory reverseTrajectory = driveCancelable.trajectoryBuilder(driveCancelable.getPoseEstimate())
                         .back(40)
                         .build();
-                drive.followTrajectoryAsync(reverseTrajectory);
+                driveCancelable.followTrajectoryAsync(reverseTrajectory);
             } else {
-                drive.setWeightedDrivePower(
+                driveCancelable.setWeightedDrivePower(
+
                         new Pose2d(
                                 -gamepad1.left_stick_y,
                                 -gamepad1.left_stick_x,
@@ -117,7 +118,7 @@ public class RobotTeleOp extends LinearOpMode {
                 );
             }
 
-            drive.update();
+            driveCancelable.update();
 
             robot.updateSystems();
 
