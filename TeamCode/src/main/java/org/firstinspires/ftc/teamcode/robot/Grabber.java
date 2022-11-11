@@ -22,7 +22,7 @@ import java.util.Map;
 
 public class Grabber {
     private Telemetry telemetry;
-    private ServoImplEx grabber;
+    private Servo grabber;
 
 
     public final String SYSTEM_NAME = "GRABBER";
@@ -30,8 +30,8 @@ public class Grabber {
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
-    public final double OPEN_VALUE = 0.4;
-    public final double CLOSED_VALUE = 0.685;
+    public final double OPEN_VALUE = 0.7;
+    public final double CLOSED_VALUE = 0.2;
 
     private Map stateMap;
 
@@ -40,15 +40,11 @@ public class Grabber {
         this.stateMap = stateMap;
 
 
-        grabber = (ServoImplEx) hwMap.servo.get("Grabber");
-
-        grabber.setPwmRange(new PwmControl.PwmRange(100,2522));
-        grabberOpen();
+        grabber = hwMap.servo.get("grabber");
 
     }
 
-
-    public void setState(String position, Lift lift) {
+    public void setState(Lift lift) {
         if(((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
             if (shouldGrab(lift)) {
                 grabber.setPosition(CLOSED_VALUE);
@@ -70,25 +66,11 @@ public class Grabber {
         } else if (((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_NOT_STARTED) && shouldGrab(lift)) {
             grabber.setPosition(OPEN_VALUE);
         }
+
+        telemetry.addData("grabberPosition", grabber.getPosition());
     }
     public boolean shouldGrab(Lift lift) {
         return lift.getPosition() < lift.LIFT_POSITION_GROUND &&
                 ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
-    }
-
-    /************************* GRABBER UTILITIES **************************/
-
-    // Opens the claw
-    public void grabberOpen() {
-        grabber.setPosition(OPEN_VALUE);
-    }
-
-    public void grabberClose() {
-        grabber.setPosition(CLOSED_VALUE);
-    }
-
-    // Returns current position of the grabber. 0 is wide open (dropped cone)
-    public double grabberPosition() {
-        return grabber.getPosition();
     }
 }

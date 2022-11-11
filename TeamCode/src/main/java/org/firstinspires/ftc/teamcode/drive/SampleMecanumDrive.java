@@ -118,9 +118,9 @@ public class SampleMecanumDrive extends MecanumDrive {
         // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "FL");
-        leftRear = hardwareMap.get(DcMotorEx.class, "BL");
+        leftRear = hardwareMap.get(DcMotorEx.class, "BLandOdo");
         rightRear = hardwareMap.get(DcMotorEx.class, "BR");
-        rightFront = hardwareMap.get(DcMotorEx.class, "FR");
+        rightFront = hardwareMap.get(DcMotorEx.class, "FRandOdo");
 
         motors = Arrays.asList(leftFront, leftRear, rightRear, rightFront);
 
@@ -141,7 +141,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         }
 
         // TODO: reverse any motors using DcMotor.setDirection()
-        rightFront.setDirection(DcMotor.Direction.REVERSE);
+        leftFront.setDirection(DcMotor.Direction.REVERSE);
         leftRear.setDirection(DcMotor.Direction.REVERSE);
 
         // TODO: if desired, use setLocalizer() to change the localization method

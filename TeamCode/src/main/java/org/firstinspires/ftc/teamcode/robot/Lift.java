@@ -17,7 +17,10 @@ import java.util.Map;
 
 public class Lift {
     private Telemetry telemetry;
-    public DcMotor liftMotor;
+    public DcMotor liftMotor1;
+    public DcMotor liftMotor2;
+    public DcMotor liftMotor3;
+    public DcMotor liftMotor4;
 
     static final double MM_TO_INCHES = 0.0393700787;
 
@@ -26,18 +29,18 @@ public class Lift {
     static final double PULLEY_WHEEL_DIAMETER_INCHES = 24.25 * MM_TO_INCHES;     // convert mm to inches
     static final double TICK_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (PULLEY_WHEEL_DIAMETER_INCHES * 3.1415);
 
-    static final double LIFT_UP_SPEED = 0.5;
-    static final double LIFT_DOWN_SPEED = 0.5;
+    static final double LIFT_UP_SPEED = 1.0;
+    static final double LIFT_DOWN_SPEED = -0.1;
 
     public final int MINIMUM_CLEARANCE_HEIGHT = 43;    // inches to lift to clear side panels
 
     public final int LIFT_POSITION_RESET = 0;
-    public final int LIFT_POSITION_GROUND = 97;
-    public final int LIFT_POSITION_LOWPOLE = 340;
-    public final int LIFT_POSITION_MIDPOLE = 550;
-    public final int LIFT_POSITION_HIGHPOLE = 840;
+    public final int LIFT_POSITION_GROUND = 50;
+    public final int LIFT_POSITION_LOWPOLE = 380;
+    public final int LIFT_POSITION_MIDPOLE = 590;
+    public final int LIFT_POSITION_HIGHPOLE = 600;
     public final int LIFT_POSITION_PICKUP = 8;
-    public final int LIFT_ADJUSTMENT = -75;
+    public final int LIFT_ADJUSTMENT = -25;
     Constants constants = new Constants();
 
 
@@ -59,6 +62,11 @@ public class Lift {
     public final int CYCLE_TOLERANCE = 5;
     public final String LIFT_CURRENT_STATE = "LIFT CURRENT STATE";
 
+    static final String LIFT_MOTOR_1_ID = "Lift-1";
+    static final String LIFT_MOTOR_2_ID = "Lift-2";
+    static final String LIFT_MOTOR_3_ID = "Lift-3";
+    static final String LIFT_MOTOR_4_ID = "Lift-4andOdo";
+
     public static double currentLiftHeight;
     private Map stateMap;
 
@@ -66,11 +74,47 @@ public class Lift {
     public Lift(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
-        liftMotor = hwMap.dcMotor.get("Lift");
+        liftMotor1 = hwMap.dcMotor.get(LIFT_MOTOR_1_ID);
+        liftMotor2 = hwMap.dcMotor.get(LIFT_MOTOR_2_ID);
+        liftMotor3 = hwMap.dcMotor.get(LIFT_MOTOR_3_ID);
+        liftMotor4 = hwMap.dcMotor.get(LIFT_MOTOR_4_ID);
 
+        initializeLiftMotor(liftMotor1);
+        initializeLiftMotor(liftMotor2);
+        initializeLiftMotor(liftMotor3);
+        initializeLiftMotor(liftMotor4);
+    }
+
+    private void initializeLiftMotor(DcMotor liftMotor) {
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+        liftMotor.setDirection(DcMotor.Direction.REVERSE);
+        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    }
+
+    public void moveUp() {
+        setMotorsPower(LIFT_UP_SPEED);
+    }
+
+    public void moveDown() {
+        setMotorsPower(LIFT_DOWN_SPEED);
+    }
+
+    public void stop() {
+        setMotorsPower(0.0);
+    }
+
+    private void setMotorsPower(double power) {
+        liftMotor1.setPower(power);
+        liftMotor2.setPower(power);
+        liftMotor3.setPower(power);
+        liftMotor4.setPower(power);
+    }
+
+    private void setBoostPower(double power) {
+        liftMotor1.setPower(power);
+        liftMotor2.setPower(power);
+        liftMotor4.setPower(power);
     }
 
     public boolean isCollectionHeight() {
@@ -78,7 +122,7 @@ public class Lift {
     }
 
     public int getPosition() {
-        return liftMotor.getCurrentPosition();
+        return liftMotor3.getCurrentPosition();
     }
 
     public void setState() {
@@ -89,11 +133,11 @@ public class Lift {
         stateMap.put(LIFT_CURRENT_STATE, currentState);
 
         updateConeCycleState();
-
+        telemetry.addData("liftCurrentState", currentState);
         if (shouldLiftMove(level, currentState) ) {
             selectTransition(level, subheight, currentState);
         } else {
-            liftMotor.setPower(0);
+            liftMotor3.setPower(0);
         }
     }
 
@@ -113,7 +157,6 @@ public class Lift {
                 stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
         }
     }
-
 
     private boolean isCycleInProgress(String cycleName) {
         return ((String)stateMap.get(cycleName)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
@@ -148,10 +191,6 @@ public class Lift {
 
     private void selectTransition(String desiredLevel, String subheight, String currentState){
         switch(desiredLevel){
-            case LIFT_PICKUP:{
-                transitionToLiftPosition(LIFT_POSITION_PICKUP);
-                break;
-            }
             case LIFT_POLE_LOW:{
                 transitionToLiftPosition(LIFT_POSITION_LOWPOLE + deliveryHeight(subheight));
                 break;
@@ -200,15 +239,44 @@ public class Lift {
 
     public void raiseHeightTo (int heightInTicks) {
         //raising heights to reach different junctions, so four values
-        liftMotor.setTargetPosition(heightInTicks);
-        liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor.setPower(1.0);
+        telemetry.addData("raiseHeightCalled" , true);
+        liftMotor3.setTargetPosition(heightInTicks);
+        liftMotor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor3.setPower(1.0);
 
+        if ((heightInTicks - (4 * HEIGHT_TOLERANCE)) > getPosition()) {
+            telemetry.addData("boostOn" , 1.0);
+            setBoostPower(1.0);
+        } else if (heightInTicks - (2 * HEIGHT_TOLERANCE) > getPosition()) {
+            telemetry.addData("boostOn" , 0.5);
+            setBoostPower(0.5);
+        } else if (heightInTicks - HEIGHT_TOLERANCE > getPosition()) {
+            telemetry.addData("boostOn" , 0.25);
+            setBoostPower(0.25);
+        } else if (heightInTicks + HEIGHT_TOLERANCE < getPosition() && !isCycleInProgress(constants.CONE_CYCLE)) {
+            telemetry.addData("boostOn" , 0.02);
+            setBoostPower(0.02);
+        } else if (heightInTicks + (4 * HEIGHT_TOLERANCE) < getPosition() && !isCycleInProgress(constants.CONE_CYCLE)) {
+            telemetry.addData("boostOn" , 0.05);
+            setBoostPower(0.05);
+        } else if (heightInTicks + (8 * HEIGHT_TOLERANCE) < getPosition() && !isCycleInProgress(constants.CONE_CYCLE)) {
+            telemetry.addData("boostOn" , -0.1);
+            setBoostPower(-0.1);
+        } else {
+            telemetry.addData("boostOn" , 0);
+            setBoostPower(0.0);
+        }
+
+        telemetry.addData("MotorPosition", liftMotor3.getCurrentPosition());
+    }
+
+    public double getPower() {
+        return liftMotor3.getPower();
     }
 
     public  boolean isClear () {
         //true means turret can turn and lift is raised to minimum clearance; false is the opposite
-        double currentLiftHeight = liftMotor.getCurrentPosition() * TICK_PER_INCH;
+        double currentLiftHeight = liftMotor3.getCurrentPosition() * TICK_PER_INCH;
         if(currentLiftHeight >= MINIMUM_CLEARANCE_HEIGHT){
             return true;
         }
@@ -222,12 +290,12 @@ public class Lift {
     }
 
     public void initializePosition( ) {
-        liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        liftMotor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
     }
     public void setMotor(double power){
 //        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-        liftMotor.setPower(power);
+        liftMotor3.setPower(power);
     }
 
     private boolean inHeightTolerance(double heightPosition, double targetHeight) {

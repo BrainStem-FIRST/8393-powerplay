@@ -46,7 +46,7 @@ public class BrainStemRobot {
         this.opMode = opMode;
 
         // instantiate components turret, lift, arm, grabber
-        turret  = new Turret(hwMap, telemetry);
+        turret  = new Turret(hwMap, telemetry, stateMap);
         lift    = new Lift(hwMap, telemetry, stateMap);
         arm     = new Extension(hwMap, telemetry);
         drive   = new SampleMecanumDrive(hwMap);
@@ -61,24 +61,16 @@ public class BrainStemRobot {
         telemetry.update();
     }
 
-    public void initializeRobotPosition(){
-        lift.initializePosition();
-        lift.moveToMinHeight();  // Raise lift to clear side panels. This does not clear the arm holding cone.
-        // Extend the arm so it clears corner of the robot when swinging
-        turret.initializePosition();
-        lift.raiseHeightTo(0);
-    }
-
     public void updateSystems() {
         telemetry.addData("robotStateMap" , stateMap);
         stateMap.put(constants.SYSTEM_TIME, System.currentTimeMillis());
-
 
         if(((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
             coneCycle();
         } else {
             lift.setState();
-            turret.setState((String) stateMap.get(turret.SYSTEM_NAME), lift);
+            grabber.setState(lift);
+            turret.setState(lift);
             arm.setState((String) stateMap.get(arm.SYSTEM_NAME));
         }
 
@@ -105,7 +97,7 @@ public class BrainStemRobot {
 
     private void setConeCycleSystems() {
         lift.setState();
-        grabber.setState((String) stateMap.get(grabber.SYSTEM_NAME), lift);
+        grabber.setState(lift);
     }
 
     private boolean startLiftUp() {
