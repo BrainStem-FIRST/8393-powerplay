@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.StateMachine;
@@ -124,31 +125,46 @@ public class Lift {
     public final String LIFT_CURRENT_STATE = "LIFT CURRENT STATE";
 
     public static double currentLiftHeight;
+
+    //declaring the state map
     private Map stateMap;
 
+    //declaring list of lift motors
     private ArrayList<DcMotor> liftMotors;
-    private BrainSTEMRobot robot;
 
     public Lift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap) {
-        this.robot = robot;
+        //initializing telemetry
         this.telemetry = telemetry;
+        //initializing state map
         this.stateMap = stateMap;
+
+        //initialize lift motors
         liftMotor1 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_1_ID));
         liftMotor2 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_2_ID));
         liftMotor3 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_3_ID));
         liftMotor4 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_4_ID));
 
-        initializeLiftMotor(liftMotor1);
-        initializeLiftMotor(liftMotor2);
-        initializeLiftMotor(liftMotor3);
-        initializeLiftMotor(liftMotor4);
-
         liftMotors = new ArrayList<>();
 
+        //add lift motors to list
         liftMotors.add(liftMotor1);
         liftMotors.add(liftMotor2);
         liftMotors.add(liftMotor3);
         liftMotors.add(liftMotor4);
+
+        liftMotor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+        //setting motor modes
+        liftMotor1.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotor2.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotor3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        liftMotor4.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+        //setting directions
+        liftMotor1.setDirection(LiftConstants.LIFT_MOTOR_1_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+        liftMotor2.setDirection(LiftConstants.LIFT_MOTOR_2_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+        liftMotor3.setDirection(LiftConstants.LIFT_MOTOR_3_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+        liftMotor4.setDirection(LiftConstants.LIFT_MOTOR_4_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
     }
 
     private void initializeLiftMotor(DcMotorEx liftMotor) {

@@ -12,6 +12,13 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import java.util.Map;
 
 public class BrainSTEMRobot {
+    private static final class BrainSTEMRobotConstants {
+
+    }
+
+    public enum BrainSTEMRobotState {
+
+    }
 
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor.RunMode currentDrivetrainMode;
