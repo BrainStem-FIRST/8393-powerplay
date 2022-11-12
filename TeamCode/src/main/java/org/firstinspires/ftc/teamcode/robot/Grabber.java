@@ -45,6 +45,12 @@ public class Grabber {
     }
 
     public void setState(Lift lift) {
+        if (shouldGrab(lift)) {
+            grabber.setPosition(CLOSED_VALUE);
+        } else {
+            grabber.setPosition(OPEN_VALUE);
+        }
+
         if(((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
             if (shouldGrab(lift)) {
                 grabber.setPosition(CLOSED_VALUE);
@@ -69,6 +75,15 @@ public class Grabber {
 
         telemetry.addData("grabberPosition", grabber.getPosition());
     }
+
+    public void openGrabber() {
+        grabber.setPosition(OPEN_VALUE);
+    }
+
+    public void closeGrabber() {
+        grabber.setPosition(CLOSED_VALUE);
+    }
+
     public boolean shouldGrab(Lift lift) {
         return lift.getPosition() < lift.LIFT_POSITION_GROUND &&
                 ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);

@@ -120,10 +120,7 @@ public class RobotTeleOp extends LinearOpMode {
             drive.update();
 
             robot.updateSystems();
-
-            telemetry.addData("toggleMap", toggleMap);
-
-            telemetry.addData("liftEncoders", robot.lift.getPosition());
+            telemetry.addData("stateMap", stateMap);
             telemetry.update();
         }
     }

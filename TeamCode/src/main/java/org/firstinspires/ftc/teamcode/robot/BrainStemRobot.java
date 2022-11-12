@@ -14,6 +14,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
+import static java.lang.Thread.currentThread;
 import static java.lang.Thread.sleep;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -62,19 +64,40 @@ public class BrainStemRobot {
     }
 
     public void updateSystems() {
-        telemetry.addData("robotStateMap" , stateMap);
         stateMap.put(constants.SYSTEM_TIME, System.currentTimeMillis());
 
         if(((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
             coneCycle();
         } else {
             lift.setState();
-            grabber.setState(lift);
+//            grabber.setState(lift);
             turret.setState(lift);
             arm.setState((String) stateMap.get(arm.SYSTEM_NAME));
         }
 
     }
+
+//    public void coneCycle() {
+//        telemetry.addData("coneCycle", true);
+//        if (!lift.isLiftUp()) {
+//            grabber.openGrabber();
+//        }
+//
+//        stateMap.put(lift.LIFT_SUBHEIGHT, lift.PLACEMENT_HEIGHT);
+//        lift.setState();
+//
+//        if (!lift.isLiftUp()) {
+//            grabber.closeGrabber();
+//        } else {
+//            grabber.openGrabber();
+//        }
+//
+//        stateMap.put(lift.LIFT_SUBHEIGHT, lift.APPROACH_HEIGHT);
+//        lift.setState();
+//
+//        stateMap.put(constants.CONE_CYCLE, constants.STATE_COMPLETE);
+//        telemetry.addData("coneCycle", false);
+//    }
 
     public void coneCycle() {
         if(startliftDown()) {
