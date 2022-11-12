@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import java.util.HashMap;
 import java.util.Map;
 
-@TeleOp(name="Robot: TeleOp", group="Robot")
+@TeleOp(name = "Robot: TeleOp", group = "Robot")
 public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_A_STATE = "GAMEPAD_1_A_STATE";
     private final String GAMEPAD_1_A_IS_PRESSED = "GAMEPAD_1_A_IS_PRESSED";
@@ -23,17 +23,16 @@ public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_RIGHT_STICK_PRESSED = "GAMEPAD_1_RIGHT_STICK_PRESSED ";
     private final String GAMEPAD_1_RIGHT_STICK_STATE = "GAMEPAD_1_RIGHT_STICK";
     private final String GAMEPAD_1_LEFT_STICK_PRESSED = "GAMEPAD_1_LEFT_STICK_PRESSED";
-    private final String GAMEPAD_1_LEFT_STICK_STATE =  "GAMEPAD_1_LEFT_STICK_STATE";
-    private final String GAMEPAD_1_LEFT_TRIGGER_STATE  = "GAMEPAD_1_LEFT_TRIGGER_STATE";
+    private final String GAMEPAD_1_LEFT_STICK_STATE = "GAMEPAD_1_LEFT_STICK_STATE";
+    private final String GAMEPAD_1_LEFT_TRIGGER_STATE = "GAMEPAD_1_LEFT_TRIGGER_STATE";
     private final String GAMEPAD_1_LEFT_TRIGGER_PRESSED = "GAMEPAD_1_LEFT_TRIGGER_PRESSED";
     private final String GAMEPAD_1_Y_STATE = "GAMEPAD_1_Y_STATE";
     private final String GAMEPAD_1_Y_PRESSED = "GAMEPAD_1_Y_IS_PRESSED";
 
     private boolean leftTriggerPressed = false;
-    private final double SLOWMODE  = 0.45;
+    private final double SLOWMODE = 0.45;
 
     Constants constants = new Constants();
-
 
 
     Map<String, Boolean> toggleMap = new HashMap<String, Boolean>() {{
@@ -46,7 +45,7 @@ public class RobotTeleOp extends LinearOpMode {
         put(GAMEPAD_1_RIGHT_STICK_STATE, false);
         put(GAMEPAD_1_RIGHT_STICK_PRESSED, false);
         put(GAMEPAD_1_LEFT_STICK_PRESSED, false);
-        put(GAMEPAD_1_LEFT_TRIGGER_STATE ,false);
+        put(GAMEPAD_1_LEFT_TRIGGER_STATE, false);
         put(GAMEPAD_1_LEFT_TRIGGER_PRESSED, false);
         put(GAMEPAD_1_Y_STATE, false);
         put(GAMEPAD_1_Y_PRESSED, false);
@@ -54,7 +53,8 @@ public class RobotTeleOp extends LinearOpMode {
 
     public void runOpMode() {
 
-        Map<String, String> stateMap = new HashMap<String, String>() {{ }};
+        Map<String, String> stateMap = new HashMap<String, String>() {{
+        }};
         BrainStemRobot robot = new BrainStemRobot(hardwareMap, telemetry, stateMap);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
@@ -91,8 +91,8 @@ public class RobotTeleOp extends LinearOpMode {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
             }
 
-            if(gamepad1.right_trigger > 0.5){
-                if(!((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
+            if (gamepad1.right_trigger > 0.5) {
+                if (!((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)) {
                     stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
                 }
             }
@@ -121,6 +121,7 @@ public class RobotTeleOp extends LinearOpMode {
 
             robot.updateSystems();
             telemetry.addData("stateMap", stateMap);
+            telemetry.addData("Lift Power: ", robot.lift.getLiftMotorPowers());
             telemetry.update();
         }
     }
@@ -131,7 +132,7 @@ public class RobotTeleOp extends LinearOpMode {
         toggleButton(GAMEPAD_1_X_STATE, GAMEPAD_1_X_IS_PRESSED, gamepad1.x);
 //        toggleButton(GAMEPAD_1_RIGHT_STICK_STATE, GAMEPAD_1_RIGHT_STICK_PRESSED, gamepad1.right_stick_button);
 //        toggleButton(GAMEPAD_1_LEFT_STICK_STATE, GAMEPAD_1_LEFT_STICK_PRESSED, gamepad1.left_stick_button);
-        toggleButton(GAMEPAD_1_LEFT_TRIGGER_STATE, GAMEPAD_1_LEFT_STICK_PRESSED,gamepad1.left_trigger >= 0.5);
+        toggleButton(GAMEPAD_1_LEFT_TRIGGER_STATE, GAMEPAD_1_LEFT_STICK_PRESSED, gamepad1.left_trigger >= 0.5);
         toggleButton(GAMEPAD_1_Y_STATE, GAMEPAD_1_Y_PRESSED, gamepad1.y);
     }
 

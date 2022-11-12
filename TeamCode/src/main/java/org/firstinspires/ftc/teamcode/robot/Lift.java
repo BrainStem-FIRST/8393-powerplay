@@ -11,6 +11,9 @@ import java.util.Map;
 
 
 public class Lift {
+    private static final class LiftConstants {
+
+    }
     private Telemetry telemetry;
     public DcMotor liftMotor1;
     public DcMotor liftMotor2;
@@ -250,15 +253,14 @@ public class Lift {
         telemetry.addData("heightInTicks", heightInTicks);
         int currentPosition = getPosition();
         int goDown;
-        if(getPosition() > heightInTicks + 10){
+        if (getPosition() > heightInTicks + 10) {
             goDown = -1;
-        } else if (getPosition() < heightInTicks -10) {
+        } else if (getPosition() < heightInTicks - 10) {
             goDown = 1;
         } else {
             goDown = 0;
         }
-
-        if(stateMap.get(constants.CONE_CYCLE).equals(constants.STATE_IN_PROGRESS)){
+        if (stateMap.get(constants.CONE_CYCLE).equals(constants.STATE_IN_PROGRESS)) {
             setMotorPowerFromDistance(goDown * Math.abs(currentPosition - heightInTicks) * 5);
         } else
             setMotorPowerFromDistance(goDown * Math.abs(currentPosition - heightInTicks));
@@ -277,26 +279,32 @@ public class Lift {
         }
     }
 
+    public ArrayList<Double> getLiftMotorPowers(){
+        ArrayList<Double> liftMotorPowers = new ArrayList<>();
+        for(DcMotor liftMotor : liftMotors){
+            liftMotorPowers.add(liftMotor.getPower());
+        }
+        return liftMotorPowers;
+    }
+
     public void setMotorPowerFromDistance(int distanceFromDesiredHeight) {
-        if(distanceFromDesiredHeight > 0){
+        if (distanceFromDesiredHeight > 0) {
             if (Math.abs(distanceFromDesiredHeight) > 100) {
                 setAllMotorPowers(1);
-            } else if (Math.abs(distanceFromDesiredHeight )>25){
+            } else if (Math.abs(distanceFromDesiredHeight) > 25) {
                 setAllMotorPowers(0.05 * (Math.pow(0.25 * distanceFromDesiredHeight, 0.578)) + 0.4);
             } else {
                 setAllMotorPowers(0.4);
             }
-        } else if (distanceFromDesiredHeight < 0){
+        } else if (distanceFromDesiredHeight < 0) {
             telemetry.addData("distanceFromDesiredHeight", distanceFromDesiredHeight);
             if (Math.abs(distanceFromDesiredHeight) > 100) {
                 setAllMotorPowers(-0.2);
-            /*} else if (Math.abs(distanceFromDesiredHeight) > 25){
-                setAllMotorPowers(-0.05 * (Math.pow(0.714 * distanceFromDesiredHeight, 0.578)));
-            } */}else {
-                setAllMotorPowers(0.4);
+            } else {
+                setAllMotorPowers(-0.05 * (Math.pow(6 * distanceFromDesiredHeight, 0.578) + 0.4));
             }
         } else {
-            return;
+            setAllMotorPowers(0.4);
         }
     }
 
