@@ -1,29 +1,17 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.I2cDeviceSynch;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+
 import static java.lang.Thread.sleep;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.util.Encoder;
 
-import java.util.HashMap;
 import java.util.Map;
-import java.util.Timer;
 
-public class BrainStemRobot {
+public class BrainSTEMRobot {
 
     private ElapsedTime runtime = new ElapsedTime();
     private DcMotor.RunMode currentDrivetrainMode;
@@ -40,7 +28,7 @@ public class BrainStemRobot {
     private Map stateMap;
     Constants constants = new Constants();
 
-    public BrainStemRobot(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
+    public BrainSTEMRobot(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
         this.opMode = opMode;
