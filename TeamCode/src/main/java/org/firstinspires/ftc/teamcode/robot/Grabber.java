@@ -3,8 +3,11 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.CachingServo;
 
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import java.util.Map;
 
@@ -12,7 +15,7 @@ import java.util.Map;
 
 public class Grabber {
     private Telemetry telemetry;
-    private Servo grabber;
+    private ServoImplEx grabber;
 
 
     public final String SYSTEM_NAME = "GRABBER";
@@ -20,8 +23,8 @@ public class Grabber {
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
-    public final double OPEN_VALUE = 0.7;
-    public final double CLOSED_VALUE = 0.2;
+    public final double OPEN_VALUE = 1600; //was 0.7
+    public final double CLOSED_VALUE = 1000; //was 1125
 
     private Map stateMap;
 
@@ -30,11 +33,11 @@ public class Grabber {
         this.stateMap = stateMap;
 
 
-        grabber = hwMap.servo.get("grabber");
-
+        grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
+        grabber.setPwmRange(new PwmControl.PwmRange(CLOSED_VALUE, OPEN_VALUE));
     }
 
-    public void setState(Lift lift) {
+    /*public void setState(Lift lift) {
         if (shouldGrab(lift)) {
             grabber.setPosition(CLOSED_VALUE);
         } else {
@@ -64,14 +67,21 @@ public class Grabber {
         }
 
         telemetry.addData("grabberPosition", grabber.getPosition());
-    }
+    }*/
 
+    public void setState(){
+        if (stateMap.get(SYSTEM_NAME).equals(OPEN_STATE)) {
+            grabber.setPosition(1);
+        } else if (stateMap.get(SYSTEM_NAME).equals(CLOSED_STATE)) {
+            grabber.setPosition(0);
+        }
+    }
     public void openGrabber() {
-        grabber.setPosition(OPEN_VALUE);
+        grabber.setPosition(1);
     }
 
     public void closeGrabber() {
-        grabber.setPosition(CLOSED_VALUE);
+        grabber.setPosition(0);
     }
 
     public boolean shouldGrab(Lift lift) {

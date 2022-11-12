@@ -63,7 +63,7 @@ public class BrainSTEMRobot {
             coneCycle();
         } else {
             lift.setState();
-//            grabber.setState(lift);
+            grabber.setState();
             turret.setState(lift);
             arm.setState((String) stateMap.get(arm.SYSTEM_NAME));
         }
@@ -108,13 +108,13 @@ public class BrainSTEMRobot {
             stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
         }
 
-        setConeCycleSystems();
+        //setConeCycleSystems();
     }
 
-    private void setConeCycleSystems() {
+    /*private void setConeCycleSystems() {
         lift.setState();
         grabber.setState(lift);
-    }
+    }*/
 
     private boolean startLiftUp() {
         return ((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_COMPLETE) &&

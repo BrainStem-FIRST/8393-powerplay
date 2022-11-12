@@ -16,66 +16,66 @@ import java.util.Map;
 
 
 public class Lift {
-    private static final class LiftConstants {
-        static final int BOTTOM_ENCODER_TICKS = -5;
-        static final int LOW_POLE__ENCODER_TICKS = 275;
-        static final int MIDDLE_POLE_ENCODER_TICKS = 420;
-        static final int HIGH_POLE_ENCODER_TICKS = 730;
-        static final int JUNCTION_ENCODER_TICKS = 1;
-        static final int COLLECTING_ENCODER_TICKS = 1;
-        static final int LIFT_POSITION_TOLERANCE = 0;
-        static final int MINIMUM_LIFT_TICKS_BElOW_LIFTSTATE_BEFORE_BRAKING = 25;
-        static final int MINIMUM_SAFE_ENCODER_TICKS_FOR_TURRET_TO_TURN = LiftHeight.LOW.getTicks() + 80;
+  //  private static final class LiftConstants {
+//        static final int BOTTOM_ENCODER_TICKS = -5;
+//        static final int LOW_POLE__ENCODER_TICKS = 275;
+//        static final int MIDDLE_POLE_ENCODER_TICKS = 420;
+//        static final int HIGH_POLE_ENCODER_TICKS = 710;
+//        static final int JUNCTION_ENCODER_TICKS = 1;
+//        static final int COLLECTING_ENCODER_TICKS = 1;
+//        static final int LIFT_POSITION_TOLERANCE = 0;
+//        static final int MINIMUM_LIFT_TICKS_BElOW_LIFTSTATE_BEFORE_BRAKING = 25;
+//        static final int MINIMUM_SAFE_ENCODER_TICKS_FOR_TURRET_TO_TURN = LiftHeight.LOW.getTicks() + 80;
+//
+//        //motor id's
+//        static final String LIFT_MOTOR_1_ID = "Lift-1";
+//        static final String LIFT_MOTOR_2_ID = "Lift-2";
+//        static final String LIFT_MOTOR_3_ID = "Lift-3";
+//        static final String LIFT_MOTOR_4_ID = "Lift-4andOdo";
+//
+//        //lift motor power
+//        static final double STAY_AT_POSITION_POWER = 0.3;
+//        static final double GO_UP_LIFT_MOTOR_POWER = 1;
+//        static final double GO_DOWN_LIFT_POWER = -0.4;
+//
+//        //lift motors reversed
+//        static final boolean LIFT_MOTOR_1_REVERSED = true;
+//        static final boolean LIFT_MOTOR_2_REVERSED = true;
+//        static final boolean LIFT_MOTOR_3_REVERSED = true;
+//        static final boolean LIFT_MOTOR_4_REVERSED = true;
+//
+//        //lift motors linear function equation slope
+//        static final double LIFT_SLOPE = 0.05;
+//        //lift motors linear function y intercept
+//        static final double LIFT_Y_INTERCEPT = STAY_AT_POSITION_POWER;
+//
+//        //PID Constants
+//        static final double PROPORTIONAL = 0; //FIXME
+//        static final double INTEGRAL = 0; //FIXME
+//        static final double DERIVATIVE = 0; //FIXME
+//    }
 
-        //motor id's
-        static final String LIFT_MOTOR_1_ID = "Lift-1";
-        static final String LIFT_MOTOR_2_ID = "Lift-2";
-        static final String LIFT_MOTOR_3_ID = "Lift-3";
-        static final String LIFT_MOTOR_4_ID = "Lift-4andOdo";
-
-        //lift motor power
-        static final double STAY_AT_POSITION_POWER = 0.3;
-        static final double GO_UP_LIFT_MOTOR_POWER = 1;
-        static final double GO_DOWN_LIFT_POWER = -0.4;
-
-        //lift motors reversed
-        static final boolean LIFT_MOTOR_1_REVERSED = true;
-        static final boolean LIFT_MOTOR_2_REVERSED = true;
-        static final boolean LIFT_MOTOR_3_REVERSED = true;
-        static final boolean LIFT_MOTOR_4_REVERSED = true;
-
-        //lift motors linear function equation slope
-        static final double LIFT_SLOPE = 0.05;
-        //lift motors linear function y intercept
-        static final double LIFT_Y_INTERCEPT = STAY_AT_POSITION_POWER;
-
-        //PID Constants
-        static final double PROPORTIONAL = 0; //FIXME
-        static final double INTEGRAL = 0; //FIXME
-        static final double DERIVATIVE = 0; //FIXME
-    }
-
-    public enum LiftHeight {
-        //constants with encoder values
-        DEFAULT(LiftConstants.BOTTOM_ENCODER_TICKS), LOW(LiftConstants.LOW_POLE__ENCODER_TICKS),
-        MIDDLE(LiftConstants.MIDDLE_POLE_ENCODER_TICKS), HIGH(LiftConstants.HIGH_POLE_ENCODER_TICKS),
-        JUNCTION(LiftConstants.JUNCTION_ENCODER_TICKS), COLLECTING(LiftConstants.COLLECTING_ENCODER_TICKS);
-
-        private Integer ticks;
-
-        LiftHeight(Integer ticks) {
-            this.ticks = ticks;
-        }
-
-
-        public Integer getTicks() {
-            return this.ticks;
-        }
-    }
-
-    public enum LiftState {
-
-    }
+//    public enum LiftHeight {
+//        //constants with encoder values
+//        DEFAULT(LiftConstants.BOTTOM_ENCODER_TICKS), LOW(LiftConstants.LOW_POLE__ENCODER_TICKS),
+//        MIDDLE(LiftConstants.MIDDLE_POLE_ENCODER_TICKS), HIGH(LiftConstants.HIGH_POLE_ENCODER_TICKS),
+//        JUNCTION(LiftConstants.JUNCTION_ENCODER_TICKS), COLLECTING(LiftConstants.COLLECTING_ENCODER_TICKS);
+//
+//        private Integer ticks;
+//
+//        LiftHeight(Integer ticks) {
+//            this.ticks = ticks;
+//        }
+//
+//
+//        public Integer getTicks() {
+//            return this.ticks;
+//        }
+//    }
+//
+//    public enum LiftState {
+//
+//    }
 
 
     private Telemetry telemetry;
@@ -99,12 +99,12 @@ public class Lift {
     public final int MINIMUM_CLEARANCE_HEIGHT = 43;    // inches to lift to clear side panels
 
     public final int LIFT_POSITION_RESET = 0;
-    public final int LIFT_HEIGHT_GROUND = 50;
+    public final int LIFT_HEIGHT_GROUND = 17;
     public final int LIFT_POSITION_LOWPOLE = 380;
     public final int LIFT_POSITION_MIDPOLE = 590;
-    public final int LIFT_POSITION_HIGHPOLE = 740;
+    public final int LIFT_POSITION_HIGHPOLE = 690;
     public final int LIFT_POSITION_PICKUP = 8;
-    public final int LIFT_ADJUSTMENT = -50;
+    public final int LIFT_ADJUSTMENT = -40;
     Constants constants = new Constants();
     public final double HARD_STOP_CURRENT_DRAW = 100;
 
@@ -139,10 +139,10 @@ public class Lift {
         this.stateMap = stateMap;
 
         //initialize lift motors
-        liftMotor1 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_1_ID));
-        liftMotor2 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_2_ID));
-        liftMotor3 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_3_ID));
-        liftMotor4 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_4_ID));
+        liftMotor1 = new CachingMotor(hardwareMap.get(DcMotorEx.class, "Lift-1"));
+        liftMotor2 = new CachingMotor(hardwareMap.get(DcMotorEx.class, "Lift-2"));
+        liftMotor3 = new CachingMotor(hardwareMap.get(DcMotorEx.class, "Lift-3"));
+        liftMotor4 = new CachingMotor(hardwareMap.get(DcMotorEx.class, "Lift-4andOdo"));
 
         liftMotors = new ArrayList<>();
 
@@ -161,10 +161,16 @@ public class Lift {
         liftMotor4.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         //setting directions
-        liftMotor1.setDirection(LiftConstants.LIFT_MOTOR_1_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+        /*liftMotor1.setDirection(LiftConstants.LIFT_MOTOR_1_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
         liftMotor2.setDirection(LiftConstants.LIFT_MOTOR_2_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
         liftMotor3.setDirection(LiftConstants.LIFT_MOTOR_3_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
-        liftMotor4.setDirection(LiftConstants.LIFT_MOTOR_4_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+        liftMotor4.setDirection(LiftConstants.LIFT_MOTOR_4_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);*/
+
+
+        initializeLiftMotor(liftMotor1);
+        initializeLiftMotor(liftMotor2);
+        initializeLiftMotor(liftMotor3);
+        initializeLiftMotor(liftMotor4);
     }
 
     private void initializeLiftMotor(DcMotorEx liftMotor) {
@@ -178,9 +184,7 @@ public class Lift {
         setMotorsPower(LIFT_UP_SPEED);
     }
 
-    public void moveDown() {
-        setMotorsPower(LIFT_DOWN_SPEED);
-    }
+
 
     public void stop() {
         setMotorsPower(0.0);
@@ -327,17 +331,17 @@ public class Lift {
         telemetry.addData("heightInTicks", heightInTicks);
         int currentPosition = getPosition();
         int goDown;
-        if (getPosition() > heightInTicks + 10) {
+        if (getPosition() > heightInTicks + 25) {
             goDown = -1;
-        } else if (getPosition() < heightInTicks - 10) {
+        } else if (getPosition() < heightInTicks - 25) {
             goDown = 1;
         } else {
             goDown = 0;
         }
-        if (stateMap.get(constants.CONE_CYCLE).equals(constants.STATE_IN_PROGRESS)) {
+        /*if (stateMap.get(constants.CONE_CYCLE).equals(constants.STATE_IN_PROGRESS)) {
             setMotorPowerFromDistance(goDown * Math.abs(currentPosition - heightInTicks) * 5);
-        } else
-            setMotorPowerFromDistance(goDown * Math.abs(currentPosition - heightInTicks));
+        } else*/
+        setMotorPowerFromDistance(goDown * Math.abs(currentPosition - heightInTicks), heightInTicks);
 
         telemetry.addData("MotorPosition", liftMotor3.getCurrentPosition());
     }
@@ -347,10 +351,17 @@ public class Lift {
         liftMotor3.setPower(power);
     }
 
-    private void setAllMotorPowers(double power) {
+    public void setAllMotorPowers(double power) {
         for (DcMotor liftMotor : liftMotors) {
             liftMotor.setPower(power);
         }
+    }
+
+    public void setAllMotorPowersExcept3(double power){
+        liftMotor1.setPower(power);
+        liftMotor2.setPower(power);
+        liftMotor4.setPower(power);
+
     }
 
     public ArrayList<Double> getLiftMotorPowers() {
@@ -361,25 +372,80 @@ public class Lift {
         return liftMotorPowers;
     }
 
-    public void setMotorPowerFromDistance(int distanceFromDesiredHeight) {
-        if (distanceFromDesiredHeight > 0) {
-            if (Math.abs(distanceFromDesiredHeight) > 100) {
+    public void setMotorPowerFromDistance(int distanceFromDesiredHeight, int heightInTicks) {
+        if (heightInTicks < 100){
+            setAllMotorPowersExcept3(0.0);
+            liftMotor3.setTargetPosition(heightInTicks);
+            liftMotor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            if (Math.abs(distanceFromDesiredHeight) < 3) {
+                telemetry.addData("Current Lift Position: ", getPosition());
+                liftMotor3.setPower(0.0);
+            } else {
+                liftMotor3.setPower(1.0);
+            }
+        } else if (distanceFromDesiredHeight > 0) {
+            liftMotor3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if (distanceFromDesiredHeight > 200) {
                 setAllMotorPowers(1);
-            } else if (Math.abs(distanceFromDesiredHeight) > 25) {
-                setAllMotorPowers(0.05 * (Math.pow(0.25 * distanceFromDesiredHeight, 0.578)) + 0.4);
+            } else if (distanceFromDesiredHeight > 100) {
+                setAllMotorPowers(0.8);
+            }
+        } else if (distanceFromDesiredHeight < 0) {
+            liftMotor3.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            if (Math.abs(distanceFromDesiredHeight) > 200) {
+                setAllMotorPowers(-0.1);
+            } else if (Math.abs(distanceFromDesiredHeight) > 100) {
+                setAllMotorPowers(0.01);
+            }
+        } else {
+            setAllMotorPowers(0.36);
+        }
+
+
+        /*if (distanceFromDesiredHeight > 0) {
+            if (Math.abs(distanceFromDesiredHeight) > 200) {
+                setAllMotorPowers(1);
+            } else if (Math.abs(distanceFromDesiredHeight) > 100) {
+                setAllMotorPowers(0.8);
+                //setAllMotorPowers(0.05 * (Math.pow(0.25 * distanceFromDesiredHeight, 0.578)) + 0.3);
             } else {
                 setAllMotorPowers(0.4);
             }
         } else if (distanceFromDesiredHeight < 0) {
             telemetry.addData("distanceFromDesiredHeight", distanceFromDesiredHeight);
-            if (Math.abs(distanceFromDesiredHeight) > 100) {
-                setAllMotorPowers(-0.2);
+            if (Math.abs(distanceFromDesiredHeight) > 200) {
+                setAllMotorPowers(-0.1);
+            } else if (Math.abs(distanceFromDesiredHeight) > 100 && stateMap.get(constants.CONE_CYCLE).equals(constants.STATE_IN_PROGRESS)) {
+                if (Math.abs(distanceFromDesiredHeight) > 50) {
+                    setAllMotorPowers(-0.07);
+                } else {
+                    setAllMotorPowers(0);
+                }
+                //setAllMotorPowers(-0.05 * (Math.pow(6 * (distanceFromDesiredHeight+200), 0.578) + 0.55));
+            } else if (Math.abs(distanceFromDesiredHeight) > 100) {
+                setAllMotorPowers(-0.05);
+                if (stateMap.get(constants.CONE_CYCLE).equals(constants.STATE_IN_PROGRESS)) {
+                    setAllMotorPowers(-0.07);
+                } else {
+                    setAllMotorPowers(0.1);
+                }
             } else {
-                setAllMotorPowers(-0.05 * (Math.pow(6 * distanceFromDesiredHeight, 0.578) + 0.4));
+                if (getPosition() < 300) {
+                    setAllMotorPowers(0.2);
+                } else {
+                    setAllMotorPowers(0.4);
+                }
             }
         } else {
-            setAllMotorPowers(0.4);
-        }
+            if (getPosition() < 300) {
+                setAllMotorPowers(0.2);
+            } else {
+                setAllMotorPowers(0.4);
+            }
+        }*/
+
+
     }
 
     private boolean inHeightTolerance(double heightPosition, double targetHeight) {
@@ -388,6 +454,25 @@ public class Lift {
 
     public boolean isLiftUp() {
         return (getPosition() > LIFT_HEIGHT_GROUND);
+    }
+
+    public void moveUp(int position) {
+        int targetPosition = liftMotor3.getCurrentPosition() + position;
+        liftMotor3.setTargetPosition(targetPosition);
+        liftMotor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        liftMotor3.setPower(1.0);
+    }
+
+    public void moveDown(int liftDownIncrement) {
+        if (liftDownIncrement < 7) {
+            setAllMotorPowers(-0.25);
+        } else if (liftDownIncrement < 14) {
+            setAllMotorPowers(0.6);
+        } else if (liftDownIncrement < 18) {
+            setAllMotorPowers(0.3);
+        }
+
+        telemetry.addData("liftDownIncrement", liftDownIncrement);
     }
 
 }
