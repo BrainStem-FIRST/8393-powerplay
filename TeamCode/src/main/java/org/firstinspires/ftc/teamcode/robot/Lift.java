@@ -1,8 +1,12 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.firstinspires.ftc.robotcore.external.StateMachine;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.BrainSTEMStateMachine;
+import org.firstinspires.ftc.teamcode.util.CachingMotor;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
@@ -12,13 +16,74 @@ import java.util.Map;
 
 public class Lift {
     private static final class LiftConstants {
+        static final int BOTTOM_ENCODER_TICKS = -5;
+        static final int LOW_POLE__ENCODER_TICKS = 275;
+        static final int MIDDLE_POLE_ENCODER_TICKS = 420;
+        static final int HIGH_POLE_ENCODER_TICKS = 730;
+        static final int JUNCTION_ENCODER_TICKS = 1;
+        static final int COLLECTING_ENCODER_TICKS = 1;
+        static final int LIFT_POSITION_TOLERANCE = 0;
+        static final int MINIMUM_LIFT_TICKS_BElOW_LIFTSTATE_BEFORE_BRAKING = 25;
+        static final int MINIMUM_SAFE_ENCODER_TICKS_FOR_TURRET_TO_TURN = LiftHeight.LOW.getTicks() + 80;
+
+        //motor id's
+        static final String LIFT_MOTOR_1_ID = "Lift-1";
+        static final String LIFT_MOTOR_2_ID = "Lift-2";
+        static final String LIFT_MOTOR_3_ID = "Lift-3";
+        static final String LIFT_MOTOR_4_ID = "Lift-4andOdo";
+
+        //lift motor power
+        static final double STAY_AT_POSITION_POWER = 0.3;
+        static final double GO_UP_LIFT_MOTOR_POWER = 1;
+        static final double GO_DOWN_LIFT_POWER = -0.4;
+
+        //lift motors reversed
+        static final boolean LIFT_MOTOR_1_REVERSED = true;
+        static final boolean LIFT_MOTOR_2_REVERSED = true;
+        static final boolean LIFT_MOTOR_3_REVERSED = true;
+        static final boolean LIFT_MOTOR_4_REVERSED = true;
+
+        //lift motors linear function equation slope
+        static final double LIFT_SLOPE = 0.05;
+        //lift motors linear function y intercept
+        static final double LIFT_Y_INTERCEPT = STAY_AT_POSITION_POWER;
+
+        //PID Constants
+        static final double PROPORTIONAL = 0; //FIXME
+        static final double INTEGRAL = 0; //FIXME
+        static final double DERIVATIVE = 0; //FIXME
+    }
+
+    public enum LiftHeight {
+        //constants with encoder values
+        DEFAULT(LiftConstants.BOTTOM_ENCODER_TICKS), LOW(LiftConstants.LOW_POLE__ENCODER_TICKS),
+        MIDDLE(LiftConstants.MIDDLE_POLE_ENCODER_TICKS), HIGH(LiftConstants.HIGH_POLE_ENCODER_TICKS),
+        JUNCTION(LiftConstants.JUNCTION_ENCODER_TICKS), COLLECTING(LiftConstants.COLLECTING_ENCODER_TICKS);
+
+        private Integer ticks;
+
+        LiftHeight(Integer ticks) {
+            this.ticks = ticks;
+        }
+
+
+        public Integer getTicks() {
+            return this.ticks;
+        }
+    }
+
+    public enum LiftState {
 
     }
+
+
     private Telemetry telemetry;
-    public DcMotor liftMotor1;
-    public DcMotor liftMotor2;
-    public DcMotor liftMotor3;
-    public DcMotor liftMotor4;
+
+    //declare lift motors
+    private DcMotorEx liftMotor1;
+    private DcMotorEx liftMotor2;
+    private DcMotorEx liftMotor3;
+    private DcMotorEx liftMotor4;
 
     static final double MM_TO_INCHES = 0.0393700787;
 
@@ -33,15 +98,13 @@ public class Lift {
     public final int MINIMUM_CLEARANCE_HEIGHT = 43;    // inches to lift to clear side panels
 
     public final int LIFT_POSITION_RESET = 0;
-    public final int LIFT_POSITION_GROUND = 50;
+    public final int LIFT_HEIGHT_GROUND = 50;
     public final int LIFT_POSITION_LOWPOLE = 380;
     public final int LIFT_POSITION_MIDPOLE = 590;
     public final int LIFT_POSITION_HIGHPOLE = 740;
     public final int LIFT_POSITION_PICKUP = 8;
     public final int LIFT_ADJUSTMENT = -50;
     Constants constants = new Constants();
-
-
     public final double HARD_STOP_CURRENT_DRAW = 100;
 
     public final String LIFT_SYSTEM_NAME = "Lift";
@@ -60,25 +123,20 @@ public class Lift {
     public final int CYCLE_TOLERANCE = 5;
     public final String LIFT_CURRENT_STATE = "LIFT CURRENT STATE";
 
-    static final String LIFT_MOTOR_1_ID = "Lift-1";
-    static final String LIFT_MOTOR_2_ID = "Lift-2";
-    static final String LIFT_MOTOR_3_ID = "Lift-3";
-    static final String LIFT_MOTOR_4_ID = "Lift-4andOdo";
-
     public static double currentLiftHeight;
     private Map stateMap;
 
     private ArrayList<DcMotor> liftMotors;
-    private BrainStemRobot robot;
+    private BrainSTEMRobot robot;
 
-    public Lift(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
+    public Lift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap) {
         this.robot = robot;
         this.telemetry = telemetry;
         this.stateMap = stateMap;
-        liftMotor1 = hwMap.dcMotor.get(LIFT_MOTOR_1_ID);
-        liftMotor2 = hwMap.dcMotor.get(LIFT_MOTOR_2_ID);
-        liftMotor3 = hwMap.dcMotor.get(LIFT_MOTOR_3_ID);
-        liftMotor4 = hwMap.dcMotor.get(LIFT_MOTOR_4_ID);
+        liftMotor1 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_1_ID));
+        liftMotor2 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_2_ID));
+        liftMotor3 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_3_ID));
+        liftMotor4 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_4_ID));
 
         initializeLiftMotor(liftMotor1);
         initializeLiftMotor(liftMotor2);
@@ -93,7 +151,7 @@ public class Lift {
         liftMotors.add(liftMotor4);
     }
 
-    private void initializeLiftMotor(DcMotor liftMotor) {
+    private void initializeLiftMotor(DcMotorEx liftMotor) {
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotor.Direction.REVERSE);
@@ -126,7 +184,7 @@ public class Lift {
     }
 
     public boolean isCollectionHeight() {
-        return getPosition() < (LIFT_POSITION_GROUND + CYCLE_TOLERANCE);
+        return getPosition() < (LIFT_HEIGHT_GROUND + CYCLE_TOLERANCE);
     }
 
     public int getPosition() {
@@ -190,7 +248,7 @@ public class Lift {
                 break;
             }
             case LIFT_POLE_GROUND: {
-                position = LIFT_POSITION_GROUND;
+                position = LIFT_HEIGHT_GROUND;
                 break;
             }
         }
@@ -213,7 +271,7 @@ public class Lift {
                 break;
             }
             case LIFT_POLE_GROUND: {
-                transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
+                transitionToLiftPosition(LIFT_HEIGHT_GROUND + deliveryHeight(subheight));
                 break;
             }
         }
@@ -227,7 +285,7 @@ public class Lift {
     public String getCurrentState(String subheight) {
         String state = TRANSITION_STATE;
         double currentPosition = getPosition();
-        if (inHeightTolerance(currentPosition, LIFT_POSITION_GROUND + deliveryHeight(subheight))) {
+        if (inHeightTolerance(currentPosition, LIFT_HEIGHT_GROUND + deliveryHeight(subheight))) {
             state = LIFT_POLE_GROUND;
         } else if (inHeightTolerance(currentPosition, LIFT_POSITION_LOWPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_LOW;
@@ -279,9 +337,9 @@ public class Lift {
         }
     }
 
-    public ArrayList<Double> getLiftMotorPowers(){
+    public ArrayList<Double> getLiftMotorPowers() {
         ArrayList<Double> liftMotorPowers = new ArrayList<>();
-        for(DcMotor liftMotor : liftMotors){
+        for (DcMotor liftMotor : liftMotors) {
             liftMotorPowers.add(liftMotor.getPower());
         }
         return liftMotorPowers;
@@ -313,7 +371,7 @@ public class Lift {
     }
 
     public boolean isLiftUp() {
-        return (getPosition() > LIFT_POSITION_GROUND);
+        return (getPosition() > LIFT_HEIGHT_GROUND);
     }
 
 }
