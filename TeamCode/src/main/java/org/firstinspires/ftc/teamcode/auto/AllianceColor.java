@@ -1,4 +1,5 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-public class AllianceColor {
+public enum AllianceColor {
+    RED, BLUE
 }
