@@ -247,68 +247,21 @@ public class Lift {
     public void setHeightTo(int heightInTicks) {
         //raising heights to reach different junctions, so four values
         telemetry.addData("raiseHeightCalled", true);
-        /*liftMotor3.setTargetPosition(heightInTicks);
-        liftMotor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor3.setPower(1.0);
-
-        int upBin1 = (heightInTicks - (4 * HEIGHT_TOLERANCE));
-        int upBin2 = (heightInTicks - (2 * HEIGHT_TOLERANCE));
-        int upBin3 = (heightInTicks - (HEIGHT_TOLERANCE));
-        int downBin1 = (heightInTicks + HEIGHT_TOLERANCE);
-        int downBin2 = (heightInTicks + (4 * HEIGHT_TOLERANCE));
-        int downBin3 = (heightInTicks + (8 * HEIGHT_TOLERANCE));
-
-        int currentHeight = getPosition();
-        boolean inTolerance = inHeightTolerance(currentHeight, heightInTicks);
-
-        telemetry.addData("upBin1", upBin1);
-        telemetry.addData("upBin2", upBin2);
-        telemetry.addData("upBin3", upBin3);
-        telemetry.addData("downBin1", downBin1);
-        telemetry.addData("downBin2", downBin2);
-        telemetry.addData("downBin3", downBin3);
-
-        telemetry.addData("currentHeight", currentHeight);*/
-
-
-
-       /* if (upBin1 > currentHeight) {
-            telemetry.addData("boostOn" , 1.0);
-            setBoostPower(1.0);
-        } else if (upBin2 > currentHeight) {
-            telemetry.addData("boostOn" , 0.5);
-            setBoostPower(0.5);
-        } else if (upBin3 > currentHeight) {
-            telemetry.addData("boostOn" , 0.25);
-            setBoostPower(0.25);
-        } else if (downBin1 < currentHeight && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , 0.0);
-            setBoostPower(0.00);
-        } else if (downBin2 < currentHeight && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , 0.0);
-            setBoostPower(0.0);
-        } else if (downBin3 < currentHeight && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , -0.1);
-            setBoostPower(-0.1);
-        } else if (inTolerance && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn", 0.05);
-            setBoostPower(0.05);
-        } else {
-            telemetry.addData("boostOn" , 0);
-            setBoostPower(0.0);
-        }*/
+        telemetry.addData("heightInTicks", heightInTicks);
+        int currentPosition = getPosition();
         int goDown;
-        goDown = getPosition() < heightInTicks ? 1 : -1;
+        if(getPosition() > heightInTicks + 10){
+            goDown = -1;
+        } else if (getPosition() < heightInTicks -10) {
+            goDown = 1;
+        } else {
+            goDown = 0;
+        }
 
         if(stateMap.get(constants.CONE_CYCLE).equals(constants.STATE_IN_PROGRESS)){
-            setMotorPowerFromDistance(Math.abs(getPosition() - heightInTicks)*5, true);
-        } else if(getPosition() < heightInTicks-25){
-            setMotorPowerFromDistance(Math.abs(getPosition() - heightInTicks), false);
-        } else if (getPosition() > heightInTicks +25){
-            setMotorPowerFromDistance(Math.abs(getPosition() - heightInTicks), true);
-        } else {
-            setAllMotorPowers(0.4);
-        }
+            setMotorPowerFromDistance(goDown * Math.abs(currentPosition - heightInTicks) * 5);
+        } else
+            setMotorPowerFromDistance(goDown * Math.abs(currentPosition - heightInTicks));
 
         telemetry.addData("MotorPosition", liftMotor3.getCurrentPosition());
     }
@@ -324,19 +277,26 @@ public class Lift {
         }
     }
 
-    public void setMotorPowerFromDistance(int distanceFromDesiredHeight, boolean goingDown) {
-        if(!goingDown){
-            if (distanceFromDesiredHeight > 100) {
+    public void setMotorPowerFromDistance(int distanceFromDesiredHeight) {
+        if(distanceFromDesiredHeight > 0){
+            if (Math.abs(distanceFromDesiredHeight) > 100) {
                 setAllMotorPowers(1);
-            } else {
+            } else if (Math.abs(distanceFromDesiredHeight )>25){
                 setAllMotorPowers(0.05 * (Math.pow(0.25 * distanceFromDesiredHeight, 0.578)) + 0.4);
+            } else {
+                setAllMotorPowers(0.4);
+            }
+        } else if (distanceFromDesiredHeight < 0){
+            telemetry.addData("distanceFromDesiredHeight", distanceFromDesiredHeight);
+            if (Math.abs(distanceFromDesiredHeight) > 100) {
+                setAllMotorPowers(-0.2);
+            /*} else if (Math.abs(distanceFromDesiredHeight) > 25){
+                setAllMotorPowers(-0.05 * (Math.pow(0.714 * distanceFromDesiredHeight, 0.578)));
+            } */}else {
+                setAllMotorPowers(0.4);
             }
         } else {
-            if (distanceFromDesiredHeight > 100) {
-                setAllMotorPowers(-0.2);
-            } else {
-                setAllMotorPowers(-0.05*0.25 * (Math.pow(0.714 * distanceFromDesiredHeight, 0.578)) + 0.12);
-            }
+            return;
         }
     }
 
