@@ -90,19 +90,22 @@ public class RobotTeleOp extends LinearOpMode {
             }*/
 
             if (gamepad1.dpad_left) {
+                //robot.slowTurret(0.9, robot.turret.LEFT_POSITION);
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
                 stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             } else if (gamepad1.dpad_up) {
+                //robot.slowTurret((0.9 + 0.45)/2, robot.turret.CENTER_POSITION);
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                 stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             } else if (gamepad1.dpad_right) {
+                //robot.slowTurret(0.45, robot.turret.RIGHT_POSITION);
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
                 stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             }
 
             if (toggleMap.get(GAMEPAD_1_RIGHT_TRIGGER_STATE)) {
                 robot.lift.moveDown(liftDownIncrement);
-                telemetry.addData("TeleOp LIftCOunter", liftDownIncrement);
+                telemetry.addData("TeleOp LIftCounter", liftDownIncrement);
                 stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
             } else {
                 stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);

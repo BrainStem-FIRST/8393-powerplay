@@ -23,8 +23,8 @@ public class Grabber {
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
-    public final double OPEN_VALUE = 1600; //was 0.7
-    public final double CLOSED_VALUE = 1000; //was 1125
+    public final double OPEN_VALUE = 1400; //was 1600
+    public final double CLOSED_VALUE = 2000; //was 1125
 
     private Map stateMap;
 

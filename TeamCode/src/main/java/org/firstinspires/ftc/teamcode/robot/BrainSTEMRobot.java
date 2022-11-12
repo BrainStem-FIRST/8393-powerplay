@@ -6,7 +6,9 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import static java.lang.Thread.sleep;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotserver.internal.webserver.controlhubupdater.ChUpdaterCommManager;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 import java.util.Map;
@@ -41,11 +43,11 @@ public class BrainSTEMRobot {
         this.opMode = opMode;
 
         // instantiate components turret, lift, arm, grabber
-        turret  = new Turret(hwMap, telemetry, stateMap);
-        lift    = new Lift(hwMap, telemetry, stateMap);
-        arm     = new Extension(hwMap, telemetry);
-        drive   = new SampleMecanumDrive(hwMap);
-        grabber   = new Grabber(hwMap, telemetry, stateMap);
+        turret = new Turret(hwMap, telemetry, stateMap);
+        lift = new Lift(hwMap, telemetry, stateMap);
+        arm = new Extension(hwMap, telemetry);
+        drive = new SampleMecanumDrive(hwMap);
+        grabber = new Grabber(hwMap, telemetry, stateMap);
 
         stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
         stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
@@ -59,7 +61,7 @@ public class BrainSTEMRobot {
     public void updateSystems() {
         stateMap.put(constants.SYSTEM_TIME, System.currentTimeMillis());
 
-        if(((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
+        if (((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)) {
             coneCycle();
         } else {
             lift.setState();
@@ -93,15 +95,15 @@ public class BrainSTEMRobot {
 //    }
 
     public void coneCycle() {
-        if(startliftDown()) {
+        if (startliftDown()) {
             stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_IN_PROGRESS);
             stateMap.put(lift.LIFT_SUBHEIGHT, lift.PLACEMENT_HEIGHT);
-        } else if(startGrabberAction()){
+        } else if (startGrabberAction()) {
             stateMap.put(constants.CYCLE_GRABBER, constants.STATE_IN_PROGRESS);
-        } else if(startLiftUp()){
+        } else if (startLiftUp()) {
             stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_IN_PROGRESS);
             stateMap.put(lift.LIFT_SUBHEIGHT, lift.APPROACH_HEIGHT);
-        } else if(isConeCycleComplete()){
+        } else if (isConeCycleComplete()) {
             stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
             stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
             stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
@@ -109,6 +111,31 @@ public class BrainSTEMRobot {
         }
 
         //setConeCycleSystems();
+    }
+
+    public void slowTurret(int targetPosition, String position) {
+        double currentPosition;
+        if (stateMap.get(turret.SYSTEM_NAME).equals(turret.LEFT_POSITION)) {
+            currentPosition = 0.45;
+        } else if (stateMap.get(turret.SYSTEM_NAME).equals(turret.RIGHT_POSITION)) {
+            currentPosition = 0.9;
+        } else {
+            currentPosition = (0.9 + 0.45) / 2;
+        }
+
+        if (currentPosition < targetPosition) {
+            while (currentPosition < targetPosition) {
+                turret.transitionToPosition(currentPosition + 0.05, currentPosition + 0.05);
+                currentPosition++;
+            }
+            stateMap.put(turret.SYSTEM_NAME, position);
+        } else if (currentPosition > targetPosition) {
+            while (currentPosition > targetPosition) {
+                turret.transitionToPosition(currentPosition - 0.05, currentPosition - 0.05);
+                currentPosition--;
+            }
+            stateMap.put(turret.SYSTEM_NAME, position);
+        }
     }
 
     /*private void setConeCycleSystems() {
@@ -123,7 +150,7 @@ public class BrainSTEMRobot {
 
     private boolean startliftDown() {
         return (((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) &&
-                ((String)(stateMap.get(constants.CYCLE_LIFT_DOWN))).equalsIgnoreCase(constants.STATE_NOT_STARTED));
+                ((String) (stateMap.get(constants.CYCLE_LIFT_DOWN))).equalsIgnoreCase(constants.STATE_NOT_STARTED));
     }
 
     private boolean startGrabberAction() {
