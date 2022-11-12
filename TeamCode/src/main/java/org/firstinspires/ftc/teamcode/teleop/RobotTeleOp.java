@@ -35,6 +35,7 @@ public class RobotTeleOp extends LinearOpMode {
     private final double SLOWMODE  = 0.45;
 
     private boolean isDriverDriving = true;
+    private boolean slowMode = false;
 
     Constants constants = new Constants();
 
@@ -75,8 +76,10 @@ public class RobotTeleOp extends LinearOpMode {
             setButtons();
 
             if (toggleMap.get(GAMEPAD_1_A_STATE)) {
+                slowMode = true;
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
             } else {
+                slowMode = false;
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
             }
 
@@ -128,14 +131,24 @@ public class RobotTeleOp extends LinearOpMode {
                         )
                 );
             } else {
-                driveCancelable.setWeightedDrivePower(
 
-                        new Pose2d(
-                                -gamepad1.left_stick_y,
-                                -gamepad1.left_stick_x,
-                                -gamepad1.right_stick_x
-                        )
-                );
+                if (slowMode) {
+                    driveCancelable.setWeightedDrivePower(
+                            new Pose2d(
+                                    (-gamepad1.left_stick_y) * 0.5,
+                                    (-gamepad1.left_stick_x) * 0.5,
+                                    (-gamepad1.right_stick_x) * 0.4
+                            )
+                    );
+                } else {
+                    driveCancelable.setWeightedDrivePower(
+                            new Pose2d(
+                                    -gamepad1.left_stick_y,
+                                    -gamepad1.left_stick_x,
+                                    -gamepad1.right_stick_x
+                            )
+                    );
+                }
             }
 
             driveCancelable.update();
