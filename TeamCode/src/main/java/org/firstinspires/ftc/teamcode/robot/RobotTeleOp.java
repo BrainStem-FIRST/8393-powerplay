@@ -98,11 +98,11 @@ public class RobotTeleOp extends LinearOpMode {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
             }
 
-            if(gamepad1.right_trigger > 0.5){
-                if(!((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
-                    stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
-                }
-            }
+//            if(gamepad1.right_trigger > 0.5){
+//                if(!((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
+//                    stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
+//                }
+//            }
 
             if (toggleMap.get(GAMEPAD_1_RIGHT_TRIGGER_STATE)) {
                 robot.lift.poorMansConeCycle(liftDownIncrement, robot);
