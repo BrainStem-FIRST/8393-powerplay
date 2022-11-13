@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -13,8 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.Map;
+import com.acmerobotics.dashboard.config.Config;
 
-
+@Config
 public class Lift {
     private Telemetry telemetry;
     public DcMotor liftMotor1;
@@ -67,9 +70,14 @@ public class Lift {
     static final String LIFT_MOTOR_3_ID = "Lift-3";
     static final String LIFT_MOTOR_4_ID = "Lift-4andOdo";
 
-    public static double currentLiftHeight;
+    public static double Kp = 2.0;
+    public static double Ki = 0;
+    public static double Kd = 0;
+    public static double Kv = 0.2;
+    public static double Ka = 0.01;
     private Map stateMap;
 
+    PIDFController pidfController = new PIDFController(new PIDCoefficients(Kp, Ki, Kd), Kv, Ka);
 
     public Lift(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
         this.telemetry = telemetry;
@@ -83,6 +91,9 @@ public class Lift {
         initializeLiftMotor(liftMotor2);
         initializeLiftMotor(liftMotor3);
         initializeLiftMotor(liftMotor4);
+
+        pidfController.setInputBounds(0, LIFT_POSITION_HIGHPOLE);
+        pidfController.setOutputBounds(0, 1);
     }
 
     private void initializeLiftMotor(DcMotor liftMotor) {
@@ -240,56 +251,24 @@ public class Lift {
     public void raiseHeightTo (int heightInTicks) {
         //raising heights to reach different junctions, so four values
         telemetry.addData("raiseHeightCalled" , true);
-        liftMotor3.setTargetPosition(heightInTicks);
-        liftMotor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor3.setPower(1.0);
+        telemetry.addData("heightInTicks" , heightInTicks);
 
-        int upBin1 = (heightInTicks - (4 * HEIGHT_TOLERANCE));
-        int upBin2 = (heightInTicks - (2 * HEIGHT_TOLERANCE));
-        int upBin3 = (heightInTicks - (HEIGHT_TOLERANCE));
-        int downBin1 = (heightInTicks + HEIGHT_TOLERANCE);
-        int downBin2 = (heightInTicks + (4 * HEIGHT_TOLERANCE));
-        int downBin3 = (heightInTicks + (8 * HEIGHT_TOLERANCE));
+        int position = getPosition();
+        telemetry.addData("position" , position);
 
-        int currentHeight = getPosition();
-        boolean inTolerance = inHeightTolerance(currentHeight, heightInTicks);
-
-        telemetry.addData("upBin1", upBin1);
-        telemetry.addData("upBin2", upBin2);
-        telemetry.addData("upBin3", upBin3);
-        telemetry.addData("downBin1", downBin1);
-        telemetry.addData("downBin2", downBin2);
-        telemetry.addData("downBin3", downBin3);
-
-        telemetry.addData("currentHeight", currentHeight);
-
-        if (upBin1 > currentHeight) {
-            telemetry.addData("boostOn" , 1.0);
-            setBoostPower(1.0);
-        } else if (upBin2 > currentHeight) {
-            telemetry.addData("boostOn" , 0.5);
-            setBoostPower(0.5);
-        } else if (upBin3 > currentHeight) {
-            telemetry.addData("boostOn" , 0.25);
-            setBoostPower(0.25);
-        } else if (downBin1 < currentHeight && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , 0.0);
-            setBoostPower(0.00);
-        } else if (downBin2 < currentHeight && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , 0.0);
-            setBoostPower(0.0);
-        } else if (downBin3 < currentHeight && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , -0.1);
-            setBoostPower(-0.1);
-        } else if (inTolerance && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn", 0.05);
-            setBoostPower(0.05);
+        // calculate the error
+        int error = heightInTicks - position;
+        double direction = 0;
+        if (error > 0) {
+            direction = 1;
         } else {
-            telemetry.addData("boostOn" , 0);
-            setBoostPower(0.0);
+            direction = 0.3;
         }
 
-        telemetry.addData("MotorPosition", liftMotor3.getCurrentPosition());
+        double power = ((Kp * direction * error) / LIFT_POSITION_HIGHPOLE) + Kv;
+        setMotorsPower(power);
+
+        telemetry.addData("PID Correction", power);
     }
 
     public void setMotor(double power){
