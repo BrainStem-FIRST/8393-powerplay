@@ -36,6 +36,11 @@ public class RobotTeleOp extends LinearOpMode {
     private boolean d2LeftTriggerPressed = false;
     private boolean d2RightTriggerPressed = false;
 
+    private StickyButton extensionFineAdjustUp = new StickyButton();
+    private StickyButton extensionFineAdjustDown = new StickyButton();
+    private StickyButton liftFineAdjustUp = new StickyButton();
+    private  StickyButton liftFineAdjustDown = new StickyButton();
+
     private final double SLOWMODE  = 0.45;
 
     private boolean isDriverDriving = true;
@@ -173,12 +178,15 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
             //Change extension preset values
-            if (gamepad2.left_bumper){
+
+            extensionFineAdjustUp.update(gamepad2.left_bumper);
+            if (extensionFineAdjustUp.getState()){
                 robot.arm.EXTENSION_POSITION_MAX += 20;
                 robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
             }
 
-            if (gamepad2.right_bumper){
+            extensionFineAdjustDown.update(gamepad2.right_bumper);
+            if (extensionFineAdjustDown.getState()){
                 robot.arm.EXTENSION_POSITION_MAX -= 20;
                 robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
             }
@@ -186,19 +194,23 @@ public class RobotTeleOp extends LinearOpMode {
             // Change highpole preset value
             if (gamepad2.left_trigger > 0.2){
                 d2LeftTriggerPressed = true;
+            } else if (gamepad2.left_trigger < 0.2){
+                d2LeftTriggerPressed = false;
             }
 
-            if (d2LeftTriggerPressed){
-                d2LeftTriggerPressed = false;
+            liftFineAdjustUp.update(d2LeftTriggerPressed);
+            if (liftFineAdjustUp.getState()){
                 robot.lift.LIFT_POSITION_HIGHPOLE += 20;
             }
 
             if (gamepad2.right_trigger > 0.2){
                 d2RightTriggerPressed = true;
+            } else if (gamepad2.right_trigger < 0.2){
+                d2RightTriggerPressed = false;
             }
 
-            if (d2RightTriggerPressed){
-                d2RightTriggerPressed = false;
+            liftFineAdjustDown.update(d2RightTriggerPressed);
+            if (liftFineAdjustDown.getState()){
                 robot.lift.LIFT_POSITION_HIGHPOLE -= 20;
             }
 
@@ -210,6 +222,7 @@ public class RobotTeleOp extends LinearOpMode {
 
             telemetry.addData("liftEncoders", robot.lift.getPosition());
             telemetry.addData("Lift High Pole Encoder Pos", robot.lift.LIFT_POSITION_HIGHPOLE);
+            telemetry.addData("Extension out PWM", robot.arm.EXTENSION_POSITION_MAX);
             telemetry.update();
         }
     }
