@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -14,14 +15,14 @@ public class Extension {
     private Telemetry telemetry;
 
     // Three servos (plus the turret) work together to place cone to desired location
-    public Servo extension;
+    public ServoImplEx extension;
 
     static final double MM_TO_INCHES = 0.0393700787;
     static final double MINIMUM_CLEARANCE_DISTANCE = 95.875 * MM_TO_INCHES;
 
     // Servo Positions
-    public final double EXTENSION_POSITION_HOME = 0.1;    // Fully retracted
-    public final double EXTENSION_POSITION_MAX  = 0.9;    // Fully extended
+    public final double EXTENSION_POSITION_HOME = 1920;    // Fully retracted
+    public final double EXTENSION_POSITION_MAX  = 2300;    // Fully extended
 
     // extension statemap values
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
@@ -32,7 +33,9 @@ public class Extension {
     public Extension(HardwareMap hwMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
-        extension = hwMap.servo.get("extension");
+        extension = new CachingServo(hwMap.get(ServoImplEx.class, "extension"));
+
+        extension.setPwmRange(new PwmControl.PwmRange(EXTENSION_POSITION_HOME, EXTENSION_POSITION_MAX));
 
         // Scale the operating range of Servos and set initial position
         extendHome();
@@ -61,12 +64,12 @@ public class Extension {
 
     // Pulls the extension arm to its starting position (it is NOT in clear)
     public void extendHome() {
-        extension.setPosition(EXTENSION_POSITION_HOME);
+        extension.setPosition(0);
     }
 
     // Extends the arm to its maximum reach
     public void extendMax() {
-        extension.setPosition(EXTENSION_POSITION_MAX);
+        extension.setPosition(1);
     }
 
     public void setState(String desiredState){
