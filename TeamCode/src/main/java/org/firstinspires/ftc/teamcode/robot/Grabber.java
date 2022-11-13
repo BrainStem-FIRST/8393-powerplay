@@ -6,10 +6,13 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
+import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.util.CachingServo;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -22,7 +25,7 @@ import java.util.Map;
 
 public class Grabber {
     private Telemetry telemetry;
-    private Servo grabber;
+    private ServoImplEx grabber;
 
 
     public final String SYSTEM_NAME = "GRABBER";
@@ -30,8 +33,8 @@ public class Grabber {
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
-    public final double OPEN_VALUE = 0.7;
-    public final double CLOSED_VALUE = 0.2;
+    public final double OPEN_VALUE = 1400;
+    public final double CLOSED_VALUE = 2000;
 
     private Map stateMap;
 
@@ -40,16 +43,18 @@ public class Grabber {
         this.stateMap = stateMap;
 
 
-        grabber = hwMap.servo.get("grabber");
+        grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
+
+        grabber.setPwmRange(new PwmControl.PwmRange(CLOSED_VALUE, OPEN_VALUE));
 
     }
 
     public void setState(Lift lift) {
         if(((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
             if (shouldGrab(lift)) {
-                grabber.setPosition(CLOSED_VALUE);
+                grabber.setPosition(0);
             } else {
-                grabber.setPosition(OPEN_VALUE);
+                grabber.setPosition(1);
             }
 
             if (stateMap.get(constants.GRABBER_START_TIME) == null) {
@@ -64,7 +69,7 @@ public class Grabber {
             }
 
         } else if (((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_NOT_STARTED) && shouldGrab(lift)) {
-            grabber.setPosition(OPEN_VALUE);
+            grabber.setPosition(1);
         }
 
         telemetry.addData("grabberPosition", grabber.getPosition());
