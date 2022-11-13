@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +63,7 @@ public class RobotTeleOp extends LinearOpMode {
         }};
         BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap);
 
-        SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
+        SampleMecanumDriveCancelable drive = new SampleMecanumDriveCancelable(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
