@@ -58,7 +58,7 @@ public class Lift {
 
     public final String TRANSITION_STATE = "TRANSITION";
     public final int DELIVERY_ADJUSTMENT = -3;
-    public final int HEIGHT_TOLERANCE = 5;
+    public final int HEIGHT_TOLERANCE = 15;
     public final int CYCLE_TOLERANCE = 5;
     public final String LIFT_CURRENT_STATE = "LIFT CURRENT STATE";
 
