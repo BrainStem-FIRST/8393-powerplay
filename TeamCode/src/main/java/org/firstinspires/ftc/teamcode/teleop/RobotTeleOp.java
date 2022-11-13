@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -98,35 +97,22 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
                 }
             }
-
-            if (gamepad1.right_bumper) {
-                Trajectory forwardTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .forward(40)
-                        .build();
-                drive.followTrajectoryAsync(forwardTrajectory);
-            } else if (gamepad1.left_bumper) {
-                Trajectory reverseTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .back(40)
-                        .build();
-                drive.followTrajectoryAsync(reverseTrajectory);
-            } else {
-                drive.setWeightedDrivePower(
-                        new Pose2d(
-                                -gamepad1.left_stick_y,
-                                -gamepad1.left_stick_x,
-                                -gamepad1.right_stick_x
-                        )
-                );
-            }
+            drive.setWeightedDrivePower(
+                    new Pose2d(
+                            -gamepad1.left_stick_y,
+                            -gamepad1.left_stick_x,
+                            -gamepad1.right_stick_x
+                    )
+            );
 
             drive.update();
 
-            robot.updateSystems();
+        robot.updateSystems();
 
-            telemetry.addData("toggleMap", toggleMap);
+        telemetry.addData("toggleMap", toggleMap);
 
-            telemetry.addData("liftEncoders", robot.lift.getPosition());
-            telemetry.update();
+        telemetry.addData("liftEncoders", robot.lift.getPosition());
+        telemetry.update();
         }
     }
 

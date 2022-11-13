@@ -244,46 +244,24 @@ public class Lift {
         liftMotor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         liftMotor3.setPower(1.0);
 
-        int upBin1 = (heightInTicks - (4 * HEIGHT_TOLERANCE));
-        int upBin2 = (heightInTicks - (2 * HEIGHT_TOLERANCE));
-        int upBin3 = (heightInTicks - (HEIGHT_TOLERANCE));
-        int downBin1 = (heightInTicks + HEIGHT_TOLERANCE);
-        int downBin2 = (heightInTicks + (4 * HEIGHT_TOLERANCE));
-        int downBin3 = (heightInTicks + (8 * HEIGHT_TOLERANCE));
-
-        int currentHeight = getPosition();
-        boolean inTolerance = inHeightTolerance(currentHeight, heightInTicks);
-
-        telemetry.addData("upBin1", upBin1);
-        telemetry.addData("upBin2", upBin2);
-        telemetry.addData("upBin3", upBin3);
-        telemetry.addData("downBin1", downBin1);
-        telemetry.addData("downBin2", downBin2);
-        telemetry.addData("downBin3", downBin3);
-
-        telemetry.addData("currentHeight", currentHeight);
-
-        if (upBin1 > currentHeight) {
+        if ((heightInTicks - (4 * HEIGHT_TOLERANCE)) > getPosition()) {
             telemetry.addData("boostOn" , 1.0);
             setBoostPower(1.0);
-        } else if (upBin2 > currentHeight) {
+        } else if (heightInTicks - (2 * HEIGHT_TOLERANCE) > getPosition()) {
             telemetry.addData("boostOn" , 0.5);
             setBoostPower(0.5);
-        } else if (upBin3 > currentHeight) {
+        } else if (heightInTicks - HEIGHT_TOLERANCE > getPosition()) {
             telemetry.addData("boostOn" , 0.25);
             setBoostPower(0.25);
-        } else if (downBin1 < currentHeight && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , 0.0);
-            setBoostPower(0.00);
-        } else if (downBin2 < currentHeight && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , 0.0);
-            setBoostPower(0.0);
-        } else if (downBin3 < currentHeight && !isCycleInProgress(constants.CONE_CYCLE)) {
+        } else if (heightInTicks + HEIGHT_TOLERANCE < getPosition() && !isCycleInProgress(constants.CONE_CYCLE)) {
+            telemetry.addData("boostOn" , 0.02);
+            setBoostPower(0.02);
+        } else if (heightInTicks + (4 * HEIGHT_TOLERANCE) < getPosition() && !isCycleInProgress(constants.CONE_CYCLE)) {
+            telemetry.addData("boostOn" , 0.05);
+            setBoostPower(0.05);
+        } else if (heightInTicks + (8 * HEIGHT_TOLERANCE) < getPosition() && !isCycleInProgress(constants.CONE_CYCLE)) {
             telemetry.addData("boostOn" , -0.1);
             setBoostPower(-0.1);
-        } else if (inTolerance && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn", 0.05);
-            setBoostPower(0.05);
         } else {
             telemetry.addData("boostOn" , 0);
             setBoostPower(0.0);
@@ -292,6 +270,29 @@ public class Lift {
         telemetry.addData("MotorPosition", liftMotor3.getCurrentPosition());
     }
 
+    public double getPower() {
+        return liftMotor3.getPower();
+    }
+
+    public  boolean isClear () {
+        //true means turret can turn and lift is raised to minimum clearance; false is the opposite
+        double currentLiftHeight = liftMotor3.getCurrentPosition() * TICK_PER_INCH;
+        if(currentLiftHeight >= MINIMUM_CLEARANCE_HEIGHT){
+            return true;
+        }
+        return false;
+
+    }
+    public void moveToMinHeight(){
+        if (!isClear()) {
+            raiseHeightTo(MINIMUM_CLEARANCE_HEIGHT);
+        }
+    }
+
+    public void initializePosition( ) {
+        liftMotor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
+    }
     public void setMotor(double power){
 //        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftMotor3.setPower(power);
@@ -300,7 +301,6 @@ public class Lift {
     private boolean inHeightTolerance(double heightPosition, double targetHeight) {
         return (heightPosition > targetHeight - HEIGHT_TOLERANCE) && (heightPosition < targetHeight + HEIGHT_TOLERANCE);
     }
-
     public boolean isLiftUp(){
         return (getPosition() > LIFT_POSITION_GROUND);
     }
