@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
+import org.firstinspires.ftc.teamcode.util.StickyButton;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -31,13 +32,15 @@ public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_Y_PRESSED = "GAMEPAD_1_Y_IS_PRESSED";
 
     private boolean leftTriggerPressed = false;
+    private boolean d2LeftTriggerPressed = false;
+    private boolean d2RightTriggerPressed = false;
+
     private final double SLOWMODE  = 0.45;
 
     private boolean isDriverDriving = true;
     private boolean slowMode = false;
 
     Constants constants = new Constants();
-
 
 
     Map<String, Boolean> toggleMap = new HashMap<String, Boolean>() {{
@@ -69,6 +72,8 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+
+        robot.arm.extendHome();
 
         waitForStart();
 
@@ -151,6 +156,40 @@ public class RobotTeleOp extends LinearOpMode {
                 }
             }
 
+
+            // Driver 2 //
+
+            if (gamepad2.a){
+                //set lift height to top
+            }
+
+            if (gamepad2.x){
+                // set lift height to medium
+            }
+
+            if (gamepad2.y){
+                // set lift height to bottom
+            }
+
+            // Change highpole preset value
+            if (gamepad2.left_trigger > 0.2){
+                d2LeftTriggerPressed = true;
+            }
+
+            if (d2LeftTriggerPressed){
+                d2LeftTriggerPressed = false;
+                robot.lift.LIFT_POSITION_HIGHPOLE += 20;
+            }
+
+            if (gamepad2.right_trigger > 0.2){
+                d2RightTriggerPressed = true;
+            }
+
+            if (d2RightTriggerPressed){
+                d2RightTriggerPressed = false;
+                robot.lift.LIFT_POSITION_HIGHPOLE -= 20;
+            }
+
             driveCancelable.update();
 
             robot.updateSystems();
@@ -158,6 +197,7 @@ public class RobotTeleOp extends LinearOpMode {
             telemetry.addData("toggleMap", toggleMap);
 
             telemetry.addData("liftEncoders", robot.lift.getPosition());
+            telemetry.addData("Lift High Pole Encoder Pos", robot.lift.LIFT_POSITION_HIGHPOLE);
             telemetry.update();
         }
     }
@@ -187,5 +227,7 @@ public class RobotTeleOp extends LinearOpMode {
 
         return toggleMap.get(buttonStateName);
     }
+
+
 
 }

@@ -49,12 +49,12 @@ public class Turret {
 
     }
 
-    public void setState(Lift lift){
+    public void setState(Lift lift, String desiredLevel){
         if(isLiftTooLow(lift)){
             return;
         }
         else{
-            selectTransition((String) stateMap.get(SYSTEM_NAME));
+            selectTransition(desiredLevel);
         }
     }
 
