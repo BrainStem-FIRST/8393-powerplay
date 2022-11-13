@@ -1,24 +1,22 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.CachingServo;
+
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -33,8 +31,9 @@ public class Grabber {
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
-    public final double OPEN_VALUE = 1400;
-    public final double CLOSED_VALUE = 2000;
+
+    public final double OPEN_VALUE = 1400; //was 1600
+    public final double CLOSED_VALUE = 2000; //was 1125
 
     private Map stateMap;
 
@@ -46,10 +45,15 @@ public class Grabber {
         grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
 
         grabber.setPwmRange(new PwmControl.PwmRange(CLOSED_VALUE, OPEN_VALUE));
-
     }
 
-    public void setState(Lift lift) {
+    /*public void setState(Lift lift) {
+        if (shouldGrab(lift)) {
+            grabber.setPosition(CLOSED_VALUE);
+        } else {
+            grabber.setPosition(OPEN_VALUE);
+        }
+
         if(((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
             if (shouldGrab(lift)) {
                 grabber.setPosition(0);
@@ -73,9 +77,25 @@ public class Grabber {
         }
 
         telemetry.addData("grabberPosition", grabber.getPosition());
+    }*/
+
+    public void setState(){
+        if (stateMap.get(SYSTEM_NAME).equals(OPEN_STATE)) {
+            grabber.setPosition(1);
+        } else if (stateMap.get(SYSTEM_NAME).equals(CLOSED_STATE)) {
+            grabber.setPosition(0);
+        }
     }
+    public void openGrabber() {
+        grabber.setPosition(1);
+    }
+
+    public void closeGrabber() {
+        grabber.setPosition(0);
+    }
+
     public boolean shouldGrab(Lift lift) {
-        return lift.getPosition() < lift.LIFT_POSITION_GROUND &&
+        return lift.getPosition() < lift.LIFT_HEIGHT_GROUND &&
                 ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
     }
 }

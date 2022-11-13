@@ -12,10 +12,11 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.util.StickyButton;
 
+
 import java.util.HashMap;
 import java.util.Map;
 
-@TeleOp(name="Robot: TeleOp", group="Robot")
+@TeleOp(name = "Robot: TeleOp", group = "Robot")
 public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_A_STATE = "GAMEPAD_1_A_STATE";
     private final String GAMEPAD_1_A_IS_PRESSED = "GAMEPAD_1_A_IS_PRESSED";
@@ -26,11 +27,13 @@ public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_RIGHT_STICK_PRESSED = "GAMEPAD_1_RIGHT_STICK_PRESSED ";
     private final String GAMEPAD_1_RIGHT_STICK_STATE = "GAMEPAD_1_RIGHT_STICK";
     private final String GAMEPAD_1_LEFT_STICK_PRESSED = "GAMEPAD_1_LEFT_STICK_PRESSED";
-    private final String GAMEPAD_1_LEFT_STICK_STATE =  "GAMEPAD_1_LEFT_STICK_STATE";
-    private final String GAMEPAD_1_LEFT_TRIGGER_STATE  = "GAMEPAD_1_LEFT_TRIGGER_STATE";
+    private final String GAMEPAD_1_LEFT_STICK_STATE = "GAMEPAD_1_LEFT_STICK_STATE";
+    private final String GAMEPAD_1_LEFT_TRIGGER_STATE = "GAMEPAD_1_LEFT_TRIGGER_STATE";
     private final String GAMEPAD_1_LEFT_TRIGGER_PRESSED = "GAMEPAD_1_LEFT_TRIGGER_PRESSED";
     private final String GAMEPAD_1_Y_STATE = "GAMEPAD_1_Y_STATE";
     private final String GAMEPAD_1_Y_PRESSED = "GAMEPAD_1_Y_IS_PRESSED";
+    private final String GAMEPAD_1_RIGHT_TRIGGER_STATE = "GAMEPAD_1_RIGHT_TRIGGER_STATE";
+    private final String GAMEPAD_1_RIGHT_TRIGGER_PRESSED = "GAMEPAD_1_RIGHT_TRIGGER_PRESSED";
 
     private String LIFT_HEIGHT = "POLE_HIGH";
 
@@ -44,11 +47,12 @@ public class RobotTeleOp extends LinearOpMode {
     private  StickyButton liftFineAdjustDown = new StickyButton();
 
     private final double SLOWMODE  = 0.45;
-
     private boolean isDriverDriving = true;
     private boolean slowMode = false;
-
     Constants constants = new Constants();
+    private int liftDownIncrement = 0;
+    Constants constants = new Constants();
+    boolean coneCycle = false;
 
 
     Map<String, Boolean> toggleMap = new HashMap<String, Boolean>() {{
@@ -61,25 +65,30 @@ public class RobotTeleOp extends LinearOpMode {
         put(GAMEPAD_1_RIGHT_STICK_STATE, false);
         put(GAMEPAD_1_RIGHT_STICK_PRESSED, false);
         put(GAMEPAD_1_LEFT_STICK_PRESSED, false);
-        put(GAMEPAD_1_LEFT_TRIGGER_STATE ,false);
+        put(GAMEPAD_1_LEFT_TRIGGER_STATE, false);
         put(GAMEPAD_1_LEFT_TRIGGER_PRESSED, false);
         put(GAMEPAD_1_Y_STATE, false);
         put(GAMEPAD_1_Y_PRESSED, false);
+        put(GAMEPAD_1_RIGHT_TRIGGER_STATE, false);
+        put(GAMEPAD_1_RIGHT_TRIGGER_PRESSED, false);
     }};
 
     public void runOpMode() {
 
-        Map<String, String> stateMap = new HashMap<String, String>() {{ }};
-        BrainStemRobot robot = new BrainStemRobot(hardwareMap, telemetry, stateMap);
+        Map<String, String> stateMap = new HashMap<String, String>() {{
+        }};
+        BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap);
 
         SampleMecanumDriveCancelable driveCancelable = new SampleMecanumDriveCancelable(hardwareMap);
         driveCancelable.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
 
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
         stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
         stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+        stateMap.put("liftDownIncrement", "0");
 
         robot.arm.extendHome();
 
@@ -96,25 +105,41 @@ public class RobotTeleOp extends LinearOpMode {
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
             }
 
-            if (toggleMap.get(GAMEPAD_1_Y_STATE)) {
+            /*if (toggleMap.get(GAMEPAD_1_Y_STATE)) {
                 stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             } else {
                 stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-            }
+            }*/
 
             if (gamepad1.dpad_left) {
+                //robot.slowTurret(0.9, robot.turret.LEFT_POSITION);
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             } else if (gamepad1.dpad_up) {
+                //robot.slowTurret((0.9 + 0.45)/2, robot.turret.CENTER_POSITION);
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             } else if (gamepad1.dpad_right) {
+                //robot.slowTurret(0.45, robot.turret.RIGHT_POSITION);
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             }
 
-            if(gamepad1.right_trigger > 0.5){
-                if(!((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
-                    stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
-                }
+            if (toggleMap.get(GAMEPAD_1_RIGHT_TRIGGER_STATE)) {
+                robot.lift.moveDown(liftDownIncrement);
+                telemetry.addData("TeleOp LIftCounter", liftDownIncrement);
+                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+            } else {
+                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
             }
+
+
+            if (gamepad1.right_trigger > 0.5) {
+                liftDownIncrement = 0;
+            } else {
+                liftDownIncrement = liftDownIncrement + 1;
+            }
+
 
             if (gamepad1.right_bumper) {
                 isDriverDriving = false;
@@ -159,6 +184,7 @@ public class RobotTeleOp extends LinearOpMode {
                                     -gamepad1.left_stick_y,
                                     -gamepad1.left_stick_x,
                                     -gamepad1.right_stick_x
+
                             )
                     );
                 }
@@ -221,13 +247,17 @@ public class RobotTeleOp extends LinearOpMode {
             robot.updateSystems();
 
             telemetry.addData("toggleMap", toggleMap);
-
             telemetry.addData("liftEncoders", robot.lift.getPosition());
             telemetry.addData("Lift High Pole Encoder Pos", robot.lift.LIFT_POSITION_HIGHPOLE);
             telemetry.addData("Extension out PWM", robot.arm.EXTENSION_POSITION_MAX);
+            telemetry.addData("stateMap", stateMap);
+            telemetry.addData("Lift Power: ", robot.lift.getLiftMotorPowers());
+
             telemetry.update();
         }
     }
+
+
 
     private void setButtons() {
         toggleButton(GAMEPAD_1_A_STATE, GAMEPAD_1_A_IS_PRESSED, gamepad1.a);
@@ -235,8 +265,9 @@ public class RobotTeleOp extends LinearOpMode {
         toggleButton(GAMEPAD_1_X_STATE, GAMEPAD_1_X_IS_PRESSED, gamepad1.x);
 //        toggleButton(GAMEPAD_1_RIGHT_STICK_STATE, GAMEPAD_1_RIGHT_STICK_PRESSED, gamepad1.right_stick_button);
 //        toggleButton(GAMEPAD_1_LEFT_STICK_STATE, GAMEPAD_1_LEFT_STICK_PRESSED, gamepad1.left_stick_button);
-        toggleButton(GAMEPAD_1_LEFT_TRIGGER_STATE, GAMEPAD_1_LEFT_STICK_PRESSED,gamepad1.left_trigger >= 0.5);
+        toggleButton(GAMEPAD_1_LEFT_TRIGGER_STATE, GAMEPAD_1_LEFT_STICK_PRESSED, gamepad1.left_trigger >= 0.5);
         toggleButton(GAMEPAD_1_Y_STATE, GAMEPAD_1_Y_PRESSED, gamepad1.y);
+        toggleButton(GAMEPAD_1_RIGHT_TRIGGER_STATE, GAMEPAD_1_RIGHT_TRIGGER_PRESSED, gamepad1.right_trigger > 0.5);
     }
 
     private boolean toggleButton(String buttonStateName, String buttonPressName, boolean buttonState) {
