@@ -5,6 +5,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.PwmControl;
 
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -169,6 +170,17 @@ public class RobotTeleOp extends LinearOpMode {
 
             if (gamepad2.y){
                 // set lift height to bottom
+            }
+
+            //Change extension preset values
+            if (gamepad2.left_bumper){
+                robot.arm.EXTENSION_POSITION_MAX += 20;
+                robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
+            }
+
+            if (gamepad2.right_bumper){
+                robot.arm.EXTENSION_POSITION_MAX -= 20;
+                robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
             }
 
             // Change highpole preset value
