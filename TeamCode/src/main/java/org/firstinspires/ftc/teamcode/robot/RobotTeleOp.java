@@ -32,6 +32,8 @@ public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_Y_STATE = "GAMEPAD_1_Y_STATE";
     private final String GAMEPAD_1_Y_PRESSED = "GAMEPAD_1_Y_IS_PRESSED";
 
+    private String LIFT_HEIGHT = "POLE_HIGH";
+
     private boolean leftTriggerPressed = false;
     private boolean d2LeftTriggerPressed = false;
     private boolean d2RightTriggerPressed = false;
@@ -88,7 +90,7 @@ public class RobotTeleOp extends LinearOpMode {
 
             if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                 slowMode = true;
-                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, LIFT_HEIGHT);
             } else {
                 slowMode = false;
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
@@ -166,15 +168,15 @@ public class RobotTeleOp extends LinearOpMode {
             // Driver 2 //
 
             if (gamepad2.a){
-                //set lift height to top
+                LIFT_HEIGHT = "POLE_HIGH";
             }
 
             if (gamepad2.x){
-                // set lift height to medium
+                LIFT_HEIGHT = "POlE_MEDIUM";
             }
 
             if (gamepad2.y){
-                // set lift height to bottom
+                LIFT_HEIGHT = "POLE_LOW";
             }
 
             //Change extension preset values
