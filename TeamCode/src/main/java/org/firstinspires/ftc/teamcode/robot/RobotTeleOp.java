@@ -202,7 +202,12 @@ public class RobotTeleOp extends LinearOpMode {
 
             liftFineAdjustUp.update(d2LeftTriggerPressed);
             if (liftFineAdjustUp.getState()){
-                robot.lift.LIFT_POSITION_HIGHPOLE += 20;
+                if (robot.lift.LIFT_POSITION_HIGHPOLE == 730){
+
+                } else {
+                    robot.lift.LIFT_POSITION_HIGHPOLE += 30;
+                }
+
             }
 
             if (gamepad2.right_trigger > 0.2){
@@ -213,7 +218,11 @@ public class RobotTeleOp extends LinearOpMode {
 
             liftFineAdjustDown.update(d2RightTriggerPressed);
             if (liftFineAdjustDown.getState()){
-                robot.lift.LIFT_POSITION_HIGHPOLE -= 20;
+                if (robot.lift.LIFT_POSITION_HIGHPOLE == 0){
+
+                } else {
+                    robot.lift.LIFT_POSITION_HIGHPOLE -= 30;
+                }
             }
 
             driveCancelable.update();
