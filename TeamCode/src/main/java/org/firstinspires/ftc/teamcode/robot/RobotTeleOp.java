@@ -29,8 +29,13 @@ public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_Y_STATE = "GAMEPAD_1_Y_STATE";
     private final String GAMEPAD_1_Y_PRESSED = "GAMEPAD_1_Y_IS_PRESSED";
 
+    private final String GAMEPAD_1_RIGHT_TRIGGER_STATE = "GAMEPAD_1_RIGHT_TRIGGER_STATE";
+    private final String GAMEPAD_1_RIGHT_TRIGGER_PRESSED = "GAMEPAD_1_RIGHT_TRIGGER_PRESSED";
+
     private boolean leftTriggerPressed = false;
     private final double SLOWMODE  = 0.45;
+
+    private int liftDownIncrement;
 
     Constants constants = new Constants();
 
@@ -50,12 +55,14 @@ public class RobotTeleOp extends LinearOpMode {
         put(GAMEPAD_1_LEFT_TRIGGER_PRESSED, false);
         put(GAMEPAD_1_Y_STATE, false);
         put(GAMEPAD_1_Y_PRESSED, false);
+        put(GAMEPAD_1_RIGHT_TRIGGER_PRESSED, false);
+        put(GAMEPAD_1_RIGHT_TRIGGER_STATE, false);
     }};
 
     public void runOpMode() {
 
         Map<String, String> stateMap = new HashMap<String, String>() {{ }};
-        BrainStemRobot robot = new BrainStemRobot(hardwareMap, telemetry, stateMap);
+        BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -97,6 +104,20 @@ public class RobotTeleOp extends LinearOpMode {
                 }
             }
 
+            if (toggleMap.get(GAMEPAD_1_RIGHT_TRIGGER_STATE)) {
+                robot.lift.poorMansConeCycle(liftDownIncrement, robot);
+                telemetry.addData("TeleOp LIftCounter", liftDownIncrement);
+                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+            } else {
+                robot.lift.poorMansConeCycle(liftDownIncrement, robot);
+            }
+
+            if (gamepad1.right_trigger > 0.5) {
+                liftDownIncrement = 0;
+            } else {
+                liftDownIncrement = liftDownIncrement + 1;
+            }
+
             if (gamepad1.right_bumper) {
                 Trajectory forwardTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
                         .forward(40)
@@ -132,6 +153,7 @@ public class RobotTeleOp extends LinearOpMode {
         toggleButton(GAMEPAD_1_A_STATE, GAMEPAD_1_A_IS_PRESSED, gamepad1.a);
         toggleButton(GAMEPAD_1_B_STATE, GAMEPAD_1_B_IS_PRESSED, gamepad1.b);
         toggleButton(GAMEPAD_1_X_STATE, GAMEPAD_1_X_IS_PRESSED, gamepad1.x);
+        toggleButton(GAMEPAD_1_RIGHT_TRIGGER_STATE, GAMEPAD_1_RIGHT_TRIGGER_PRESSED, gamepad1.right_trigger > 0.5);
 //        toggleButton(GAMEPAD_1_RIGHT_STICK_STATE, GAMEPAD_1_RIGHT_STICK_PRESSED, gamepad1.right_stick_button);
 //        toggleButton(GAMEPAD_1_LEFT_STICK_STATE, GAMEPAD_1_LEFT_STICK_PRESSED, gamepad1.left_stick_button);
         toggleButton(GAMEPAD_1_LEFT_TRIGGER_STATE, GAMEPAD_1_LEFT_STICK_PRESSED,gamepad1.left_trigger >= 0.5);
