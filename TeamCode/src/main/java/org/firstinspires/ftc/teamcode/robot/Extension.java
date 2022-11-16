@@ -20,8 +20,8 @@ public class Extension {
     static final double MINIMUM_CLEARANCE_DISTANCE = 95.875 * MM_TO_INCHES;
 
     // Servo Positions
-    public final double EXTENSION_POSITION_HOME = 0.1;    // Fully retracted
-    public final double EXTENSION_POSITION_MAX  = 0.9;    // Fully extended
+    public final double EXTENSION_POSITION_HOME = 1800/2520;    // Fully retracted
+    public final double EXTENSION_POSITION_MAX  = 2372/2520;    // Fully extended
 
     // extension statemap values
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
