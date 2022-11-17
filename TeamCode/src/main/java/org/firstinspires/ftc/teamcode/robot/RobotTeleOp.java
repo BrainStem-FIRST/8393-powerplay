@@ -120,18 +120,21 @@ public class RobotTeleOp extends LinearOpMode {
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
             }
 
-            if (toggleMap.get(GAMEPAD_1_Y_STATE)) {
-                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
-            } else {
-                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-            }
+//            if (toggleMap.get(GAMEPAD_1_Y_STATE)) {
+//                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+//            } else {
+//                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+//            }
 
             if (gamepad1.dpad_left) {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             } else if (gamepad1.dpad_up) {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             } else if (gamepad1.dpad_right) {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             }
 
 
@@ -238,7 +241,7 @@ public class RobotTeleOp extends LinearOpMode {
             // Driver 2 //
 
             if (gamepad2.a){
-                LIFT_HEIGHT = "POLE_HIGH";
+                LIFT_HEIGHT = "POLE_LOW";
             }
 
             if (gamepad2.x){
@@ -246,7 +249,7 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.y){
-                LIFT_HEIGHT = "POLE_LOW";
+                LIFT_HEIGHT = "POLE_HIGH";
             }
 
             //Change extension preset values
