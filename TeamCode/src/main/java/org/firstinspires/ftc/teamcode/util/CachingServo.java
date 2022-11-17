@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.ServoConfigurationType;
 
 public class CachingServo extends ServoImplEx {
+
     private double lastPosition = 0;
 
     public CachingServo(ServoImplEx servo) {
@@ -19,4 +20,5 @@ public class CachingServo extends ServoImplEx {
             lastPosition = position;
         }
     }
+
 }

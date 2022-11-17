@@ -34,6 +34,9 @@ public class RobotTeleOp extends LinearOpMode {
 
     private String LIFT_HEIGHT = "POLE_HIGH";
 
+    private final String GAMEPAD_1_RIGHT_TRIGGER_STATE = "GAMEPAD_1_RIGHT_TRIGGER_STATE";
+    private final String GAMEPAD_1_RIGHT_TRIGGER_PRESSED = "GAMEPAD_1_RIGHT_TRIGGER_PRESSED";
+
     private boolean leftTriggerPressed = false;
     private boolean d2LeftTriggerPressed = false;
     private boolean d2RightTriggerPressed = false;
@@ -45,8 +48,11 @@ public class RobotTeleOp extends LinearOpMode {
 
     private final double SLOWMODE  = 0.45;
 
+
     private boolean isDriverDriving = true;
     private boolean slowMode = false;
+
+    private int liftDownIncrement;
 
     Constants constants = new Constants();
 
@@ -65,12 +71,14 @@ public class RobotTeleOp extends LinearOpMode {
         put(GAMEPAD_1_LEFT_TRIGGER_PRESSED, false);
         put(GAMEPAD_1_Y_STATE, false);
         put(GAMEPAD_1_Y_PRESSED, false);
+        put(GAMEPAD_1_RIGHT_TRIGGER_PRESSED, false);
+        put(GAMEPAD_1_RIGHT_TRIGGER_STATE, false);
     }};
 
     public void runOpMode() {
 
         Map<String, String> stateMap = new HashMap<String, String>() {{ }};
-        BrainStemRobot robot = new BrainStemRobot(hardwareMap, telemetry, stateMap);
+        BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap);
 
         SampleMecanumDriveCancelable driveCancelable = new SampleMecanumDriveCancelable(hardwareMap);
         driveCancelable.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -110,10 +118,28 @@ public class RobotTeleOp extends LinearOpMode {
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
             }
 
-            if(gamepad1.right_trigger > 0.5){
-                if(!((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
-                    stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
-                }
+            if (gamepad1.x){
+                robot.grabber.grabber.setPosition(1);
+            }
+
+//            if(gamepad1.right_trigger > 0.5){
+//                if(!((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
+//                    stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
+//                }
+//            }
+
+            if (toggleMap.get(GAMEPAD_1_RIGHT_TRIGGER_STATE)) {
+                robot.lift.poorMansConeCycle(liftDownIncrement, robot);
+                telemetry.addData("TeleOp LIftCounter", liftDownIncrement);
+                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+            } else {
+                robot.lift.poorMansConeCycle(liftDownIncrement, robot);
+            }
+
+            if (gamepad1.right_trigger > 0.5) {
+                liftDownIncrement = 0;
+            } else {
+                liftDownIncrement = liftDownIncrement + 1;
             }
 
             if (gamepad1.right_bumper) {
@@ -242,6 +268,7 @@ public class RobotTeleOp extends LinearOpMode {
         toggleButton(GAMEPAD_1_A_STATE, GAMEPAD_1_A_IS_PRESSED, gamepad1.a);
         toggleButton(GAMEPAD_1_B_STATE, GAMEPAD_1_B_IS_PRESSED, gamepad1.b);
         toggleButton(GAMEPAD_1_X_STATE, GAMEPAD_1_X_IS_PRESSED, gamepad1.x);
+        toggleButton(GAMEPAD_1_RIGHT_TRIGGER_STATE, GAMEPAD_1_RIGHT_TRIGGER_PRESSED, gamepad1.right_trigger > 0.5);
 //        toggleButton(GAMEPAD_1_RIGHT_STICK_STATE, GAMEPAD_1_RIGHT_STICK_PRESSED, gamepad1.right_stick_button);
 //        toggleButton(GAMEPAD_1_LEFT_STICK_STATE, GAMEPAD_1_LEFT_STICK_PRESSED, gamepad1.left_stick_button);
         toggleButton(GAMEPAD_1_LEFT_TRIGGER_STATE, GAMEPAD_1_LEFT_STICK_PRESSED,gamepad1.left_trigger >= 0.5);

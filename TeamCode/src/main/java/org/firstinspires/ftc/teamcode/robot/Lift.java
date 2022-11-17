@@ -16,6 +16,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -73,6 +74,9 @@ public class Lift {
     static final String LIFT_MOTOR_3_ID = "Lift-3";
     static final String LIFT_MOTOR_4_ID = "Lift-4andOdo";
 
+    //declaring list of lift motors
+    private ArrayList<DcMotor> liftMotors;
+
     public static double Kp = 2.0;
     public static double Ki = 0;
     public static double Kd = 0;
@@ -95,6 +99,15 @@ public class Lift {
         initializeLiftMotor(liftMotor3);
         initializeLiftMotor(liftMotor4);
 
+
+        liftMotors = new ArrayList<>();
+
+        //add lift motors to list
+        liftMotors.add(liftMotor1);
+        liftMotors.add(liftMotor2);
+        liftMotors.add(liftMotor3);
+        liftMotors.add(liftMotor4);
+
         pidfController.setInputBounds(0, LIFT_POSITION_HIGHPOLE);
         pidfController.setOutputBounds(0, 1);
     }
@@ -106,13 +119,47 @@ public class Lift {
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    public void setAllMotorPowers(double power) {
+        for (DcMotor liftMotor : liftMotors) {
+            liftMotor.setPower(power);
+        }
+    }
+
+    public void setAllMotorPowersExcept3(double power){
+        liftMotor1.setPower(power);
+        liftMotor2.setPower(power);
+        liftMotor4.setPower(power);
+
+    }
+
     public void moveUp() {
         setMotorsPower(LIFT_UP_SPEED);
     }
 
-    public void moveDown() {
-        setMotorsPower(LIFT_DOWN_SPEED);
+    public void poorMansConeCycle(int liftDownIncrement, BrainSTEMRobot robot) {
+        if(getPosition() < LIFT_POSITION_LOWPOLE){
+            if (liftDownIncrement < 7) {
+                setAllMotorPowers(-0.25);
+            } else if (liftDownIncrement < 14) {
+                setAllMotorPowers(0.6);
+            } else if (liftDownIncrement < 19) {
+                setAllMotorPowers(0.35);
+            }
+        } else {
+            if (liftDownIncrement < 7) {
+                setAllMotorPowers(-0.05);
+            } else if (liftDownIncrement < 10) {
+                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+            } else if (liftDownIncrement < 14) {
+                setAllMotorPowers(0.8);
+            } else if (liftDownIncrement < 19) {
+                setAllMotorPowers(0.4);
+            }
+        }
+
+        telemetry.addData("liftDownIncrement", liftDownIncrement);
     }
+
 
     public void stop() {
         setMotorsPower(0.0);
@@ -279,10 +326,17 @@ public class Lift {
             }
         }
 
+
         double power = ((Kp * direction * error) / LIFT_POSITION_HIGHPOLE) + Kv;
         setMotorsPower(power);
 
         telemetry.addData("PID Correction", power);
+    }
+
+    public void coneCycle(boolean top) {
+        if (top) {
+
+        }
     }
 
     public void setMotor(double power) {

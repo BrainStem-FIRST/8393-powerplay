@@ -25,7 +25,8 @@ import java.util.Map;
 
 public class Grabber {
     private Telemetry telemetry;
-    private ServoImplEx grabber;
+
+    public ServoImplEx grabber;
 
 
     public final String SYSTEM_NAME = "GRABBER";
@@ -33,8 +34,9 @@ public class Grabber {
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
-    public final double OPEN_VALUE = 1400;
-    public final double CLOSED_VALUE = 2000;
+
+    public final double OPEN_VALUE = 1376;
+    public final double CLOSED_VALUE = 1850;
 
     private Map stateMap;
 
@@ -45,16 +47,16 @@ public class Grabber {
 
         grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
 
-        grabber.setPwmRange(new PwmControl.PwmRange(CLOSED_VALUE, OPEN_VALUE));
+        grabber.setPwmRange(new PwmControl.PwmRange(OPEN_VALUE, CLOSED_VALUE));
 
     }
 
     public void setState(Lift lift) {
         if(((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
             if (shouldGrab(lift)) {
-                grabber.setPosition(0);
-            } else {
                 grabber.setPosition(1);
+            } else {
+                grabber.setPosition(0);
             }
 
             if (stateMap.get(constants.GRABBER_START_TIME) == null) {
@@ -69,7 +71,7 @@ public class Grabber {
             }
 
         } else if (((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_NOT_STARTED) && shouldGrab(lift)) {
-            grabber.setPosition(1);
+            grabber.setPosition(0);
         }
 
         telemetry.addData("grabberPosition", grabber.getPosition());
