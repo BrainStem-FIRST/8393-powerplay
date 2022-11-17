@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.robot;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -7,13 +7,11 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.robot.BrainSTEMRobot;
-import org.firstinspires.ftc.teamcode.robot.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@TeleOp(name="TeleOp", group="Robot")
+@TeleOp(name="Robot: TeleOp", group="Robot")
 public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_A_STATE = "GAMEPAD_1_A_STATE";
     private final String GAMEPAD_1_A_IS_PRESSED = "GAMEPAD_1_A_IS_PRESSED";
@@ -56,7 +54,7 @@ public class RobotTeleOp extends LinearOpMode {
     public void runOpMode() {
 
         Map<String, String> stateMap = new HashMap<String, String>() {{ }};
-        BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap);
+        BrainStemRobot robot = new BrainStemRobot(hardwareMap, telemetry, stateMap);
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

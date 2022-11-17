@@ -69,7 +69,6 @@ public class Extension {
         extension.setPosition(EXTENSION_POSITION_MAX);
     }
 
-
     public void setState(String desiredState){
         selectTransition(desiredState);
     }
