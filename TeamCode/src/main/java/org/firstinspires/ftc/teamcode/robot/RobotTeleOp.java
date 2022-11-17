@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.robot;
 
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -189,6 +188,7 @@ public class RobotTeleOp extends LinearOpMode {
                 liftDownIncrement = liftDownIncrement + 1;
             }
 
+
             if (gamepad1.right_bumper) {
                 isDriverDriving = false;
 
@@ -300,9 +300,10 @@ public class RobotTeleOp extends LinearOpMode {
 
             driveCancelable.update();
 
-            robot.updateSystems();
+        robot.updateSystems();
 
-            telemetry.addData("toggleMap", toggleMap);
+        telemetry.addData("toggleMap", toggleMap);
+
 
             telemetry.addData("liftEncoders", robot.lift.getPosition());
             telemetry.addData("Lift High Pole Encoder Pos", robot.lift.LIFT_POSITION_HIGHPOLE);

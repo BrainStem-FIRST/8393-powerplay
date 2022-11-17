@@ -339,6 +339,7 @@ public class Lift {
         }
     }
 
+
     public void setMotor(double power) {
 //        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftMotor3.setPower(power);
@@ -348,7 +349,9 @@ public class Lift {
         return (heightPosition > targetHeight - HEIGHT_TOLERANCE) && (heightPosition < targetHeight + HEIGHT_TOLERANCE);
     }
 
+
     public boolean isLiftUp() {
+
         return (getPosition() > LIFT_POSITION_GROUND);
     }
 
