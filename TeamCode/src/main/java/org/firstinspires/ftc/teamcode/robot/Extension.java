@@ -21,6 +21,7 @@ public class Extension {
     static final double MINIMUM_CLEARANCE_DISTANCE = 95.875 * MM_TO_INCHES;
 
     // Servo Positions
+
     public final double EXTENSION_POSITION_HOME = 1800;    // Fully retracted
     public double EXTENSION_POSITION_MAX  = 2372;    // Fully extended
 

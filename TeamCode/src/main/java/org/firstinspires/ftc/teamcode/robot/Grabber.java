@@ -25,6 +25,7 @@ import java.util.Map;
 
 public class Grabber {
     private Telemetry telemetry;
+
     public ServoImplEx grabber;
 
 
@@ -32,6 +33,7 @@ public class Grabber {
     public final String OPEN_STATE = "OPEN";
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
+
 
     public final double OPEN_VALUE = 1376;
     public final double CLOSED_VALUE = 1850;
