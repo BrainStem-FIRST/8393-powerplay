@@ -24,12 +24,12 @@ public class Turret {
     public final String     LEFT_POSITION = "LEFT_STATE";
     public final String     RIGHT_POSITION = "RIGHT_STATE";
     public final String     CENTER_POSITION = "CENTER_STATE";
-    public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 550;
-    public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 550;
+    public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 550 - 55;
+    public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 550 - 55;
     public final double     CENTER_POSITION_LEFT_SERVO_VALUE = 1407;
     public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 1407;
-    public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2280;
-    public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2280;
+    public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2280 - 55;
+    public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2280 - 55;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 75;
 
     public Telemetry telemetry;
@@ -65,13 +65,13 @@ public class Turret {
     private void selectTransition(String desiredLevel){
         switch(desiredLevel){
             case LEFT_POSITION:{
-                transitionToPosition(0, 0);
+                transitionToPosition(0.05, 0.05);
                 break;
             } case CENTER_POSITION:{
                 transitionToPosition(0.5, 0.5);
                 break;
             } case RIGHT_POSITION:{
-                transitionToPosition(1, 1);
+                transitionToPosition(0.95, 0.95);
                 break;
             }
         }

@@ -42,13 +42,17 @@ public class Lift {
     public final int MINIMUM_CLEARANCE_HEIGHT = 43;    // inches to lift to clear side panels
 
     public final int LIFT_POSITION_RESET = 0;
-    public final int LIFT_POSITION_GROUND = 24;
+    public final int LIFT_POSITION_GROUND = 0;
     public final int LIFT_POSITION_LOWPOLE = 380;
     public final int LIFT_POSITION_MIDPOLE = 590;
     public int LIFT_POSITION_HIGHPOLE = 690;
-    public final int LIFT_POSITION_PICKUP = 8;
+    public final int LIFT_POSITION_PICKUP = 1;
     public final int LIFT_ADJUSTMENT = -25;
     Constants constants = new Constants();
+
+
+    public boolean coneCycleNowAt;
+
 
 
     public final double HARD_STOP_CURRENT_DRAW = 100;
@@ -137,19 +141,15 @@ public class Lift {
     }
 
     public void poorMansConeCycle(int liftDownIncrement, BrainSTEMRobot robot) {
-        if(getPosition() < LIFT_POSITION_LOWPOLE){
-            if (liftDownIncrement < 7) {
-                setAllMotorPowers(-0.25);
-            } else if (liftDownIncrement < 14) {
-                setAllMotorPowers(0.6);
-            } else if (liftDownIncrement < 19) {
-                setAllMotorPowers(0.35);
-            }
+        if(getPosition() < LIFT_POSITION_LOWPOLE - 200){
+
+                robot.grabber.grabber.setPosition(1);
+
         } else {
             if (liftDownIncrement < 7) {
                 setAllMotorPowers(-0.05);
             } else if (liftDownIncrement < 10) {
-                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                robot.grabber.grabber.setPosition(0);
             } else if (liftDownIncrement < 14) {
                 setAllMotorPowers(0.8);
             } else if (liftDownIncrement < 19) {
