@@ -197,7 +197,7 @@ public class RobotTeleOp extends LinearOpMode {
             // Driver 2 //
 
             if (gamepad2.a){
-                LIFT_HEIGHT = "POLE_HIGH";
+                LIFT_HEIGHT = "POLE_LOW";
             }
 
             if (gamepad2.x){
@@ -205,7 +205,7 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
             if (gamepad2.y){
-                LIFT_HEIGHT = "POLE_LOW";
+                LIFT_HEIGHT = "POLE_HIGH";
             }
 
             //Change extension preset values
