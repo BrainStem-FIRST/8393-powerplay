@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
+import com.acmerobotics.roadrunner.control.PIDCoefficients;
+import com.acmerobotics.roadrunner.control.PIDFController;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
@@ -9,12 +11,17 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
+
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
+import java.util.ArrayList;
 import java.util.Map;
 
+import com.acmerobotics.dashboard.config.Config;
 
+@Config
 public class Lift {
     private Telemetry telemetry;
     public DcMotor liftMotor1;
@@ -35,13 +42,17 @@ public class Lift {
     public final int MINIMUM_CLEARANCE_HEIGHT = 43;    // inches to lift to clear side panels
 
     public final int LIFT_POSITION_RESET = 0;
-    public final int LIFT_POSITION_GROUND = 50;
+    public final int LIFT_POSITION_GROUND = 0;
     public final int LIFT_POSITION_LOWPOLE = 380;
     public final int LIFT_POSITION_MIDPOLE = 590;
-    public final int LIFT_POSITION_HIGHPOLE = 600;
-    public final int LIFT_POSITION_PICKUP = 8;
+    public int LIFT_POSITION_HIGHPOLE = 690;
+    public final int LIFT_POSITION_PICKUP = 1;
     public final int LIFT_ADJUSTMENT = -25;
     Constants constants = new Constants();
+
+
+    public boolean coneCycleNowAt;
+
 
 
     public final double HARD_STOP_CURRENT_DRAW = 100;
@@ -58,7 +69,7 @@ public class Lift {
 
     public final String TRANSITION_STATE = "TRANSITION";
     public final int DELIVERY_ADJUSTMENT = -3;
-    public final int HEIGHT_TOLERANCE = 5;
+    public final int HEIGHT_TOLERANCE = 15;
     public final int CYCLE_TOLERANCE = 5;
     public final String LIFT_CURRENT_STATE = "LIFT CURRENT STATE";
 
@@ -67,9 +78,17 @@ public class Lift {
     static final String LIFT_MOTOR_3_ID = "Lift-3";
     static final String LIFT_MOTOR_4_ID = "Lift-4andOdo";
 
-    public static double currentLiftHeight;
+    //declaring list of lift motors
+    private ArrayList<DcMotor> liftMotors;
+
+    public static double Kp = 2.0;
+    public static double Ki = 0;
+    public static double Kd = 0;
+    public static double Kv = 0.17;
+    public static double Ka = 0.01;
     private Map stateMap;
 
+    PIDFController pidfController = new PIDFController(new PIDCoefficients(Kp, Ki, Kd), Kv, Ka);
 
     public Lift(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
         this.telemetry = telemetry;
@@ -83,6 +102,18 @@ public class Lift {
         initializeLiftMotor(liftMotor2);
         initializeLiftMotor(liftMotor3);
         initializeLiftMotor(liftMotor4);
+
+
+        liftMotors = new ArrayList<>();
+
+        //add lift motors to list
+        liftMotors.add(liftMotor1);
+        liftMotors.add(liftMotor2);
+        liftMotors.add(liftMotor3);
+        liftMotors.add(liftMotor4);
+
+        pidfController.setInputBounds(0, LIFT_POSITION_HIGHPOLE);
+        pidfController.setOutputBounds(0, 1);
     }
 
     private void initializeLiftMotor(DcMotor liftMotor) {
@@ -92,13 +123,43 @@ public class Lift {
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
+    public void setAllMotorPowers(double power) {
+        for (DcMotor liftMotor : liftMotors) {
+            liftMotor.setPower(power);
+        }
+    }
+
+    public void setAllMotorPowersExcept3(double power){
+        liftMotor1.setPower(power);
+        liftMotor2.setPower(power);
+        liftMotor4.setPower(power);
+
+    }
+
     public void moveUp() {
         setMotorsPower(LIFT_UP_SPEED);
     }
 
-    public void moveDown() {
-        setMotorsPower(LIFT_DOWN_SPEED);
+    public void poorMansConeCycle(int liftDownIncrement, BrainSTEMRobot robot) {
+        if(getPosition() < LIFT_POSITION_LOWPOLE - 200){
+
+                robot.grabber.grabber.setPosition(1);
+
+        } else {
+            if (liftDownIncrement < 7) {
+                setAllMotorPowers(-0.05);
+            } else if (liftDownIncrement < 10) {
+                robot.grabber.grabber.setPosition(0);
+            } else if (liftDownIncrement < 14) {
+                setAllMotorPowers(0.8);
+            } else if (liftDownIncrement < 19) {
+                setAllMotorPowers(0.4);
+            }
+        }
+
+        telemetry.addData("liftDownIncrement", liftDownIncrement);
     }
+
 
     public void stop() {
         setMotorsPower(0.0);
@@ -134,7 +195,7 @@ public class Lift {
 
         updateConeCycleState();
         telemetry.addData("liftCurrentState", currentState);
-        if (shouldLiftMove(level, currentState) ) {
+        if (shouldLiftMove(level, currentState)) {
             selectTransition(level, subheight, currentState);
         } else {
             liftMotor3.setPower(0);
@@ -142,8 +203,8 @@ public class Lift {
     }
 
     private boolean shouldLiftMove(String level, String currentState) {
-        return ((String)stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
-                ((String)stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
+        return ((String) stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
+                ((String) stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
                 !level.equalsIgnoreCase(currentState);
     }
 
@@ -153,21 +214,22 @@ public class Lift {
             if (inHeightTolerance(getPosition(), position + LIFT_ADJUSTMENT)) {
                 stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
             }
-        } else if(isCycleInProgress(constants.CYCLE_LIFT_UP) && inHeightTolerance(getPosition(), position)){
-                stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
+        } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && inHeightTolerance(getPosition(), position)) {
+            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
         }
     }
 
     private boolean isCycleInProgress(String cycleName) {
-        return ((String)stateMap.get(cycleName)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
+        return ((String) stateMap.get(cycleName)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
     }
 
-    private boolean isSubheightPlacement(){
-        return ((String)stateMap.get(LIFT_SUBHEIGHT)).equalsIgnoreCase(PLACEMENT_HEIGHT);
+    private boolean isSubheightPlacement() {
+        return ((String) stateMap.get(LIFT_SUBHEIGHT)).equalsIgnoreCase(PLACEMENT_HEIGHT);
     }
-    private int getStateValue(){
+
+    private int getStateValue() {
         int position = 0;
-        switch((String)stateMap.get(LIFT_CURRENT_STATE)) {
+        switch ((String) stateMap.get(LIFT_CURRENT_STATE)) {
             case LIFT_POLE_HIGH: {
                 position = LIFT_POSITION_HIGHPOLE;
                 break;
@@ -180,44 +242,45 @@ public class Lift {
                 position = LIFT_POSITION_LOWPOLE;
                 break;
             }
-            case LIFT_POLE_GROUND:{
+            case LIFT_POLE_GROUND: {
                 position = LIFT_POSITION_GROUND;
                 break;
             }
         }
-            return position;
+        return position;
     }
 
 
-    private void selectTransition(String desiredLevel, String subheight, String currentState){
-        switch(desiredLevel){
-            case LIFT_POLE_LOW:{
+    private void selectTransition(String desiredLevel, String subheight, String currentState) {
+        switch (desiredLevel) {
+            case LIFT_POLE_LOW: {
                 transitionToLiftPosition(LIFT_POSITION_LOWPOLE + deliveryHeight(subheight));
                 break;
             }
-            case LIFT_POLE_MEDIUM:{
+            case LIFT_POLE_MEDIUM: {
                 transitionToLiftPosition(LIFT_POSITION_MIDPOLE + deliveryHeight(subheight));
                 break;
             }
-            case LIFT_POLE_HIGH:{
+            case LIFT_POLE_HIGH: {
                 transitionToLiftPosition(LIFT_POSITION_HIGHPOLE + deliveryHeight(subheight));
                 break;
             }
-            case LIFT_POLE_GROUND:{
+            case LIFT_POLE_GROUND: {
                 transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
                 break;
             }
         }
 
     }
-    private void transitionToLiftPosition(int ticks){
+
+    private void transitionToLiftPosition(int ticks) {
         raiseHeightTo(ticks);
     }
 
     public String getCurrentState(String subheight) {
         String state = TRANSITION_STATE;
         double currentPosition = getPosition();
-        if(inHeightTolerance(currentPosition, LIFT_POSITION_GROUND + deliveryHeight(subheight))){
+        if (inHeightTolerance(currentPosition, LIFT_POSITION_GROUND + deliveryHeight(subheight))) {
             state = LIFT_POLE_GROUND;
         } else if (inHeightTolerance(currentPosition, LIFT_POSITION_LOWPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_LOW;
@@ -229,71 +292,55 @@ public class Lift {
         return state;
     }
 
-    public int deliveryHeight(String subheight){
+    public int deliveryHeight(String subheight) {
         int height = 0;
-        if(subheight.equalsIgnoreCase(PLACEMENT_HEIGHT)){
+        if (subheight.equalsIgnoreCase(PLACEMENT_HEIGHT)) {
             height += LIFT_ADJUSTMENT;
         }
         return height;
     }
 
-    public void raiseHeightTo (int heightInTicks) {
+    public void raiseHeightTo(int heightInTicks) {
         //raising heights to reach different junctions, so four values
-        telemetry.addData("raiseHeightCalled" , true);
-        liftMotor3.setTargetPosition(heightInTicks);
-        liftMotor3.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        liftMotor3.setPower(1.0);
+        telemetry.addData("raiseHeightCalled", true);
+        telemetry.addData("heightInTicks", heightInTicks);
 
-        if ((heightInTicks - (4 * HEIGHT_TOLERANCE)) > getPosition()) {
-            telemetry.addData("boostOn" , 1.0);
-            setBoostPower(1.0);
-        } else if (heightInTicks - (2 * HEIGHT_TOLERANCE) > getPosition()) {
-            telemetry.addData("boostOn" , 0.5);
-            setBoostPower(0.5);
-        } else if (heightInTicks - HEIGHT_TOLERANCE > getPosition()) {
-            telemetry.addData("boostOn" , 0.25);
-            setBoostPower(0.25);
-        } else if (heightInTicks + HEIGHT_TOLERANCE < getPosition() && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , 0.02);
-            setBoostPower(0.02);
-        } else if (heightInTicks + (4 * HEIGHT_TOLERANCE) < getPosition() && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , 0.05);
-            setBoostPower(0.05);
-        } else if (heightInTicks + (8 * HEIGHT_TOLERANCE) < getPosition() && !isCycleInProgress(constants.CONE_CYCLE)) {
-            telemetry.addData("boostOn" , -0.1);
-            setBoostPower(-0.1);
+        int position = getPosition();
+        telemetry.addData("position", position);
+
+        // calculate the error
+        int error = heightInTicks - position;
+        double direction = 0;
+
+        if (Math.abs(error) > 0) {
+            if (heightInTicks > position) {
+                direction = 1.65;
+            } else {
+                direction = 0.46;
+            }
         } else {
-            telemetry.addData("boostOn" , 0);
-            setBoostPower(0.0);
+            if (heightInTicks < 400) {
+                direction = 0.25;
+            } else {
+                direction = 0.3;
+            }
         }
 
-        telemetry.addData("MotorPosition", liftMotor3.getCurrentPosition());
+
+        double power = ((Kp * direction * error) / LIFT_POSITION_HIGHPOLE) + Kv;
+        setMotorsPower(power);
+
+        telemetry.addData("PID Correction", power);
     }
 
-    public double getPower() {
-        return liftMotor3.getPower();
-    }
+    public void coneCycle(boolean top) {
+        if (top) {
 
-    public  boolean isClear () {
-        //true means turret can turn and lift is raised to minimum clearance; false is the opposite
-        double currentLiftHeight = liftMotor3.getCurrentPosition() * TICK_PER_INCH;
-        if(currentLiftHeight >= MINIMUM_CLEARANCE_HEIGHT){
-            return true;
-        }
-        return false;
-
-    }
-    public void moveToMinHeight(){
-        if (!isClear()) {
-            raiseHeightTo(MINIMUM_CLEARANCE_HEIGHT);
         }
     }
 
-    public void initializePosition( ) {
-        liftMotor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
-    }
-    public void setMotor(double power){
+    public void setMotor(double power) {
 //        liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         liftMotor3.setPower(power);
     }
@@ -301,7 +348,10 @@ public class Lift {
     private boolean inHeightTolerance(double heightPosition, double targetHeight) {
         return (heightPosition > targetHeight - HEIGHT_TOLERANCE) && (heightPosition < targetHeight + HEIGHT_TOLERANCE);
     }
-    public boolean isLiftUp(){
+
+
+    public boolean isLiftUp() {
+
         return (getPosition() > LIFT_POSITION_GROUND);
     }
 

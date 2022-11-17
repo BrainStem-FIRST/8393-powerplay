@@ -9,10 +9,13 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import java.util.Map;
 
@@ -21,25 +24,29 @@ public class Turret {
     public final String     LEFT_POSITION = "LEFT_STATE";
     public final String     RIGHT_POSITION = "RIGHT_STATE";
     public final String     CENTER_POSITION = "CENTER_STATE";
-    public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 0.01;
-    public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 0.01;
-    public final double     CENTER_POSITION_LEFT_SERVO_VALUE = 0.45;
-    public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 0.435;
-    public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 0.9;
-    public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 0.9;
+    public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 550 - 55;
+    public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 550 - 55;
+    public final double     CENTER_POSITION_LEFT_SERVO_VALUE = 1407;
+    public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 1407;
+    public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2280 - 55;
+    public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2280 - 55;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 75;
 
     public Telemetry telemetry;
-    private Servo leftTurretServo;
-    private Servo rightTurretServo;
+    private ServoImplEx leftTurretServo;
+    private ServoImplEx rightTurretServo;
     private Map stateMap;
 
     public Turret(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
 
-        leftTurretServo = hwMap.servo.get("turretLeft");
-        rightTurretServo = hwMap.servo.get("turretRight");
+        leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretLeft"));
+        rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
+
+        leftTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE,  RIGHT_POSITION_LEFT_SERVO_VALUE));
+        rightTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_RIGHT_SERVO_VALUE,  RIGHT_POSITION_RIGHT_SERVO_VALUE));
+
     }
 
     public void setState(Lift lift){
@@ -58,13 +65,13 @@ public class Turret {
     private void selectTransition(String desiredLevel){
         switch(desiredLevel){
             case LEFT_POSITION:{
-                transitionToPosition(LEFT_POSITION_LEFT_SERVO_VALUE, LEFT_POSITION_RIGHT_SERVO_VALUE);
+                transitionToPosition(0.05, 0.05);
                 break;
             } case CENTER_POSITION:{
-                transitionToPosition(CENTER_POSITION_LEFT_SERVO_VALUE, CENTER_POSITION_RIGHT_SERVO_VALUE);
+                transitionToPosition(0.5, 0.5);
                 break;
             } case RIGHT_POSITION:{
-                transitionToPosition(RIGHT_POSITION_LEFT_SERVO_VALUE, RIGHT_POSITION_RIGHT_SERVO_VALUE);
+                transitionToPosition(0.95, 0.95);
                 break;
             }
         }
