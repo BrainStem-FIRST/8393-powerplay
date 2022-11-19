@@ -35,8 +35,8 @@ public class Grabber {
     Constants constants = new Constants();
 
 
-    public final double OPEN_VALUE = 1376;
-    public final double CLOSED_VALUE = 1850;
+    public final double CLOSED_VALUE = 1376;
+    public final double OPEN_VALUE = 1850;
 
     private Map stateMap;
 
@@ -47,7 +47,7 @@ public class Grabber {
 
         grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
 
-        grabber.setPwmRange(new PwmControl.PwmRange(OPEN_VALUE, CLOSED_VALUE));
+        grabber.setPwmRange(new PwmControl.PwmRange(CLOSED_VALUE, OPEN_VALUE));
 
     }
 
@@ -76,6 +76,11 @@ public class Grabber {
 
         telemetry.addData("grabberPosition", grabber.getPosition());
     }
+
+    public void open() {
+        grabber.setPosition(0);
+    }
+
     public boolean shouldGrab(Lift lift) {
         return lift.getPosition() < lift.LIFT_POSITION_GROUND &&
                 ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
