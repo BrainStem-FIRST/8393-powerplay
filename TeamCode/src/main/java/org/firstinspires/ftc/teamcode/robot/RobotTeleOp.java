@@ -112,9 +112,14 @@ public class RobotTeleOp extends LinearOpMode {
         while (!isStopRequested()) {
             setButtons();
 
+            if (gamepad1.a || gamepad1.right_trigger > 0.5) {
+                stateMap.put(constants.LIFT_START_TIME, String.valueOf(System.currentTimeMillis()));
+                stateMap.put(constants.LIFT_INTEGRAL_SUM, "0.0");
+            }
+
             if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                 slowMode = true;
-                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, LIFT_HEIGHT);
+                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
             } else {
                 slowMode = false;
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
@@ -137,56 +142,16 @@ public class RobotTeleOp extends LinearOpMode {
                 stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             }
 
-
-//            if(gamepad1.right_trigger > 0.5){
-//                if(!((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
-//                    stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
-//                }
-//            }
-
-// FIXME PLZ
-//            if (coneCycleStickyBoolean){
-//                coneCycleToggleGBoolean = true;
-//            } else if (!coneCycleStickyBoolean){
-//                coneCycleToggleGBoolean = false;
-//            }
-//
-//            if (gamepad1.right_trigger > 0.4){
-//                coneCycleStickyBoolean = true;
-//            } else if (gamepad1.right_trigger < 0.4){
-//                coneCycleStickyBoolean = false;
-//            }
-//
-//            if(coneCycleToggleGBoolean) {
-//                if (coneCycleToggleG.getState() == 1) {
-//                    robot.lift.coneCycleNowAt = false;
-//                } else {
-//                    robot.lift.coneCycleNowAt = true;
-//
-//                }
-//                coneCycleToggleG.nextState();
-//            }
-
-
-
-            if (gamepad1.x){
-                robot.grabber.grabber.setPosition(0.5);
+            if (toggleMap.get(GAMEPAD_1_LEFT_TRIGGER_STATE)) {
+                robot.grabber.open();
             }
 
-
-            if (toggleMap.get(GAMEPAD_1_RIGHT_TRIGGER_STATE)) {
-
-                robot.lift.poorMansConeCycle(liftDownIncrement, robot);
-                telemetry.addData("TeleOp LiftCounter", liftDownIncrement);
-                robot.grabber.grabber.setPosition(1);
-            } else {
-                robot.lift.poorMansConeCycle(liftDownIncrement, robot);
-            }
-
-            if (gamepad1.right_trigger > 0.5) {
-                liftDownIncrement = 0;
-            } else {
-                liftDownIncrement = liftDownIncrement + 1;
+            if(gamepad1.right_trigger > 0.5) {
+                toggleMap.put(GAMEPAD_1_LEFT_TRIGGER_STATE, false);
+                if(!((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
+                    stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
+                    stateMap.put(constants.CONE_CYCLE_START_TIME, String.valueOf(System.currentTimeMillis()));
+                }
             }
 
 
@@ -242,15 +207,15 @@ public class RobotTeleOp extends LinearOpMode {
             // Driver 2 //
 
             if (gamepad2.a){
-                LIFT_HEIGHT = "POLE_LOW";
+                stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_LOW);
             }
 
-            if (gamepad2.x){
-                LIFT_HEIGHT = "POlE_MEDIUM";
+            if (gamepad2.b){
+                stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_MEDIUM);
             }
 
             if (gamepad2.y){
-                LIFT_HEIGHT = "POLE_HIGH";
+                stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_HIGH);
             }
 
             //Change extension preset values
@@ -284,11 +249,11 @@ public class RobotTeleOp extends LinearOpMode {
 
             }
 
-            if (gamepad2.right_trigger > 0.2){
-                d2RightTriggerPressed = true;
-            } else if (gamepad2.right_trigger < 0.2){
-                d2RightTriggerPressed = false;
-            }
+//            if (gamepad2.right_trigger > 0.2){
+//                d2RightTriggerPressed = true;
+//            } else if (gamepad2.right_trigger < 0.2){
+//                d2RightTriggerPressed = false;
+//            }
 
             liftFineAdjustDown.update(d2RightTriggerPressed);
             if (liftFineAdjustDown.getState()){
@@ -301,14 +266,14 @@ public class RobotTeleOp extends LinearOpMode {
 
             driveCancelable.update();
 
-        robot.updateSystems();
+            robot.updateSystems();
 
-        telemetry.addData("toggleMap", toggleMap);
+//            telemetry.addData("toggleMap", toggleMap);
 
 
-            telemetry.addData("liftEncoders", robot.lift.getPosition());
-            telemetry.addData("Lift High Pole Encoder Pos", robot.lift.LIFT_POSITION_HIGHPOLE);
-            telemetry.addData("Extension out PWM", robot.arm.EXTENSION_POSITION_MAX);
+//            telemetry.addData("liftEncoders", robot.lift.getPosition());
+//            telemetry.addData("Lift High Pole Encoder Pos", robot.lift.LIFT_POSITION_HIGHPOLE);
+//            telemetry.addData("Extension out PWM", robot.arm.EXTENSION_POSITION_MAX);
             telemetry.update();
         }
     }

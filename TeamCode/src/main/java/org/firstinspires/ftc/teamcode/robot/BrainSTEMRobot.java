@@ -44,6 +44,9 @@ public class BrainSTEMRobot {
         stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
         stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
         stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
+        stateMap.put(constants.LIFT_INTEGRAL_SUM, "0.0");
+        stateMap.put(constants.LIFT_COMPLETE_TIME, "0");
+        stateMap.put(lift.LIFT_TARGET_HEIGHT, lift.LIFT_POLE_HIGH);
 
         telemetry.addData("Robot", " Is Ready");
         telemetry.update();
