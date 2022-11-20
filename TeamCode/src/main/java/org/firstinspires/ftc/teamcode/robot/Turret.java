@@ -62,7 +62,7 @@ public class Turret {
         return lift.getPosition() < LIFT_MIN_HEIGHT_TO_MOVE_TURRET;
     }
 
-    private void selectTransition(String desiredLevel){
+    public void selectTransition(String desiredLevel){
         switch(desiredLevel){
             case LEFT_POSITION:{
                 transitionToPosition(0.05, 0.05);

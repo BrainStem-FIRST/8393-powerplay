@@ -6,7 +6,6 @@ import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.BrainSTEMRobot;
 
@@ -20,8 +19,8 @@ public class Auto1 extends LinearOpMode {
 
     // Locations - For Red /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(36, -65, Math.toRadians(90));
-    private Pose2d alignToCenterOfBlueChannel = new Pose2d(36, -13, Math.toRadians(0));
-    private Pose2d depositPreLoad = new Pose2d(48, -12, Math.toRadians(0));
+    private Pose2d depositPreLoadMidPole = new Pose2d(36, -23.5, Math.toRadians(90));
+    private Pose2d depositPreLoad = new Pose2d(36, -23.5, Math.toRadians(90));
     private Pose2d collectConesPosition = new Pose2d(64, -12.5, Math.toRadians(0));
     private Pose2d depositOnHighPole = new Pose2d(23, -12.5, Math.toRadians(0));
 
@@ -51,7 +50,7 @@ public class Auto1 extends LinearOpMode {
                 break;
             case BLUE:
                 startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
-                alignToCenterOfBlueChannel = new Pose2d(alignToCenterOfBlueChannel.getX(), -alignToCenterOfBlueChannel.getY(), Math.toRadians(0));
+                depositPreLoadMidPole = new Pose2d(depositPreLoadMidPole.getX(), -depositPreLoadMidPole.getY(), Math.toRadians(0));
                 depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(0));
                 collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(0));
                 depositOnHighPole = new Pose2d(depositOnHighPole.getX(), -depositOnHighPole.getY(), Math.toRadians(0));
@@ -96,21 +95,40 @@ public class Auto1 extends LinearOpMode {
         robot.grabber.actuallySettingGrabberState(robot.grabber.CLOSED_STATE);
         stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
         robot.lift.setState();
-//        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
-//        robot.updateSystems();
+
         totalTime.reset();
-        this.step1 = true;
-        telemetry.addData("Trajectory: ", "setting trajectory");
-        telemetry.update();
-        Trajectory alignCenterOfBlueAutoChannel = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                .lineToLinearHeading(alignToCenterOfBlueChannel)
+        //   1   /////////////////////////////////////////////////////////////////////;
+//        this.step1 = true;
+//        telemetry.addData("Trajectory: ", "setting trajectory");
+//        telemetry.update();
+//        Trajectory alignCenterOfBlueAutoChannel = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+//                .lineToLinearHeading(depositPreLoadMidPole)
+//                .build();
+//        sampleMecanumDrive.followTrajectoryAsync(alignCenterOfBlueAutoChannel);
+//
+//        while (step1) {
+//            telemetry.addData("StateMap: ", "lift low");
+//            telemetry.update();
+//            if ((false)) {
+//
+//            } else {
+//                telemetry.addData("else:", "else");
+//                telemetry.update();
+//                step2 = true;
+//                step1 = false;
+//            }
+//        }
+//        sampleMecanumDrive.waitForIdle();
+
+        //   2   ////////////////////////////////////////////////////////////////////
+
+        Trajectory depositPreLoadTraj = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                .lineToLinearHeading(depositPreLoad)
                 .build();
-        sampleMecanumDrive.followTrajectoryAsync(alignCenterOfBlueAutoChannel);
-        while (step1) {
-            //   1   /////////////////////////////////////////////////////////////////////;
-            telemetry.addData("StateMap: ", "lift low");
-            telemetry.update();
-            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
+        sampleMecanumDrive.followTrajectoryAsync(depositPreLoadTraj);
+
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
+        while (step2) {
             if (!robot.lift.hasLiftReachedHeight(robot.lift.LIFT_POLE_LOW)) {
                 telemetry.addData("Lift: ", "running Lift");
                 telemetry.update();
@@ -119,25 +137,22 @@ public class Auto1 extends LinearOpMode {
             } else {
                 telemetry.addData("else:", "else");
                 telemetry.update();
-                step2 = true;
-                step1 = false;
+                step3 = true;
+                step2 = false;
             }
         }
         sampleMecanumDrive.waitForIdle();
-        /*
-        //   2   ////////////////////////////////////////////////////////////////////
 
-        Trajectory depositPreLoadTraj = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                .lineToLinearHeading(depositPreLoad)
-                .build();
-        sampleMecanumDrive.followTrajectoryAsync(depositPreLoadTraj);
+        //   2.5 / Deposit Pre Load /////////////////////////////////////////////////////
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+        robot.arm.extendMax();
+        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
+        robot.turret.setState(robot.lift);
+        while (runTime.seconds() < 0.75);
+        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+        robot.grabber.runGrabber(robot.grabber.OPEN_STATE);
 
-        while (step2) {
-            step3 = true;
-            step2 = false;
-        }
-        sampleMecanumDrive.waitForIdle();
-
+        while (this.opModeIsActive());
         //   3   ////////////////////////////////////////////////////////////////////
 
 
@@ -183,6 +198,6 @@ public class Auto1 extends LinearOpMode {
                 robot.lift.setState();
             }
             sampleMecanumDrive.waitForIdle();
-        }*/
+        }
     }
 }
