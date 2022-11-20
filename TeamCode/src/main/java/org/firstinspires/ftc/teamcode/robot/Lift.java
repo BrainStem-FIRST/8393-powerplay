@@ -345,10 +345,23 @@ public class Lift {
         liftMotor3.setPower(power);
     }
 
-    private boolean inHeightTolerance(double heightPosition, double targetHeight) {
+    public boolean inHeightTolerance(double heightPosition, double targetHeight) {
         return (heightPosition > targetHeight - HEIGHT_TOLERANCE) && (heightPosition < targetHeight + HEIGHT_TOLERANCE);
     }
 
+    public boolean hasLiftReachedHeight(String height){
+        if(height == LIFT_POLE_LOW){
+            return(inHeightTolerance(getPosition(), LIFT_POSITION_LOWPOLE));
+        } else if (height == LIFT_POLE_GROUND){
+            return inHeightTolerance(getPosition(), LIFT_POSITION_GROUND);
+        } else if (height == LIFT_POLE_HIGH){
+            return inHeightTolerance(getPosition(), LIFT_POSITION_HIGHPOLE);
+        } else if(height == LIFT_POLE_MEDIUM){
+            return inHeightTolerance(getPosition(), LIFT_POSITION_MIDPOLE);
+        } else {
+            return false;
+        }
+    }
 
     public boolean isLiftUp() {
 
