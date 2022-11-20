@@ -9,7 +9,9 @@ import static java.lang.Thread.sleep;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+import java.util.HashMap;
 import java.util.Map;
+//import java.util.Map;
 
 public class BrainSTEMRobot {
 
@@ -32,7 +34,6 @@ public class BrainSTEMRobot {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
         this.opMode = opMode;
-
         // instantiate components turret, lift, arm, grabber
         turret  = new Turret(hwMap, telemetry, stateMap);
         lift    = new Lift(hwMap, telemetry, stateMap);
@@ -40,10 +41,10 @@ public class BrainSTEMRobot {
         drive   = new SampleMecanumDrive(hwMap);
         grabber   = new Grabber(hwMap, telemetry, stateMap);
 
-        stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
+        this.stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
+        this.stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
+        this.stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
+        this.stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
 
         telemetry.addData("Robot", " Is Ready");
         telemetry.update();

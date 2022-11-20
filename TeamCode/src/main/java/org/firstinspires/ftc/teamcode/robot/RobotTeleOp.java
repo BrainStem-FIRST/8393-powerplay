@@ -93,7 +93,7 @@ public class RobotTeleOp extends LinearOpMode {
 
     public void runOpMode() {
 
-        Map<String, String> stateMap = new HashMap<String, String>() {{ }};
+        HashMap<String, String> stateMap = new HashMap<String, String>() {{ }};
         BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap);
 
         SampleMecanumDriveCancelable driveCancelable = new SampleMecanumDriveCancelable(hardwareMap);

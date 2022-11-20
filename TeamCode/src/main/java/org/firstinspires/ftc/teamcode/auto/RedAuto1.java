@@ -1,16 +1,13 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-@Autonomous(name="1 Red Auto")
-public class RedAuto1 extends LinearOpMode {
-
+@Autonomous(name = "1 Red Auto")
+public class RedAuto1 extends Auto1 {
+    public RedAuto1() {super(AllianceColor.RED);}
     @Override
     public void runOpMode() throws InterruptedException {
-        Auto1 auto = new Auto1(Auto1.AllianceColor.RED, this);
-        auto.run();
-
+        super.runOpMode();
     }
 
 }
