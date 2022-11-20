@@ -31,6 +31,7 @@ public class Grabber {
 
     public final String SYSTEM_NAME = "GRABBER";
     public final String OPEN_STATE = "OPEN";
+    public final String FULLY_OPEN = "FULLYOPEN";
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
