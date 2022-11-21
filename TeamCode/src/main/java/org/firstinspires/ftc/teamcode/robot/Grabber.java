@@ -31,12 +31,14 @@ public class Grabber {
 
     public final String SYSTEM_NAME = "GRABBER";
     public final String OPEN_STATE = "OPEN";
+    public final String FULLY_OPEN = "FULLYOPEN";
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
 
-    public final double CLOSED_VALUE = 1376;
-    public final double OPEN_VALUE = 1850;
+    public final double FULLY_OPEN_VALUE = 900;
+    public final double OPEN_VALUE = 1376;
+    public final double CLOSED_VALUE = 1850;
 
     private Map stateMap;
 
@@ -47,7 +49,7 @@ public class Grabber {
 
         grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
 
-        grabber.setPwmRange(new PwmControl.PwmRange(CLOSED_VALUE, OPEN_VALUE));
+        grabber.setPwmRange(new PwmControl.PwmRange(FULLY_OPEN_VALUE, CLOSED_VALUE));
 
     }
 

@@ -5,6 +5,7 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.tel
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -16,6 +17,8 @@ public class Auto1 {
     private final AllianceColor color;
     private final LinearOpMode opMode;
     private Object robot;
+    private HardwareMap hardwareMap;
+    private Telemetry telemetry;
 
 
     // Locations - For Red /////////////////////////////////////////////////////////////////////
@@ -37,7 +40,8 @@ public class Auto1 {
     public Auto1(AllianceColor color, LinearOpMode opMode) {
         this.color = color;
         this.opMode = opMode;
-        Telemetry telemetry = opMode.telemetry;
+        this.hardwareMap = opMode.hardwareMap;
+        this.telemetry = opMode.telemetry;
 
         switch (color) {
             case RED:
@@ -55,13 +59,14 @@ public class Auto1 {
     }
 
     public void run() throws InterruptedException {
+
         ElapsedTime runTime = new ElapsedTime();
         ElapsedTime totalTime = new ElapsedTime();
 //        FIXME PLZ
-//        Map<String, String> stateMap = new HashMap<String, String>() {{ }};
-//        BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap);
+       Map<String, String> stateMap = new HashMap<String, String>() {{ }};
+     BrainSTEMRobot robot = new BrainSTEMRobot( this.hardwareMap, telemetry, stateMap);
         SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(opMode.hardwareMap);
-        
+
 
 
         while (!opMode.opModeIsActive()) {
@@ -89,10 +94,11 @@ public class Auto1 {
         Trajectory depositPreLoadTraj = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                 .lineToLinearHeading(depositPreLoad)
                 .build();
-        sampleMecanumDrive.followTrajectory(depositPreLoadTraj);
+        sampleMecanumDrive.followTrajectoryAsync(depositPreLoadTraj);
+        robot.lift.raiseHeightTo(300);
 
         sampleMecanumDrive.waitForIdle();
-
+/*
         //   3   ////////////////////////////////////////////////////////////////////
 
 
@@ -124,8 +130,10 @@ public class Auto1 {
             sampleMecanumDrive.followTrajectory(cycleCollectTraj);
 
             sampleMecanumDrive.waitForIdle();
+            */
+
         }
 
 
     }
-}
+
