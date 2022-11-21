@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDriveCancelable;
+import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.StickyButton;
 import org.firstinspires.ftc.teamcode.util.ToggleButton;
 
@@ -34,6 +35,7 @@ public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_LEFT_TRIGGER_PRESSED = "GAMEPAD_1_LEFT_TRIGGER_PRESSED";
     private final String GAMEPAD_1_Y_STATE = "GAMEPAD_1_Y_STATE";
     private final String GAMEPAD_1_Y_PRESSED = "GAMEPAD_1_Y_IS_PRESSED";
+    private final double AUTO_EXTENSION_ADJUSTMENT = 0.25;
 
 
     private String LIFT_HEIGHT = "POLE_HIGH";
@@ -108,6 +110,7 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         stateMap.put(DRIVE_MODE, MANUAL_DRIVE_MODE);
+        stateMap.put(constants.EXTENSION_TARGET, String.valueOf(1));
 
         robot.arm.extendHome();
         robot.grabber.grabber.setPosition(0);
@@ -160,84 +163,88 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
 
-            if (gamepad1.dpad_up) {
+            if (gamepad1.left_bumper) {
                 isDriverDriving = false;
                 stateMap.put(DRIVE_MODE, AUTO_DRIVE_MODE);
                 toggleMap.put(GAMEPAD_1_A_STATE, true);
-                Trajectory forwardTrajectory = driveCancelable.trajectoryBuilder(driveCancelable.getPoseEstimate())
-                        .forward(4)
-                        .addDisplacementMarker(() -> {
-                            // This marker runs 2 inches into the trajectory
-                            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_TARGET_HEIGHT);
-                            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+
+                Pose2d currentPosition = driveCancelable.getPoseEstimate();
+                Pose2d targetPosition = new Pose2d(currentPosition.getX() + 40, currentPosition.getY(), currentPosition.getHeading());
+                TrajectorySequence forwardTrajectory = driveCancelable.trajectorySequenceBuilder(currentPosition)
+                        .lineToLinearHeading(targetPosition)
+                        .UNSTABLE_addTemporalMarkerOffset(-2.0, () -> {
+                            toggleMap.put(GAMEPAD_1_A_STATE, true);
+                            toggleMap.put(GAMEPAD_1_Y_STATE, true);
+                            stateMap.put(constants.EXTENSION_TARGET, String.valueOf(Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET)) - AUTO_EXTENSION_ADJUSTMENT));
+
                         })
-                        .forward(38)
-                        .addDisplacementMarker(() -> {
-                            // This marker runs 2 inches into the trajectory
+                        .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                             stateMap.put(DRIVE_MODE, MANUAL_DRIVE_MODE);
                         })
+                        .build();
+                driveCancelable.followTrajectorySequenceAsync(forwardTrajectory);
 
-
-                                .build();
-                driveCancelable.followTrajectoryAsync(forwardTrajectory);
-
-
-
-            } else if (gamepad1.dpad_down) {
+            } else if (gamepad1.right_bumper) {
                 stateMap.put(DRIVE_MODE, AUTO_DRIVE_MODE);
                 isDriverDriving = false;
-                toggleMap.put(GAMEPAD_1_A_STATE, false);
-                Trajectory reverseTrajectory = driveCancelable.trajectoryBuilder(driveCancelable.getPoseEstimate())
-                        .back(25)
-                        .addDisplacementMarker(() -> {
-                            // This marker runs 2 inches into the trajectory
-                            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-
-
+                Pose2d currentPosition = driveCancelable.getPoseEstimate();
+                Pose2d targetPosition = new Pose2d(currentPosition.getX() - 40, currentPosition.getY(), currentPosition.getHeading());
+                TrajectorySequence reverseTrajectory = driveCancelable.trajectorySequenceBuilder(driveCancelable.getPoseEstimate())
+                        .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                            stateMap.put(constants.EXTENSION_TARGET, String.valueOf(Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET)) + AUTO_EXTENSION_ADJUSTMENT));
                         })
-                        .back(22)
-                        .addDisplacementMarker(() -> {
+                        .lineToLinearHeading(targetPosition)
+                        .UNSTABLE_addTemporalMarkerOffset(-1.0, () -> {
                             // This marker runs 2 inches into the trajectory
+                            toggleMap.put(GAMEPAD_1_A_STATE, false);
+                        })
+                        .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                             stateMap.put(DRIVE_MODE, MANUAL_DRIVE_MODE);
                         })
-
                         .build();
-                driveCancelable.followTrajectoryAsync(reverseTrajectory);
-            }  else if (gamepad1.dpad_right){
-                    Trajectory strafeRightTrajectory = driveCancelable.trajectoryBuilder(driveCancelable.getPoseEstimate())
-                            .strafeRight(3)
-                            .build();
-                    driveCancelable.followTrajectory(strafeRightTrajectory);
-
-
-
-                } else if(gamepad1.dpad_left) {
-                Trajectory strafeLeftTrajectory = driveCancelable.trajectoryBuilder(driveCancelable.getPoseEstimate())
-                        .strafeLeft(3)
+                driveCancelable.followTrajectorySequenceAsync(reverseTrajectory);
+            }  else if (gamepad1.dpad_up || gamepad2.right_bumper) {
+                double targetPosition = Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET));
+                targetPosition += 0.02;
+                stateMap.put(constants.EXTENSION_TARGET, String.valueOf(targetPosition));
+            } else if (gamepad1.dpad_down || gamepad2.left_bumper) {
+                double targetPosition = Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET));
+                targetPosition -= 0.02;
+                stateMap.put(constants.EXTENSION_TARGET, String.valueOf(targetPosition));
+            }  else if (gamepad1.dpad_left) {
+                Pose2d currentPosition = driveCancelable.getPoseEstimate();
+                Pose2d targetPosition = new Pose2d(currentPosition.getX(), currentPosition.getY() + 2, currentPosition.getHeading());
+                TrajectorySequence strafeTrajectory = driveCancelable.trajectorySequenceBuilder(currentPosition)
+                        .lineToLinearHeading(targetPosition)
                         .build();
-                driveCancelable.followTrajectory(strafeLeftTrajectory);
+                driveCancelable.followTrajectorySequenceAsync(strafeTrajectory);
+            }  else if (gamepad1.dpad_right) {
+                Pose2d currentPosition = driveCancelable.getPoseEstimate();
+                Pose2d targetPosition = new Pose2d(currentPosition.getX(), currentPosition.getY() - 2, currentPosition.getHeading());
+                TrajectorySequence strafeTrajectory = driveCancelable.trajectorySequenceBuilder(currentPosition)
+                        .lineToLinearHeading(targetPosition)
+                        .build();
+                driveCancelable.followTrajectorySequenceAsync(strafeTrajectory);
+            }
+
+            if (stateMap.get(DRIVE_MODE).equals(MANUAL_DRIVE_MODE)) {
+//                    if (((gamepad1.left_stick_y != 0) || (gamepad1.left_stick_x != 0) || (gamepad1.right_stick_x != 0)) && !isDriverDriving) {
+//
+//                        // driveCancelable.breakFollowing();
+//
+//                        driveCancelable.setWeightedDrivePower(
+//
+//                                new Pose2d(
+//                                        -gamepad1.left_stick_y,
+//                                        -gamepad1.left_stick_x,
+//                                        -gamepad1.right_stick_x
+//                                )
+//                        );
 
 
-                if (stateMap.get(DRIVE_MODE).equals(MANUAL_DRIVE_MODE)) {
-
-                    if (((gamepad1.left_stick_y != 0) || (gamepad1.left_stick_x != 0) || (gamepad1.right_stick_x != 0)) && !isDriverDriving) {
-
-                        // driveCancelable.breakFollowing();
-
-                        driveCancelable.setWeightedDrivePower(
-
-                                new Pose2d(
-                                        -gamepad1.left_stick_y,
-                                        -gamepad1.left_stick_x,
-                                        -gamepad1.right_stick_x
-                                )
-                        );
-
-
-                    } else {
+//                    } else {
 
                         if (slowMode) {
-
                             driveCancelable.setWeightedDrivePower(
                                     new Pose2d(
                                             (-gamepad1.left_stick_y) * 0.5,
@@ -255,8 +262,7 @@ public class RobotTeleOp extends LinearOpMode {
                             );
                         }
                     }
-                }
-            }
+//                }
 
             // Driver 2 //
 

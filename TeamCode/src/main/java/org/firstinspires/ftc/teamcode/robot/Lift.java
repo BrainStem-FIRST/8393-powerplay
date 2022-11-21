@@ -47,7 +47,7 @@ public class Lift {
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;
     public final int LIFT_POSITION_PICKUP = 1;
-    public final int LIFT_ADJUSTMENT = -20;
+    public final int LIFT_ADJUSTMENT = -30;
     public final int CYCLE_LIFT_DOWN_TIME = 150;
     public final int CYCLE_LIFT_UP_TIME = 400;
     Constants constants = new Constants();
@@ -171,7 +171,7 @@ public class Lift {
             if (getPosition() < position + LIFT_ADJUSTMENT || isCycleExpired(CYCLE_LIFT_DOWN_TIME)) {
                 stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
             }
-        } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (getPosition() > position || isCycleExpired(CYCLE_LIFT_DOWN_TIME + CYCLE_LIFT_DOWN_TIME))) {
+        } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (getPosition() > position || isCycleExpired(CYCLE_LIFT_DOWN_TIME + constants.GRABBER_CYCLE_TIME))) {
             stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
         }
     }

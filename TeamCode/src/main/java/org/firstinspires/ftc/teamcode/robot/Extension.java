@@ -10,6 +10,8 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
 
+import java.util.Map;
+
 
 public class Extension {
     private Telemetry telemetry;
@@ -30,9 +32,13 @@ public class Extension {
     public final String DEFAULT_VALUE = "RETRACTED";
     public final String FULL_EXTEND = "EXTENDED";
     public final String TRANSITION_STATE = "TRANSITION";
+    Constants constants = new Constants();
 
-    public Extension(HardwareMap hwMap, Telemetry telemetry) {
+    private Map stateMap;
+
+    public Extension(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
         this.telemetry = telemetry;
+        this.stateMap = stateMap;
 
         extension = new CachingServo(hwMap.get(ServoImplEx.class, "extension"));
 
@@ -73,6 +79,10 @@ public class Extension {
         extension.setPosition(1);
     }
 
+    public void extendToTarget() {
+        extension.setPosition(Double.valueOf((String) stateMap.get(constants.EXTENSION_TARGET)));
+    }
+
     public void setState(String desiredState){
         selectTransition(desiredState);
     }
@@ -84,7 +94,7 @@ public class Extension {
                 break;
             }
             case FULL_EXTEND: {
-                extendMax();
+                extendToTarget();
                 break;
             }
         }
