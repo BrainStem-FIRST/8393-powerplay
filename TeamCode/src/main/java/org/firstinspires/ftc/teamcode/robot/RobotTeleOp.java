@@ -183,7 +183,6 @@ public class RobotTeleOp extends LinearOpMode {
                         })
                         .build();
                 driveCancelable.followTrajectorySequenceAsync(forwardTrajectory);
-
             } else if (gamepad1.right_bumper) {
                 stateMap.put(DRIVE_MODE, AUTO_DRIVE_MODE);
                 isDriverDriving = false;
@@ -228,41 +227,29 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
             if (stateMap.get(DRIVE_MODE).equals(MANUAL_DRIVE_MODE)) {
-//                    if (((gamepad1.left_stick_y != 0) || (gamepad1.left_stick_x != 0) || (gamepad1.right_stick_x != 0)) && !isDriverDriving) {
-//
-//                        // driveCancelable.breakFollowing();
-//
-//                        driveCancelable.setWeightedDrivePower(
-//
-//                                new Pose2d(
-//                                        -gamepad1.left_stick_y,
-//                                        -gamepad1.left_stick_x,
-//                                        -gamepad1.right_stick_x
-//                                )
-//                        );
+                if (slowMode) {
+                    driveCancelable.setWeightedDrivePower(
+                            new Pose2d(
+                                    (-gamepad1.left_stick_y) * 0.5,
+                                    (-gamepad1.left_stick_x) * 0.5,
+                                    (-gamepad1.right_stick_x) * 0.4
+                            )
+                    );
+                } else {
+                    driveCancelable.setWeightedDrivePower(
+                            new Pose2d(
+                                    -gamepad1.left_stick_y,
+                                    -gamepad1.left_stick_x,
+                                    -gamepad1.right_stick_x
+                            )
+                    );
+                }
+            }
 
-
-//                    } else {
-
-                        if (slowMode) {
-                            driveCancelable.setWeightedDrivePower(
-                                    new Pose2d(
-                                            (-gamepad1.left_stick_y) * 0.5,
-                                            (-gamepad1.left_stick_x) * 0.5,
-                                            (-gamepad1.right_stick_x) * 0.4
-                                    )
-                            );
-                        } else {
-                            driveCancelable.setWeightedDrivePower(
-                                    new Pose2d(
-                                            -gamepad1.left_stick_y,
-                                            -gamepad1.left_stick_x,
-                                            -gamepad1.right_stick_x
-                                    )
-                            );
-                        }
-                    }
-//                }
+            if (((gamepad1.left_stick_y != 0) || (gamepad1.left_stick_x != 0) || (gamepad1.right_stick_x != 0)) && !isDriverDriving) {
+                driveCancelable.breakFollowing();
+                stateMap.put(DRIVE_MODE, MANUAL_DRIVE_MODE);
+            }
 
             // Driver 2 //
 

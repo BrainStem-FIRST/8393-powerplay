@@ -48,7 +48,7 @@ public class Lift {
     public int LIFT_POSITION_HIGHPOLE = 720;
     public final int LIFT_POSITION_PICKUP = 1;
     public final int LIFT_ADJUSTMENT = -30;
-    public final int CYCLE_LIFT_DOWN_TIME = 150;
+    public final int CYCLE_LIFT_DOWN_TIME = 250;
     public final int CYCLE_LIFT_UP_TIME = 400;
     Constants constants = new Constants();
 
