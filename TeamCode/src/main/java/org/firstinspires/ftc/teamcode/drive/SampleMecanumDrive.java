@@ -54,7 +54,7 @@ import java.util.List;
 @Config
 public class SampleMecanumDrive extends MecanumDrive {
     public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(1.5, 0, 0.1);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(2, 0, 0.1);
 
     public static double LATERAL_MULTIPLIER = 1.57;
 
@@ -62,7 +62,7 @@ public class SampleMecanumDrive extends MecanumDrive {
     public static double VY_WEIGHT = 1;
     public static double OMEGA_WEIGHT = 1;
 
-    private TrajectorySequenceRunner trajectorySequenceRunner;
+    private TrajectorySequenceRunnerCancelable trajectorySequenceRunner;
 
     private static final TrajectoryVelocityConstraint VEL_CONSTRAINT = getVelocityConstraint(MAX_VEL, MAX_ANG_VEL, TRACK_WIDTH);
     private static final TrajectoryAccelerationConstraint ACCEL_CONSTRAINT = getAccelerationConstraint(MAX_ACCEL);
@@ -148,7 +148,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
         setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
 
-        trajectorySequenceRunner = new TrajectorySequenceRunner(follower, HEADING_PID);
+        trajectorySequenceRunner = new TrajectorySequenceRunnerCancelable(follower, HEADING_PID);
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {
@@ -204,6 +204,10 @@ public class SampleMecanumDrive extends MecanumDrive {
     public void followTrajectorySequence(TrajectorySequence trajectorySequence) {
         followTrajectorySequenceAsync(trajectorySequence);
         waitForIdle();
+    }
+
+    public void breakFollowing() {
+        trajectorySequenceRunner.breakFollowing();
     }
 
     public Pose2d getLastError() {

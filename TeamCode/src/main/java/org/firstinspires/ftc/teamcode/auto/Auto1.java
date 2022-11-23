@@ -4,6 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -47,6 +49,10 @@ public class Auto1 extends LinearOpMode {
     public Auto1(AllianceColor color) {
         this.color = color;
 
+        this.opMode = opMode;
+        this.hardwareMap = opMode.hardwareMap;
+        this.telemetry = opMode.telemetry;
+
         switch (color) {
             case RED:
                     isRed = true;
@@ -64,6 +70,7 @@ public class Auto1 extends LinearOpMode {
 
     }
 
+
     @Override
     public void runOpMode() throws InterruptedException {
         ElapsedTime runTime = new ElapsedTime();
@@ -73,6 +80,7 @@ public class Auto1 extends LinearOpMode {
         this.stateMap = new HashMap<String, String>() {{
         }};
         BrainSTEMRobot robot = new BrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap);
+
 
 
         this.stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
@@ -130,6 +138,7 @@ public class Auto1 extends LinearOpMode {
                 .lineToLinearHeading(depositPreLoad)
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(depositPreLoadTraj);
+
 
         stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
         while (step2) {
@@ -299,6 +308,11 @@ public class Auto1 extends LinearOpMode {
 
             sampleMecanumDrive.waitForIdle();
 
+            
+
+        
+
+
 
 
             telemetry.addData("Cycle Loop :", "end of loop");
@@ -306,4 +320,4 @@ public class Auto1 extends LinearOpMode {
 
         }
     }
-}
+
