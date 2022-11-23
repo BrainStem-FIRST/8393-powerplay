@@ -9,7 +9,9 @@ import static java.lang.Thread.sleep;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
+import java.util.HashMap;
 import java.util.Map;
+//import java.util.Map;
 
 public class BrainSTEMRobot {
 
@@ -33,13 +35,13 @@ public class BrainSTEMRobot {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
         this.opMode = opMode;
-
         // instantiate components turret, lift, arm, grabber
         turret  = new Turret(hwMap, telemetry, stateMap);
         lift    = new Lift(hwMap, telemetry, stateMap);
         arm     = new Extension(hwMap, telemetry, stateMap);
         drive   = new SampleMecanumDrive(hwMap);
         grabber   = new Grabber(hwMap, telemetry, stateMap);
+
 
         stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
         stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
@@ -48,6 +50,7 @@ public class BrainSTEMRobot {
         stateMap.put(constants.LIFT_INTEGRAL_SUM, "0.0");
         stateMap.put(constants.LIFT_COMPLETE_TIME, "0");
         stateMap.put(lift.LIFT_TARGET_HEIGHT, lift.LIFT_POLE_HIGH);
+
 
         telemetry.addData("Robot", " Is Ready");
         telemetry.update();

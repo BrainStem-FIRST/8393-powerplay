@@ -87,4 +87,19 @@ public class Grabber {
         return lift.getPosition() < lift.LIFT_POSITION_GROUND &&
                 ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
     }
+
+    public void actuallySettingGrabberState(String state){
+        stateMap.put(SYSTEM_NAME, state);
+    }
+
+    public void runGrabber(String grabberState){
+        if(stateMap.get(SYSTEM_NAME) == grabberState){
+            return;
+        }
+        if(grabberState == this.OPEN_STATE){
+            grabber.setPosition(1);
+        } else {
+            grabber.setPosition(0);
+        }
+    }
 }
