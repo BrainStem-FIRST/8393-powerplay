@@ -309,7 +309,7 @@ public class RobotTeleOp extends LinearOpMode {
 
             robot.updateSystems();
 
-//            telemetry.addData("toggleMap", toggleMap);
+            telemetry.addData("CURRENT ENCODER HEIGHT", robot.lift.getPosition());
 
             telemetry.update();
         }

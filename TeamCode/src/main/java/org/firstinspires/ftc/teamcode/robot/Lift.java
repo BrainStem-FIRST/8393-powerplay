@@ -274,7 +274,7 @@ public class Lift {
         } else if (error <= 25 && error > 3) {
             power = Math.min(heightFactor(heightInTicks) + 0.25, 0.65);
         } else if (error < -200) {
-            power = -0.05;
+            power = -0.1;
         } else if (error > -200 && error < -50) {
             power = -0.01;
         } else if (error >= -50 && error < -7) {
