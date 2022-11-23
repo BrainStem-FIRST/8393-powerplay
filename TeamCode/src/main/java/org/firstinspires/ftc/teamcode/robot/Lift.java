@@ -324,9 +324,9 @@ public class Lift {
         double power = errorToPowerLookup(error, heightInTicks);
 
         if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
-            power = -0.1;
+            power = -0.3;
         } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
-            power = 0.65;
+            power = 0.8;
         }
 
         setMotorsPower(power);

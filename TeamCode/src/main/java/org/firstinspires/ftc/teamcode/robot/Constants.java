@@ -14,7 +14,7 @@ public class Constants {
     public final String LIFT_COMPLETE_TIME = "LIFT COMPLETE TIME";
     public final String LIFT_INTEGRAL_SUM = "LIFT INTEGRAL SUM";
     public final String GRABBER_START_TIME = "GRABBER START TIME";
-    public final int GRABBER_CYCLE_TIME = 150;
+    public final int GRABBER_CYCLE_TIME = 300;
     public final String SYSTEM_TIME = "SYSTEM TIME";
     public final String EXTENSION_TARGET = "EXTENSION TARGET";
 

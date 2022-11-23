@@ -62,7 +62,7 @@ public class Auto1 {
 
         ElapsedTime runTime = new ElapsedTime();
         ElapsedTime totalTime = new ElapsedTime();
-//        FIXME PLZ
+
        Map<String, String> stateMap = new HashMap<String, String>() {{ }};
      BrainSTEMRobot robot = new BrainSTEMRobot( this.hardwareMap, telemetry, stateMap);
         SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(opMode.hardwareMap);

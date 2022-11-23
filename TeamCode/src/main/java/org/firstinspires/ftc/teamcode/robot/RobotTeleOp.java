@@ -112,10 +112,19 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(DRIVE_MODE, MANUAL_DRIVE_MODE);
         stateMap.put(constants.EXTENSION_TARGET, String.valueOf(1));
 
-        robot.arm.extendHome();
-        robot.grabber.grabber.setPosition(0);
+
+//
+//        while (!opModeIsActive()){
+//            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+//            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+//            telemetry.addData("Robot ::", "Init");
+//            telemetry.update();
+//        }
+
 
         waitForStart();
+
+
 
         while (!isStopRequested()) {
             setButtons();
@@ -130,6 +139,8 @@ public class RobotTeleOp extends LinearOpMode {
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
             } else {
                 slowMode = false;
+                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
             }
 
@@ -163,13 +174,13 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
 
-            if (gamepad1.left_bumper) {
+            if (gamepad1.right_bumper) {
                 isDriverDriving = false;
                 stateMap.put(DRIVE_MODE, AUTO_DRIVE_MODE);
                 toggleMap.put(GAMEPAD_1_A_STATE, true);
 
                 Pose2d currentPosition = driveCancelable.getPoseEstimate();
-                Pose2d targetPosition = new Pose2d(currentPosition.getX() + 40, currentPosition.getY(), currentPosition.getHeading());
+                Pose2d targetPosition = new Pose2d(currentPosition.getX() - 40, currentPosition.getY(), currentPosition.getHeading());
                 TrajectorySequence forwardTrajectory = driveCancelable.trajectorySequenceBuilder(currentPosition)
                         .lineToLinearHeading(targetPosition)
                         .UNSTABLE_addTemporalMarkerOffset(-2.0, () -> {
@@ -183,11 +194,11 @@ public class RobotTeleOp extends LinearOpMode {
                         })
                         .build();
                 driveCancelable.followTrajectorySequenceAsync(forwardTrajectory);
-            } else if (gamepad1.right_bumper) {
+            } else if (gamepad1.left_bumper) {
                 stateMap.put(DRIVE_MODE, AUTO_DRIVE_MODE);
                 isDriverDriving = false;
                 Pose2d currentPosition = driveCancelable.getPoseEstimate();
-                Pose2d targetPosition = new Pose2d(currentPosition.getX() - 40, currentPosition.getY(), currentPosition.getHeading());
+                Pose2d targetPosition = new Pose2d(currentPosition.getX() + 40, currentPosition.getY(), currentPosition.getHeading());
                 TrajectorySequence reverseTrajectory = driveCancelable.trajectorySequenceBuilder(driveCancelable.getPoseEstimate())
                         .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                             stateMap.put(constants.EXTENSION_TARGET, String.valueOf(Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET)) + AUTO_EXTENSION_ADJUSTMENT));
