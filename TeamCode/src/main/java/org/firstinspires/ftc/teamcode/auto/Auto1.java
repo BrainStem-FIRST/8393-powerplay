@@ -21,8 +21,8 @@ public class Auto1 extends LinearOpMode {
 
     // Locations - For Red /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(36, -65, Math.toRadians(90));
-    private Pose2d centerofBlueChannel = new Pose2d(36, -23.5, Math.toRadians(90));
-    private Pose2d depositPreLoad = new Pose2d(36, -23.5, Math.toRadians(90));
+    private Pose2d centerofBlueChannel = new Pose2d(36, -12.5, Math.toRadians(0));
+    private Pose2d depositPreLoad = new Pose2d(48, -12.5, Math.toRadians(0));
     private Pose2d collectConesPosition = new Pose2d(64, -12.5, Math.toRadians(0));
     private Pose2d depositOnHighPole = new Pose2d(23, -12.5, Math.toRadians(0));
     ///////////////////////////////////////////////////////////////////////////////////////////
@@ -32,6 +32,7 @@ public class Auto1 extends LinearOpMode {
     private boolean step3 = false;
     private boolean step4 = false;
     private boolean step5 = false;
+    private boolean step5a = false;
 
     private boolean isRed = true;
 
@@ -149,7 +150,7 @@ public class Auto1 extends LinearOpMode {
         //   2.5 / Deposit Pre Load /////////////////////////////////////////////////////
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
         robot.arm.extendMax();
-        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
+        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
         robot.turret.setState(robot.lift);
         while (runTime.seconds() < 0.65);
         runTime.reset();
@@ -161,18 +162,24 @@ public class Auto1 extends LinearOpMode {
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         robot.arm.extendHome();
 
-        while (this.opModeIsActive());
+
         //   3   ////////////////////////////////////////////////////////////////////
 
+        telemetry.addData("Trajcectory ::", "Collect COne");
+        telemetry.update();
 
         Trajectory collectConePoseTraj = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                 .lineToLinearHeading(collectConesPosition)
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(collectConePoseTraj);
 
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
+        runTime.reset();
         while (step3) {
-            if (!robot.lift.hasLiftReachedHeight(robot.lift.LIFT_PICKUP)){
-                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_GROUND);
+            if (runTime.seconds() < 1.3){
+                telemetry.addData("While Loop ::", "Step 3");
+                telemetry.update();
+                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_PICKUP);
                 robot.lift.setState();
             } else {
                 step4 = true;
@@ -193,30 +200,110 @@ public class Auto1 extends LinearOpMode {
                 .lineToLinearHeading(depositOnHighPole)
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(depositOnHighGoalTraj);
-
+        runTime.reset();
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
         while (step4) {
-            step5 = true;
-            step4 = false;
+            if (runTime.seconds() < 1){
+                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_HIGHPOLE);
+                robot.lift.setState();
+            } else {
+                step5 = true;
+                step4 = false;
+            }
+
         }
         sampleMecanumDrive.waitForIdle();
 
-        while (runTime.seconds() < 25) {
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+        robot.arm.extendMax();
+        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
+        robot.turret.setState(robot.lift);
+        while (runTime.seconds() < 0.65);
+        runTime.reset();
+        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+        robot.grabber.runGrabber(robot.grabber.OPEN_STATE);
+        while (runTime.milliseconds() < 750);
+        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+        robot.turret.setState(robot.lift);
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+        robot.arm.extendHome();
+
+
+
+
+        while (true) {
 
 
             //   5   ////////////////////////////////////////////////////////////////////
 
+            telemetry.addData("traj", "5");
+            telemetry.update();
 
             Trajectory cycleCollectTraj = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                     .lineToLinearHeading(collectConesPosition)
                     .build();
             sampleMecanumDrive.followTrajectoryAsync(cycleCollectTraj);
 
+            runTime.reset();
+            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
             while (step5) {
-                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_GROUND);
-                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-                robot.lift.setState();
+                if (runTime.seconds() < 1.2){
+                    robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_GROUND);
+                    robot.lift.setState();
+                    telemetry.addData("while loop", "step 5");
+                    telemetry.update();
+                } else {
+                    step5 = false;
+                    step5a = true;
+                }
             }
+
+
             sampleMecanumDrive.waitForIdle();
+
+//            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+//            robot.arm.extendMax();
+//            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
+//            robot.turret.setState(robot.lift);
+//            while (runTime.seconds() < 0.65);
+//            runTime.reset();
+//            stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+//            robot.grabber.runGrabber(robot.grabber.OPEN_STATE);
+//            while (runTime.milliseconds() < 750);
+//            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+//            robot.turret.setState(robot.lift);
+//            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+//            robot.arm.extendHome();
+
+
+            // 6? (technically) ///////////////////////////////////////
+            telemetry.addData("traj", "6");
+            telemetry.update();
+
+            Trajectory depositConeCollected = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                    .lineToLinearHeading(depositOnHighPole)
+                    .build();
+            sampleMecanumDrive.followTrajectoryAsync(depositConeCollected);
+
+            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+            runTime.reset();
+            while (step5a) {
+                if (runTime.seconds() < 1) {
+                    robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_HIGHPOLE);
+                    robot.lift.setState();
+                } else {
+                    step5a = false;
+                    step5 = true;
+                }
+            }
+
+            sampleMecanumDrive.waitForIdle();
+
+
+
+            telemetry.addData("Cycle Loop :", "end of loop");
+            telemetry.update();
+
         }
     }
 }
