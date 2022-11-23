@@ -36,7 +36,7 @@ public class Grabber {
     Constants constants = new Constants();
 
 
-    public final double FULLY_OPEN_VALUE = 900;
+    public final double FULLY_OPEN_VALUE = 1375;
     public final double OPEN_VALUE = 1376;
     public final double CLOSED_VALUE = 1850;
 

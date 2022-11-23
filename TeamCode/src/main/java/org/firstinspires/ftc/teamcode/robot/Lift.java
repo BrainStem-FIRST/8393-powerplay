@@ -324,7 +324,7 @@ public class Lift {
         double power = errorToPowerLookup(error, heightInTicks);
 
         if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
-            power = -0.05;
+            power = -0.1;
         } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
             power = 0.65;
         }
