@@ -17,12 +17,15 @@ public class Auto1 extends LinearOpMode {
     private BrainSTEMRobot robot;
     private Map stateMap;
 
+
+
     // Locations - For Red /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(36, -65, Math.toRadians(90));
-    private Pose2d depositPreLoadMidPole = new Pose2d(36, -23.5, Math.toRadians(90));
+    private Pose2d centerofBlueChannel = new Pose2d(36, -23.5, Math.toRadians(90));
     private Pose2d depositPreLoad = new Pose2d(36, -23.5, Math.toRadians(90));
     private Pose2d collectConesPosition = new Pose2d(64, -12.5, Math.toRadians(0));
     private Pose2d depositOnHighPole = new Pose2d(23, -12.5, Math.toRadians(0));
+    ///////////////////////////////////////////////////////////////////////////////////////////
 
     private boolean step1 = false;
     private boolean step2 = false;
@@ -30,11 +33,10 @@ public class Auto1 extends LinearOpMode {
     private boolean step4 = false;
     private boolean step5 = false;
 
+    private boolean isRed = true;
 
-    ///////////////////////////////////////////////////////////////////////////////////////////
-
-    private enum LiftHeight {
-        LOW, MID, TOP
+    private enum ParkingLocation {
+        LEFT, MID, RIGHT
     }
 
     public enum AllianceColor {
@@ -46,14 +48,16 @@ public class Auto1 extends LinearOpMode {
 
         switch (color) {
             case RED:
-
+                    isRed = true;
                 break;
             case BLUE:
-                startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
-                depositPreLoadMidPole = new Pose2d(depositPreLoadMidPole.getX(), -depositPreLoadMidPole.getY(), Math.toRadians(0));
-                depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(0));
-                collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(0));
-                depositOnHighPole = new Pose2d(depositOnHighPole.getX(), -depositOnHighPole.getY(), Math.toRadians(0));
+                    isRed = false;
+
+                    startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
+                    centerofBlueChannel = new Pose2d(centerofBlueChannel.getX(), -centerofBlueChannel.getY(), Math.toRadians(0));
+                    depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(0));
+                    collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(0));
+                    depositOnHighPole = new Pose2d(depositOnHighPole.getX(), -depositOnHighPole.getY(), Math.toRadians(0));
                 break;
         }
 
@@ -80,8 +84,7 @@ public class Auto1 extends LinearOpMode {
         while (!this.opModeIsActive()) {
             runTime.reset();
             // april tag open cv here
-//            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-//            stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+//
             robot.updateSystems();
         }
 
@@ -98,27 +101,27 @@ public class Auto1 extends LinearOpMode {
 
         totalTime.reset();
         //   1   /////////////////////////////////////////////////////////////////////;
-//        this.step1 = true;
-//        telemetry.addData("Trajectory: ", "setting trajectory");
-//        telemetry.update();
-//        Trajectory alignCenterOfBlueAutoChannel = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-//                .lineToLinearHeading(depositPreLoadMidPole)
-//                .build();
-//        sampleMecanumDrive.followTrajectoryAsync(alignCenterOfBlueAutoChannel);
-//
-//        while (step1) {
-//            telemetry.addData("StateMap: ", "lift low");
-//            telemetry.update();
-//            if ((false)) {
-//
-//            } else {
-//                telemetry.addData("else:", "else");
-//                telemetry.update();
-//                step2 = true;
-//                step1 = false;
-//            }
-//        }
-//        sampleMecanumDrive.waitForIdle();
+        this.step1 = true;
+        telemetry.addData("Trajectory: ", "setting trajectory");
+        telemetry.update();
+        Trajectory alignCenterOfBlueAutoChannel = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                .lineToLinearHeading(centerofBlueChannel)
+                .build();
+        sampleMecanumDrive.followTrajectoryAsync(alignCenterOfBlueAutoChannel);
+
+        while (step1) {
+            telemetry.addData("StateMap: ", "Driving Test");
+            telemetry.update();
+            if ((false)) {
+
+            } else {
+                telemetry.addData("else:", "else");
+                telemetry.update();
+                step2 = true;
+                step1 = false;
+            }
+        }
+        sampleMecanumDrive.waitForIdle();
 
         //   2   ////////////////////////////////////////////////////////////////////
 
@@ -148,9 +151,15 @@ public class Auto1 extends LinearOpMode {
         robot.arm.extendMax();
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
         robot.turret.setState(robot.lift);
-        while (runTime.seconds() < 0.75);
+        while (runTime.seconds() < 0.65);
+        runTime.reset();
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
         robot.grabber.runGrabber(robot.grabber.OPEN_STATE);
+        while (runTime.milliseconds() < 750);
+        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+        robot.turret.setState(robot.lift);
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+        robot.arm.extendHome();
 
         while (this.opModeIsActive());
         //   3   ////////////////////////////////////////////////////////////////////
@@ -162,10 +171,20 @@ public class Auto1 extends LinearOpMode {
         sampleMecanumDrive.followTrajectoryAsync(collectConePoseTraj);
 
         while (step3) {
-            step4 = true;
-            step3 = false;
+            if (!robot.lift.hasLiftReachedHeight(robot.lift.LIFT_PICKUP)){
+                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_GROUND);
+                robot.lift.setState();
+            } else {
+                step4 = true;
+                step3 = false;
+            }
+
         }
         sampleMecanumDrive.waitForIdle();
+
+        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+        robot.grabber.runGrabber(robot.grabber.CLOSED_STATE);
+
 
         //   4   ////////////////////////////////////////////////////////////////////
 
