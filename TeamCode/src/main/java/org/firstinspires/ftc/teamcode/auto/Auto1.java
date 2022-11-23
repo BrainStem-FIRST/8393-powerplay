@@ -247,7 +247,7 @@ public class Auto1 extends LinearOpMode {
             runTime.reset();
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
             while (step5) {
-                if (runTime.seconds() < 1.2){
+                if (runTime.seconds() < 0.5){
                     robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_GROUND);
                     robot.lift.setState();
                     telemetry.addData("while loop", "step 5");
@@ -288,7 +288,7 @@ public class Auto1 extends LinearOpMode {
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
             runTime.reset();
             while (step5a) {
-                if (runTime.seconds() < 1) {
+                if (runTime.seconds() < 0.5) {
                     robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_HIGHPOLE);
                     robot.lift.setState();
                 } else {
