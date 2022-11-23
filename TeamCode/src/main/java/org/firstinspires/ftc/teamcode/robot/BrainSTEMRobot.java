@@ -24,6 +24,7 @@ public class BrainSTEMRobot {
     public Lift lift;
     public Extension arm;
     public SampleMecanumDrive drive;
+    
     public Grabber grabber;
     private Map stateMap;
     Constants constants = new Constants();
