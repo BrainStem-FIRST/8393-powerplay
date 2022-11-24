@@ -48,8 +48,10 @@ public class Lift {
     public int LIFT_POSITION_HIGHPOLE = 720;
     public final int LIFT_POSITION_PICKUP = 1;
     public final int LIFT_ADJUSTMENT = -30;
-    public final int CYCLE_LIFT_DOWN_TIME = 250;
-    public final int CYCLE_LIFT_UP_TIME = 400;
+    public final int CYCLE_LIFT_DOWN_TIME_BOTTOM = 300;
+    public final int CYCLE_LIFT_UP_TIME_BOTTOM = 300;
+    public final int CYCLE_LIFT_DOWN_TIME_TOP = 50;
+    public final int CYCLE_LIFT_UP_TIME_TOP = 200;
 //    public final int LIFT_FINE_UP = 25;
 //    public final int LIFT_FINE_DOWN = 25;
 
@@ -172,14 +174,26 @@ public class Lift {
     }
 
     private void updateConeCycleState() {
-        int position = getStateValue();
-        if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
-            if (getPosition() < position + LIFT_ADJUSTMENT || isCycleExpired(CYCLE_LIFT_DOWN_TIME)) {
-                stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
+        if (getPosition() > 400) {
+            int position = getStateValue();
+            if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
+                if (getPosition() < position + LIFT_ADJUSTMENT || isCycleExpired(CYCLE_LIFT_DOWN_TIME_TOP)) {
+                    stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
+                }
+            } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (getPosition() > position || isCycleExpired(CYCLE_LIFT_UP_TIME_TOP))) {
+                stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
             }
-        } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (getPosition() > position || isCycleExpired(CYCLE_LIFT_DOWN_TIME + constants.GRABBER_CYCLE_TIME))) {
-            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
+        } else {
+            int position = getStateValue();
+            if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
+                if (getPosition() < position + LIFT_ADJUSTMENT || isCycleExpired(CYCLE_LIFT_DOWN_TIME_BOTTOM)) {
+                    stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
+                }
+            } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (getPosition() > position || isCycleExpired(CYCLE_LIFT_UP_TIME_BOTTOM))) {
+                stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
+            }
         }
+
     }
 
     private boolean isCycleExpired(int cycleTime) {
@@ -299,7 +313,7 @@ public class Lift {
         if (error > 25) {
             power = 1.0;
         } else if (error <= 25 && error > 3) {
-            power = Math.min(heightFactor(heightInTicks) + 0.25, 0.65);
+            power = Math.min(heightFactor(heightInTicks) + 0.5, 0.75);
         } else if (error < -200) {
             power = -0.1;
         } else if (error > -200 && error < -50) {
@@ -351,9 +365,9 @@ public class Lift {
         double power = errorToPowerLookup(error, heightInTicks);
 
         if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
-            power = -0.2;
+            power = -0.3;
         } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
-            power = 0.85;
+            power = 1;
         }
 
         setMotorsPower(power);

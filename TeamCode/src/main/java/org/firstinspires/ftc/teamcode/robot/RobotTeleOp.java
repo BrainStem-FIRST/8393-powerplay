@@ -333,7 +333,7 @@ public class RobotTeleOp extends LinearOpMode {
 ////                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_FINEADJ_DOWN);
 //            }
 
-            if (gamepad2.x) {
+            if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
                 robot.lift.liftMotor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             }
 
