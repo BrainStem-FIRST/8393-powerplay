@@ -42,14 +42,20 @@ public class Lift {
     public final int MINIMUM_CLEARANCE_HEIGHT = 43;    // inches to lift to clear side panels
 
     public final int LIFT_POSITION_RESET = 0;
-    public final int LIFT_POSITION_GROUND = 25;
+    public final int LIFT_POSITION_GROUND = 10;
     public final int LIFT_POSITION_LOWPOLE = 330;
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;
     public final int LIFT_POSITION_PICKUP = 1;
     public final int LIFT_ADJUSTMENT = -30;
-    public final int CYCLE_LIFT_DOWN_TIME = 250;
-    public final int CYCLE_LIFT_UP_TIME = 400;
+    public final int CYCLE_LIFT_DOWN_TIME_BOTTOM = 300;
+    public final int CYCLE_LIFT_UP_TIME_BOTTOM = 300;
+    public final int CYCLE_LIFT_DOWN_TIME_TOP = 50;
+    public final int CYCLE_LIFT_UP_TIME_TOP = 200;
+//    public final int LIFT_FINE_UP = 25;
+//    public final int LIFT_FINE_DOWN = 25;
+
+
     Constants constants = new Constants();
 
 
@@ -69,6 +75,8 @@ public class Lift {
     public final String APPROACH_HEIGHT = "APPROACH_HEIGHT";
     public final String PLACEMENT_HEIGHT = "PLACEMENT_HEIGHT";
     public final String LIFT_SUBHEIGHT = "SUB_HEIGHT";
+//    public final String LIFT_FINEADJ_DOWN = "LIFT_FINEADJ_DOWN";
+//    public final String LIFT_FINEADJ_UP = "LIFT_FINEADJ_UP";
 
     public final String TRANSITION_STATE = "TRANSITION";
     public final int DELIVERY_ADJUSTMENT = -3;
@@ -166,14 +174,26 @@ public class Lift {
     }
 
     private void updateConeCycleState() {
-        int position = getStateValue();
-        if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
-            if (getPosition() < position + LIFT_ADJUSTMENT || isCycleExpired(CYCLE_LIFT_DOWN_TIME)) {
-                stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
+        if (getPosition() > 400) {
+            int position = getStateValue();
+            if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
+                if (getPosition() < position + LIFT_ADJUSTMENT || isCycleExpired(CYCLE_LIFT_DOWN_TIME_TOP)) {
+                    stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
+                }
+            } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (getPosition() > position || isCycleExpired(CYCLE_LIFT_UP_TIME_TOP))) {
+                stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
             }
-        } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (getPosition() > position || isCycleExpired(CYCLE_LIFT_DOWN_TIME + constants.GRABBER_CYCLE_TIME))) {
-            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
+        } else {
+            int position = getStateValue();
+            if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
+                if (getPosition() < position + LIFT_ADJUSTMENT || isCycleExpired(CYCLE_LIFT_DOWN_TIME_BOTTOM)) {
+                    stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
+                }
+            } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (getPosition() > position || isCycleExpired(CYCLE_LIFT_UP_TIME_BOTTOM))) {
+                stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
+            }
         }
+
     }
 
     private boolean isCycleExpired(int cycleTime) {
@@ -207,6 +227,14 @@ public class Lift {
                 position = LIFT_POSITION_GROUND;
                 break;
             }
+//            case LIFT_FINEADJ_UP: {
+//                position = liftMotor3.getCurrentPosition() + LIFT_FINE_UP;
+//                break;
+//            }
+//            case LIFT_FINEADJ_DOWN: {
+//                position = liftMotor3.getCurrentPosition() - LIFT_FINE_DOWN;
+//                break;
+//            }
         }
         return position;
     }
@@ -230,6 +258,14 @@ public class Lift {
                 transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
                 break;
             }
+//            case LIFT_FINEADJ_UP: {
+//                transitionToLiftPosition(liftMotor3.getCurrentPosition() + deliveryHeight(subheight));
+//                break;
+//            }
+//            case LIFT_FINEADJ_DOWN: {
+//                transitionToLiftPosition(liftMotor3.getCurrentPosition() - deliveryHeight(subheight));
+//                break;
+//            }
         }
 
     }
@@ -250,6 +286,11 @@ public class Lift {
         } else if (inHeightTolerance(currentPosition, LIFT_POSITION_HIGHPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_HIGH;
         }
+//        else if (inHeightTolerance(currentPosition, LIFT_FINE_UP + deliveryHeight(subheight))) {
+//            state = LIFT_FINEADJ_UP;
+//        } else if (inHeightTolerance(currentPosition, LIFT_FINE_DOWN + deliveryHeight(subheight))) {
+//            state = LIFT_FINEADJ_DOWN;
+//        }
         return state;
     }
 
@@ -272,7 +313,7 @@ public class Lift {
         if (error > 25) {
             power = 1.0;
         } else if (error <= 25 && error > 3) {
-            power = Math.min(heightFactor(heightInTicks) + 0.25, 0.65);
+            power = Math.min(heightFactor(heightInTicks) + 0.5, 0.75);
         } else if (error < -200) {
             power = -0.1;
         } else if (error > -200 && error < -50) {
@@ -326,7 +367,7 @@ public class Lift {
         if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
             power = -0.3;
         } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
-            power = 0.8;
+            power = 1;
         }
 
         setMotorsPower(power);
