@@ -40,7 +40,7 @@ public class Grabber {
 
         grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
 
-        grabber.setPwmRange(new PwmControl.PwmRange(REGULAR_OPEN, CLOSED_VALUE));
+        grabber.setPwmRange(new PwmControl.PwmRange(MAX_OPEN, CLOSED_VALUE));
 
     }
 
@@ -71,10 +71,10 @@ public class Grabber {
     }
 
     public void open() {
-        grabber.setPosition(0);
+        grabber.setPosition(REGULAR_OPEN/CLOSED_VALUE);
     }
 
-    public void maxOpen(){grabber.setPosition(MAX_OPEN / 2250);}
+    public void maxOpen(){grabber.setPosition(0);}
 
     public boolean shouldGrab(Lift lift) {
         return lift.getPosition() < lift.LIFT_POSITION_GROUND &&

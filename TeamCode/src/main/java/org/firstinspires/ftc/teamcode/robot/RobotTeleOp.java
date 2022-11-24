@@ -136,9 +136,9 @@ public class RobotTeleOp extends LinearOpMode {
             if (gamepad1.a || gamepad1.right_trigger > 0.5) {
                 stateMap.put(constants.LIFT_START_TIME, String.valueOf(System.currentTimeMillis()));
                 stateMap.put(constants.LIFT_INTEGRAL_SUM, "0.0");
-//                if(robot.lift.getPosition() > 500){
-//                    robot.grabber.open();
-//                }
+                if(robot.lift.getPosition() > 500){
+                    robot.grabber.open();
+                }
             }
 
             if (toggleMap.get(GAMEPAD_1_A_STATE)) {
