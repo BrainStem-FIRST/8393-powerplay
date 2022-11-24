@@ -1,24 +1,17 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.BrainSTEMRobot;
-
 import java.util.HashMap;
 import java.util.Map;
 
 public class Auto1 extends LinearOpMode {
     private final AllianceColor color;
-    private BrainSTEMRobot robot;
     private Map stateMap;
-
 
 
     // Locations - For Red /////////////////////////////////////////////////////////////////////
@@ -48,23 +41,18 @@ public class Auto1 extends LinearOpMode {
 
     public Auto1(AllianceColor color) {
         this.color = color;
-
-        this.opMode = opMode;
-        this.hardwareMap = opMode.hardwareMap;
-        this.telemetry = opMode.telemetry;
-
         switch (color) {
             case RED:
-                    isRed = true;
+                isRed = true;
                 break;
             case BLUE:
-                    isRed = false;
+                isRed = false;
 
-                    startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
-                    centerofBlueChannel = new Pose2d(centerofBlueChannel.getX(), -centerofBlueChannel.getY(), Math.toRadians(0));
-                    depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(0));
-                    collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(0));
-                    depositOnHighPole = new Pose2d(depositOnHighPole.getX(), -depositOnHighPole.getY(), Math.toRadians(0));
+                startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
+                centerofBlueChannel = new Pose2d(centerofBlueChannel.getX(), -centerofBlueChannel.getY(), Math.toRadians(0));
+                depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(0));
+                collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(0));
+                depositOnHighPole = new Pose2d(depositOnHighPole.getX(), -depositOnHighPole.getY(), Math.toRadians(0));
                 break;
         }
 
@@ -80,7 +68,6 @@ public class Auto1 extends LinearOpMode {
         this.stateMap = new HashMap<String, String>() {{
         }};
         BrainSTEMRobot robot = new BrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap);
-
 
 
         this.stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
@@ -161,11 +148,11 @@ public class Auto1 extends LinearOpMode {
         robot.arm.extendMax();
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
         robot.turret.setState(robot.lift);
-        while (runTime.seconds() < 0.65);
+        while (runTime.seconds() < 0.65) ;
         runTime.reset();
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
         robot.grabber.runGrabber(robot.grabber.OPEN_STATE);
-        while (runTime.milliseconds() < 750);
+        while (runTime.milliseconds() < 750) ;
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         robot.turret.setState(robot.lift);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
@@ -185,7 +172,7 @@ public class Auto1 extends LinearOpMode {
         stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
         runTime.reset();
         while (step3) {
-            if (runTime.seconds() < 1.3){
+            if (runTime.seconds() < 1.3) {
                 telemetry.addData("While Loop ::", "Step 3");
                 telemetry.update();
                 robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_PICKUP);
@@ -212,7 +199,7 @@ public class Auto1 extends LinearOpMode {
         runTime.reset();
         stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
         while (step4) {
-            if (runTime.seconds() < 1){
+            if (runTime.seconds() < 1) {
                 robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_HIGHPOLE);
                 robot.lift.setState();
             } else {
@@ -227,17 +214,15 @@ public class Auto1 extends LinearOpMode {
         robot.arm.extendMax();
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
         robot.turret.setState(robot.lift);
-        while (runTime.seconds() < 0.65);
+        while (runTime.seconds() < 0.65) ;
         runTime.reset();
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
         robot.grabber.runGrabber(robot.grabber.OPEN_STATE);
-        while (runTime.milliseconds() < 750);
+        while (runTime.milliseconds() < 750) ;
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         robot.turret.setState(robot.lift);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         robot.arm.extendHome();
-
-
 
 
         while (true) {
@@ -256,7 +241,7 @@ public class Auto1 extends LinearOpMode {
             runTime.reset();
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
             while (step5) {
-                if (runTime.seconds() < 0.5){
+                if (runTime.seconds() < 0.5) {
                     robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_GROUND);
                     robot.lift.setState();
                     telemetry.addData("while loop", "step 5");
@@ -308,16 +293,10 @@ public class Auto1 extends LinearOpMode {
 
             sampleMecanumDrive.waitForIdle();
 
-            
-
-        
-
-
-
 
             telemetry.addData("Cycle Loop :", "end of loop");
             telemetry.update();
 
         }
     }
-
+}
