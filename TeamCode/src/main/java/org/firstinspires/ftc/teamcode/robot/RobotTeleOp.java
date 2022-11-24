@@ -136,6 +136,9 @@ public class RobotTeleOp extends LinearOpMode {
             if (gamepad1.a || gamepad1.right_trigger > 0.5) {
                 stateMap.put(constants.LIFT_START_TIME, String.valueOf(System.currentTimeMillis()));
                 stateMap.put(constants.LIFT_INTEGRAL_SUM, "0.0");
+//                if(robot.lift.getPosition() > 500){
+//                    robot.grabber.open();
+//                }
             }
 
             if (toggleMap.get(GAMEPAD_1_A_STATE)) {
@@ -171,6 +174,9 @@ public class RobotTeleOp extends LinearOpMode {
 
             if(gamepad1.right_trigger > 0.5) {
                 coneCycleCenterAdjust = false;
+                if (robot.lift.getPosition() > 500){
+                    robot.grabber.maxOpen();
+                }
                 toggleMap.put(GAMEPAD_1_LEFT_TRIGGER_STATE, false);
                 if(!((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
                     stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);

@@ -1,24 +1,14 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.checkerframework.checker.units.qual.C;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -36,8 +26,9 @@ public class Grabber {
     Constants constants = new Constants();
 
 
-    public final double FULLY_OPEN_VALUE = 1375;
-    public final double OPEN_VALUE = 1376;
+
+    public final double MAX_OPEN = 900;
+    public final double REGULAR_OPEN = 1375;
     public final double CLOSED_VALUE = 1850;
 
     private Map stateMap;
@@ -49,7 +40,7 @@ public class Grabber {
 
         grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
 
-        grabber.setPwmRange(new PwmControl.PwmRange(FULLY_OPEN_VALUE, CLOSED_VALUE));
+        grabber.setPwmRange(new PwmControl.PwmRange(REGULAR_OPEN, CLOSED_VALUE));
 
     }
 
@@ -82,6 +73,8 @@ public class Grabber {
     public void open() {
         grabber.setPosition(0);
     }
+
+    public void maxOpen(){grabber.setPosition(MAX_OPEN / 2250);}
 
     public boolean shouldGrab(Lift lift) {
         return lift.getPosition() < lift.LIFT_POSITION_GROUND &&
