@@ -50,6 +50,10 @@ public class Lift {
     public final int LIFT_ADJUSTMENT = -30;
     public final int CYCLE_LIFT_DOWN_TIME = 250;
     public final int CYCLE_LIFT_UP_TIME = 400;
+//    public final int LIFT_FINE_UP = 25;
+//    public final int LIFT_FINE_DOWN = 25;
+
+
     Constants constants = new Constants();
 
 
@@ -69,6 +73,8 @@ public class Lift {
     public final String APPROACH_HEIGHT = "APPROACH_HEIGHT";
     public final String PLACEMENT_HEIGHT = "PLACEMENT_HEIGHT";
     public final String LIFT_SUBHEIGHT = "SUB_HEIGHT";
+//    public final String LIFT_FINEADJ_DOWN = "LIFT_FINEADJ_DOWN";
+//    public final String LIFT_FINEADJ_UP = "LIFT_FINEADJ_UP";
 
     public final String TRANSITION_STATE = "TRANSITION";
     public final int DELIVERY_ADJUSTMENT = -3;
@@ -207,6 +213,14 @@ public class Lift {
                 position = LIFT_POSITION_GROUND;
                 break;
             }
+//            case LIFT_FINEADJ_UP: {
+//                position = liftMotor3.getCurrentPosition() + LIFT_FINE_UP;
+//                break;
+//            }
+//            case LIFT_FINEADJ_DOWN: {
+//                position = liftMotor3.getCurrentPosition() - LIFT_FINE_DOWN;
+//                break;
+//            }
         }
         return position;
     }
@@ -230,6 +244,14 @@ public class Lift {
                 transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
                 break;
             }
+//            case LIFT_FINEADJ_UP: {
+//                transitionToLiftPosition(liftMotor3.getCurrentPosition() + deliveryHeight(subheight));
+//                break;
+//            }
+//            case LIFT_FINEADJ_DOWN: {
+//                transitionToLiftPosition(liftMotor3.getCurrentPosition() - deliveryHeight(subheight));
+//                break;
+//            }
         }
 
     }
@@ -250,6 +272,11 @@ public class Lift {
         } else if (inHeightTolerance(currentPosition, LIFT_POSITION_HIGHPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_HIGH;
         }
+//        else if (inHeightTolerance(currentPosition, LIFT_FINE_UP + deliveryHeight(subheight))) {
+//            state = LIFT_FINEADJ_UP;
+//        } else if (inHeightTolerance(currentPosition, LIFT_FINE_DOWN + deliveryHeight(subheight))) {
+//            state = LIFT_FINEADJ_DOWN;
+//        }
         return state;
     }
 
@@ -324,9 +351,9 @@ public class Lift {
         double power = errorToPowerLookup(error, heightInTicks);
 
         if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
-            power = -0.3;
+            power = -0.2;
         } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
-            power = 0.8;
+            power = 0.85;
         }
 
         setMotorsPower(power);
