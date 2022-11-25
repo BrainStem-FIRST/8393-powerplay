@@ -87,7 +87,7 @@ public class Lift {
     static final String LIFT_MOTOR_1_ID = "Lift-1";
     static final String LIFT_MOTOR_2_ID = "Lift-2";
     static final String LIFT_MOTOR_3_ID = "Lift-3";
-    static final String LIFT_MOTOR_4_ID = "Lift-4andOdo";
+    static final String LIFT_MOTOR_4_ID = "Lift-4";
 
     //declaring list of lift motors
     private ArrayList<DcMotor> liftMotors;
