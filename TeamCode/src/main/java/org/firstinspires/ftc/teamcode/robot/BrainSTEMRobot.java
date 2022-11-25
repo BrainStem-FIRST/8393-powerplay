@@ -57,7 +57,7 @@ public class BrainSTEMRobot {
     }
 
     public void updateSystems() {
-        telemetry.addData("robotStateMap" , stateMap);
+        //telemetry.addData("robotStateMap" , stateMap);
         stateMap.put(constants.SYSTEM_TIME, System.currentTimeMillis());
 
         if(((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){

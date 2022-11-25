@@ -62,7 +62,6 @@ public class Lift {
     public boolean coneCycleNowAt;
 
 
-
     public final double HARD_STOP_CURRENT_DRAW = 100;
 
     public final String LIFT_SYSTEM_NAME = "Lift";
@@ -126,12 +125,13 @@ public class Lift {
     private void initializeLiftMotor(DcMotor liftMotor) {
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        liftMotor.setDirection(DcMotor.Direction.REVERSE);
+        liftMotor.setDirection(DcMotor.Direction.FORWARD);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
     public void setAllMotorPowers(double power) {
         for (DcMotor liftMotor : liftMotors) {
+            liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             liftMotor.setPower(power);
         }
     }
@@ -167,6 +167,17 @@ public class Lift {
         }
     }
 
+    public boolean haveLiftMotorsReachedTheirDesiredPositions() {
+        for (DcMotor liftMotor : liftMotors) {
+            int currentPosition = liftMotor.getCurrentPosition();
+            int desiredPosition = liftMotor.getTargetPosition();
+            if (!(currentPosition <= desiredPosition + 4 && currentPosition >= desiredPosition - 4)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     private boolean shouldLiftMove(String level, String currentState) {
         return ((String) stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
                 ((String) stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
@@ -177,10 +188,10 @@ public class Lift {
         if (getPosition() > 400) {
             int position = getStateValue();
             if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
-                if (getPosition() < position + LIFT_ADJUSTMENT || isCycleExpired(CYCLE_LIFT_DOWN_TIME_TOP)) {
+                if (haveLiftMotorsReachedTheirDesiredPositions() || isCycleExpired(CYCLE_LIFT_DOWN_TIME_TOP)) {
                     stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
                 }
-            } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (getPosition() > position || isCycleExpired(CYCLE_LIFT_UP_TIME_TOP))) {
+            } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (haveLiftMotorsReachedTheirDesiredPositions() || isCycleExpired(CYCLE_LIFT_UP_TIME_TOP))) {
                 stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
             }
         } else {
@@ -329,6 +340,15 @@ public class Lift {
         return power;
     }
 
+    private void runAllMotorsToPosition(int position, double power) {
+        for (DcMotor liftMotor : liftMotors) {
+            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftMotor.setTargetPosition(position);
+            liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            liftMotor.setPower(power);
+        }
+    }
+
     public void raiseHeightTo(int heightInTicks) {
 //        long liftStartTime = Long.valueOf(String.valueOf(stateMap.get(constants.LIFT_START_TIME)));
 //        long elapsedTime = System.currentTimeMillis() - liftStartTime;
@@ -339,7 +359,10 @@ public class Lift {
 //        telemetry.addData("liftStartTime", liftStartTime);
 //        telemetry.addData("elapsedTime", elapsedTime);
 
-        int position = getPosition();
+        //int position = getPosition();
+
+        int position = getAvgLiftPosition();
+
 //        double integralSum = Double.valueOf((String) stateMap.get(constants.LIFT_INTEGRAL_SUM));
         telemetry.addData("position", position);
 
@@ -359,20 +382,83 @@ public class Lift {
 //        double power = ((Kp * direction * error) / LIFT_POSITION_HIGHPOLE) +
 //                (heightFactor(heightInTicks) * Kv) +
 //                (integralSum * direction * Ki);
+        //double power = 0;
 //
         telemetry.addData("ERROR", error);
+        telemetry.addData("Current Positions: ", getLiftPositions());
 
-        double power = errorToPowerLookup(error, heightInTicks);
+        //double power = errorToPowerLookup(error, heightInTicks);
 
-        if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
-            power = -0.3;
+        runAllMotorsToPosition(400, 1);
+
+        telemetry.addData("Target Positions: ", getLiftTargetPositions());
+        telemetry.update();
+
+
+
+        /*if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
+            telemetry.addData("Setting Raw Power; ", "NOOOO");
+            telemetry.addData("Using Run To Position; ", "YESSSS");
+            telemetry.update();
+            runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT, 1);
+            //setAllMotorPowers(-0.3);
         } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
-            power = 1;
+            telemetry.addData("Setting Raw Power; ", "NOOOO");
+            telemetry.addData("Using Run To Position; ", "YESSSS");
+            telemetry.update();
+            runAllMotorsToPosition(heightInTicks, 1);
+            //setAllMotorPowers(1);
+        } else if (position >= heightInTicks - 7 && position <= heightInTicks + 7) {
+            if (heightInTicks > 400) {
+                telemetry.addData("Setting Raw Power; ", "YESS");
+                telemetry.addData("Using Run To Position; ", "NOO");
+                telemetry.update();
+                setAllMotorPowers(0.4);
+            } else {
+                telemetry.addData("Setting Raw Power; ", "YESS");
+                telemetry.addData("Using Run To Position; ", "NOOO");
+                telemetry.update();
+                setAllMotorPowers(0.1);
+            }
+        } else if (position > heightInTicks) {
+            if (position > heightInTicks + 200) {
+                telemetry.addData("Setting Raw Power; ", "YES");
+                telemetry.addData("Using Run To Position; ", "NO");
+                telemetry.update();
+                setAllMotorPowers(-0.2);
+            } else {
+                telemetry.addData("Setting Raw Power; ", "NOOOO");
+                telemetry.addData("Using Run To Position; ", "YESSSS");
+                telemetry.update();
+                runAllMotorsToPosition(heightInTicks, 1);
+            }
+        } else {
+            if (position < heightInTicks - 100) {
+                telemetry.addData("Setting Raw Power; ", "YESSS");
+                telemetry.addData("Using Run To Position; ", "NOOOO");
+                telemetry.update();
+                setAllMotorPowers(1);
+            } else {
+                telemetry.addData("Using Run To Position; ", "YESSS");
+                telemetry.addData("Setting Raw Power; ", "NOOOOO");
+                telemetry.update();
+                runAllMotorsToPosition(heightInTicks, 1);
+            }
         }
 
-        setMotorsPower(power);
 
-        telemetry.addData("POWER", power);
+        //setMotorsPower(power);
+
+        telemetry.addData("Lift Motor Powers: ", getLiftMotorPowers());*/
+        //setAllMotorPowers(1);
+    }
+
+    public int getAvgLiftPosition(){
+        double positionSum = 0;
+        for(DcMotor liftMotor : liftMotors){
+            positionSum += liftMotor.getCurrentPosition();
+        }
+        return (int)(positionSum/liftMotors.size());
     }
 
 
@@ -385,18 +471,42 @@ public class Lift {
         return (heightPosition > targetHeight - HEIGHT_TOLERANCE) && (heightPosition < targetHeight + HEIGHT_TOLERANCE);
     }
 
-    public boolean hasLiftReachedHeight(String height){
-        if(height == LIFT_POLE_LOW){
-            return(inHeightTolerance(getPosition(), LIFT_POSITION_LOWPOLE));
-        } else if (height == LIFT_POLE_GROUND){
+    public boolean hasLiftReachedHeight(String height) {
+        if (height == LIFT_POLE_LOW) {
+            return (inHeightTolerance(getPosition(), LIFT_POSITION_LOWPOLE));
+        } else if (height == LIFT_POLE_GROUND) {
             return inHeightTolerance(getPosition(), LIFT_POSITION_GROUND);
-        } else if (height == LIFT_POLE_HIGH){
+        } else if (height == LIFT_POLE_HIGH) {
             return inHeightTolerance(getPosition(), LIFT_POSITION_HIGHPOLE);
-        } else if(height == LIFT_POLE_MEDIUM){
+        } else if (height == LIFT_POLE_MEDIUM) {
             return inHeightTolerance(getPosition(), LIFT_POSITION_MIDPOLE);
         } else {
             return false;
         }
+    }
+
+    public ArrayList<Double> getLiftMotorPowers() {
+        ArrayList<Double> liftMotorPowers = new ArrayList<>();
+        for (DcMotor liftMotor : liftMotors) {
+            liftMotorPowers.add(liftMotor.getPower());
+        }
+        return liftMotorPowers;
+    }
+
+    public ArrayList<Integer> getLiftTargetPositions(){
+        ArrayList<Integer> liftTargetPositions = new ArrayList<>();
+        for(DcMotor liftMotor : liftMotors){
+            liftTargetPositions.add(liftMotor.getTargetPosition());
+        }
+        return liftTargetPositions;
+    }
+
+    public ArrayList<Integer> getLiftPositions(){
+        ArrayList<Integer> liftPositions = new ArrayList<>();
+        for(DcMotor liftMotor : liftMotors){
+            liftPositions.add(liftMotor.getCurrentPosition());
+        }
+        return liftPositions;
     }
 
     public boolean isLiftUp() {
