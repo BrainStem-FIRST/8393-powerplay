@@ -124,7 +124,7 @@ public class Lift {
 
     private void initializeLiftMotor(DcMotor liftMotor) {
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        //liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
@@ -389,14 +389,13 @@ public class Lift {
 
         //double power = errorToPowerLookup(error, heightInTicks);
 
-        runAllMotorsToPosition(400, 1);
+        //runAllMotorsToPosition(400, 0.8);
 
         telemetry.addData("Target Positions: ", getLiftTargetPositions());
         telemetry.update();
 
 
-
-        /*if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
+        if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
             telemetry.addData("Setting Raw Power; ", "NOOOO");
             telemetry.addData("Using Run To Position; ", "YESSSS");
             telemetry.update();
@@ -408,12 +407,12 @@ public class Lift {
             telemetry.update();
             runAllMotorsToPosition(heightInTicks, 1);
             //setAllMotorPowers(1);
-        } else if (position >= heightInTicks - 7 && position <= heightInTicks + 7) {
+        } else if (position >= heightInTicks - 8 && position <= heightInTicks + 8) {
             if (heightInTicks > 400) {
                 telemetry.addData("Setting Raw Power; ", "YESS");
                 telemetry.addData("Using Run To Position; ", "NOO");
                 telemetry.update();
-                setAllMotorPowers(0.4);
+                setAllMotorPowers(0.45);
             } else {
                 telemetry.addData("Setting Raw Power; ", "YESS");
                 telemetry.addData("Using Run To Position; ", "NOOO");
@@ -425,7 +424,7 @@ public class Lift {
                 telemetry.addData("Setting Raw Power; ", "YES");
                 telemetry.addData("Using Run To Position; ", "NO");
                 telemetry.update();
-                setAllMotorPowers(-0.2);
+                setAllMotorPowers(-0.1);
             } else {
                 telemetry.addData("Setting Raw Power; ", "NOOOO");
                 telemetry.addData("Using Run To Position; ", "YESSSS");
@@ -433,7 +432,7 @@ public class Lift {
                 runAllMotorsToPosition(heightInTicks, 1);
             }
         } else {
-            if (position < heightInTicks - 100) {
+            if (position < heightInTicks - 10) {
                 telemetry.addData("Setting Raw Power; ", "YESSS");
                 telemetry.addData("Using Run To Position; ", "NOOOO");
                 telemetry.update();
@@ -449,7 +448,7 @@ public class Lift {
 
         //setMotorsPower(power);
 
-        telemetry.addData("Lift Motor Powers: ", getLiftMotorPowers());*/
+        telemetry.addData("Lift Motor Powers: ", getLiftMotorPowers());
         //setAllMotorPowers(1);
     }
 
