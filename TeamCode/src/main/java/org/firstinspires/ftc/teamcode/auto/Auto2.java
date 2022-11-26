@@ -16,10 +16,10 @@ public class Auto2 extends LinearOpMode {
 
     // Locations - For Red /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -65, Math.toRadians(90));
-    private Pose2d centerofBlueChannel = new Pose2d(-36, -12.5, Math.toRadians(0));
-    private Pose2d depositPreLoad = new Pose2d(-48, -12.5, Math.toRadians(0));
-    private Pose2d collectConesPosition = new Pose2d(-64, -12.5, Math.toRadians(0));
-    private Pose2d depositOnHighPole = new Pose2d(-23, -12.5, Math.toRadians(0));
+    private Pose2d centerofBlueChannel = new Pose2d(-36, -12.5, Math.toRadians(180));
+    private Pose2d depositPreLoad = new Pose2d(-48, -12.5, Math.toRadians(180));
+    private Pose2d collectConesPosition = new Pose2d(-64, -12.5, Math.toRadians(180));
+    private Pose2d depositOnHighPole = new Pose2d(-23, -12.5, Math.toRadians(180));
     ///////////////////////////////////////////////////////////////////////////////////////////
 
     private boolean step1 = false;
@@ -49,10 +49,10 @@ public class Auto2 extends LinearOpMode {
                 isRed = false;
 
                 startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
-                centerofBlueChannel = new Pose2d(centerofBlueChannel.getX(), -centerofBlueChannel.getY(), Math.toRadians(0));
-                depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(0));
-                collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(0));
-                depositOnHighPole = new Pose2d(depositOnHighPole.getX(), -depositOnHighPole.getY(), Math.toRadians(0));
+                centerofBlueChannel = new Pose2d(centerofBlueChannel.getX(), -centerofBlueChannel.getY(), Math.toRadians(180));
+                depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(180));
+                collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(180));
+                depositOnHighPole = new Pose2d(depositOnHighPole.getX(), -depositOnHighPole.getY(), Math.toRadians(180));
                 break;
         }
 
