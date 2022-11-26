@@ -71,6 +71,7 @@ public class Extension {
 
     // Pulls the extension arm to its starting position (it is NOT in clear)
     public void extendHome() {
+        telemetry.addData("Bringing in: ", "true");
         extension.setPosition(0);
     }
 

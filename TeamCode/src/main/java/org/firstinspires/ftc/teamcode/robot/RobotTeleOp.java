@@ -114,11 +114,16 @@ public class RobotTeleOp extends LinearOpMode {
 
 
         while (!opModeIsActive()) {
+
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+            robot.arm.extendHome();
             robot.updateSystems();
 
             telemetry.addData("Robot ::", "Init");
             telemetry.update();
+
+            robot.lights.setLeftLEDGreen();
+            robot.lights.setRightLEDAmber();
         }
 
 
@@ -126,9 +131,13 @@ public class RobotTeleOp extends LinearOpMode {
 
 
         while (!isStopRequested()) {
-
+            if(gamepad2.left_trigger > 0.4){
+                robot.lift.setAllMotorPowers(-gamepad2.right_trigger);
+            }
+            if(gamepad2.right_bumper){
+                //robot.lift
+            }
             setButtons();
-
             if (gamepad1.a || gamepad1.right_trigger > 0.5) {
                 stateMap.put(constants.LIFT_START_TIME, String.valueOf(System.currentTimeMillis()));
                 stateMap.put(constants.LIFT_INTEGRAL_SUM, "0.0");

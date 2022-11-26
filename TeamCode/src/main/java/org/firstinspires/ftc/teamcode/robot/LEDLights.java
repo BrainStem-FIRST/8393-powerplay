@@ -17,11 +17,11 @@ public class LEDLights {
     public LEDLights (HardwareMap hwMap, Telemetry telemetry) {
         this.telemetry = telemetry;
 
-        leftRedLED = hwMap.get(DigitalChannel.class, "Red1");
-        leftGreenLED = hwMap.get(DigitalChannel.class, "Green1");
+        leftRedLED = hwMap.get(DigitalChannel.class, "Green1");
+        leftGreenLED = hwMap.get(DigitalChannel.class, "Red1");
 
-        rightRedLED = hwMap.get(DigitalChannel.class, "Red2");
-        rightGreenLED = hwMap.get(DigitalChannel.class, "Green2");
+        rightRedLED = hwMap.get(DigitalChannel.class, "Green2");
+        rightGreenLED = hwMap.get(DigitalChannel.class, "Red1");
 
         leftRedLED.setMode(DigitalChannel.Mode.OUTPUT);
         leftGreenLED.setMode(DigitalChannel.Mode.OUTPUT);

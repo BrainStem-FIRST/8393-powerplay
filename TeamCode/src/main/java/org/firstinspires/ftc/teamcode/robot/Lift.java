@@ -436,7 +436,7 @@ public class Lift {
                 telemetry.addData("Setting Raw Power; ", "YESSS");
                 telemetry.addData("Using Run To Position; ", "NOOOO");
                 telemetry.update();
-                setAllMotorPowers(1);
+                setAllMotorPowers(0.7);
             } else {
                 telemetry.addData("Using Run To Position; ", "YESSS");
                 telemetry.addData("Setting Raw Power; ", "NOOOOO");
@@ -458,6 +458,12 @@ public class Lift {
             positionSum += liftMotor.getCurrentPosition();
         }
         return (int)(positionSum/liftMotors.size());
+    }
+
+    public void resetAllLiftMotorEncoders(){
+        for(DcMotor liftMotor : liftMotors){
+            liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
     }
 
 
