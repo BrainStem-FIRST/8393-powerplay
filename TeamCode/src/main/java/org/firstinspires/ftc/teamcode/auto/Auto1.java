@@ -93,8 +93,8 @@ public class Auto1 extends LinearOpMode {
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         robot.arm.setState(robot.arm.DEFAULT_VALUE);
         robot.arm.extendHome();
-        robot.grabber.runGrabber(robot.grabber.CLOSED_STATE);
-        robot.grabber.actuallySettingGrabberState(robot.grabber.CLOSED_STATE);
+//        robot.grabber.runGrabber(robot.grabber.CLOSED_STATE);
+//        robot.grabber.actuallySettingGrabberState(robot.grabber.CLOSED_STATE);
         //stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
         //robot.lift.setState();
 

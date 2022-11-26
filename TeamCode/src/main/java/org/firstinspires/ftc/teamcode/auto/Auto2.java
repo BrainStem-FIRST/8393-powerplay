@@ -4,8 +4,16 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
+import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
+import org.firstinspires.ftc.teamcode.auto.imagecv.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.BrainSTEMRobot;
+import org.openftc.apriltag.AprilTagDetection;
+import org.openftc.easyopencv.OpenCvCamera;
+import org.openftc.easyopencv.OpenCvCameraFactory;
+import org.openftc.easyopencv.OpenCvCameraRotation;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,8 +28,9 @@ public class Auto2 extends LinearOpMode {
     private Pose2d depositPreLoad = new Pose2d(-48, -12.5, Math.toRadians(180));
     private Pose2d collectConesPosition = new Pose2d(-64, -12.5, Math.toRadians(180));
     private Pose2d depositOnHighPole = new Pose2d(-23, -12.5, Math.toRadians(180));
-    ///////////////////////////////////////////////////////////////////////////////////////////
 
+
+    // Async Vars /////////////////////////////////////////////////////////////////////
     private boolean step1 = false;
     private boolean step2 = false;
     private boolean step3 = false;
@@ -30,6 +39,34 @@ public class Auto2 extends LinearOpMode {
     private boolean step5a = false;
 
     private boolean isRed = true;
+
+    // Open CV Stuff
+    public OpenCvCamera camera;
+    AprilTagDetectionPipeline aprilTagDetectionPipeline;
+
+    static final double FEET_PER_METER = 3.28084;
+
+    public int Ending_Location = 1;
+
+    // Lens intrinsics
+    // UNITS ARE PIXELS
+    // NOTE: this calibration is for the C920 webcam at 800x448.
+    // You will need to do your own calibration for other configurations!
+    double fx = 578.272;
+    double fy = 1000;
+    double cx = 100;
+    double cy = 221.506;
+
+    // UNITS ARE METERS
+    double tagsize = 0.00037;
+
+    int LEFT = 1;
+    int MIDDLE = 2;
+    int RIGHT = 3;
+
+    AprilTagDetection tagOfInterest = null;
+
+
 
     private enum ParkingLocation {
         LEFT, MID, RIGHT
@@ -61,30 +98,45 @@ public class Auto2 extends LinearOpMode {
 
     @Override
     public void runOpMode() throws InterruptedException {
+
+        // Timers ////////////////////////////////////////////////////////////////////////
         ElapsedTime runTime = new ElapsedTime();
         ElapsedTime totalTime = new ElapsedTime();
-        SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(this.hardwareMap);
 
-        this.stateMap = new HashMap<String, String>() {{
-        }};
+        // Hardwhare ///////////////////////////////////////////////////////////////////
+        SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(this.hardwareMap);
+        this.stateMap = new HashMap<String, String>() {{}};
         BrainSTEMRobot robot = new BrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap);
 
-
+        // State Map ////////////////////////////////////////////////////////////////
         this.stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
         //this.stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
         //this.stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
         this.stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         this.stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
 
+        // Open CV //////////////////////////////////////////////////////////////////
+        int cameraMonitorViewId = hardwareMap.appContext.getResources().getIdentifier("cameraMonitorViewId", "id", hardwareMap.appContext.getPackageName());
+        camera = OpenCvCameraFactory.getInstance().createWebcam(hardwareMap.get(WebcamName.class, "Webcam-2"), cameraMonitorViewId);
+        aprilTagDetectionPipeline = new AprilTagDetectionPipeline(tagsize, fx, fy, cx, cy);
+
+        camera.setPipeline(aprilTagDetectionPipeline);
+        camera.openCameraDeviceAsync(new OpenCvCamera.AsyncCameraOpenListener() {
+            @Override
+            public void onOpened() {
+                camera.startStreaming(1280,720, OpenCvCameraRotation.UPSIDE_DOWN);
+            }
+
+            @Override
+            public void onError(int errorCode) {
+
+            }
+        });
+
+        telemetry.setMsTransmissionInterval(50);
 
         while (!this.opModeIsActive()) {
-//            runTime.reset();
-            // april tag open cv here
-//
-//            robot.updateSystems();
 
-//            robot.lights.setRightLEDGreen();
-//            robot.lights.setLeftLEDRed();
         }
 
 
@@ -93,8 +145,8 @@ public class Auto2 extends LinearOpMode {
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         robot.arm.setState(robot.arm.DEFAULT_VALUE);
         robot.arm.extendHome();
-        robot.grabber.runGrabber(robot.grabber.CLOSED_STATE);
-        robot.grabber.actuallySettingGrabberState(robot.grabber.CLOSED_STATE);
+//        robot.grabber.runGrabber(robot.grabber.CLOSED_STATE);
+//        robot.grabber.actuallySettingGrabberState(robot.grabber.CLOSED_STATE);
         //stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
         //robot.lift.setState();
 
