@@ -53,7 +53,7 @@ public class LEDLights {
         rightRedLED.setState(true);
     }
 
-    public void setLefLEDGreen(){
+    public void setLeftLEDGreen(){
         leftGreenLED.setState(true);
         leftRedLED.setState(false);
     }

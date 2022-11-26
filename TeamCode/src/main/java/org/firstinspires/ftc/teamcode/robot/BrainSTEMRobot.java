@@ -26,6 +26,7 @@ public class BrainSTEMRobot {
     public Lift lift;
     public Extension arm;
     public SampleMecanumDrive drive;
+    public LEDLights lights;
     
     public Grabber grabber;
     private Map stateMap;
@@ -41,6 +42,7 @@ public class BrainSTEMRobot {
         arm     = new Extension(hwMap, telemetry, stateMap);
         drive   = new SampleMecanumDrive(hwMap);
         grabber   = new Grabber(hwMap, telemetry, stateMap);
+        lights = new LEDLights(hwMap, telemetry);
 
 
         stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
