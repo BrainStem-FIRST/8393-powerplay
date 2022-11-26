@@ -21,7 +21,7 @@ public class LEDLights {
         leftGreenLED = hwMap.get(DigitalChannel.class, "Red1");
 
         rightRedLED = hwMap.get(DigitalChannel.class, "Green2");
-        rightGreenLED = hwMap.get(DigitalChannel.class, "Red1");
+        rightGreenLED = hwMap.get(DigitalChannel.class, "Red2");
 
         leftRedLED.setMode(DigitalChannel.Mode.OUTPUT);
         leftGreenLED.setMode(DigitalChannel.Mode.OUTPUT);

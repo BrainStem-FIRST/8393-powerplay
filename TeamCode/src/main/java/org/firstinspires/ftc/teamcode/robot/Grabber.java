@@ -27,7 +27,7 @@ public class Grabber {
 
 
 
-    public final double MAX_OPEN = 900;
+    public final double DONT_USE_THIS = 900;
     public final double REGULAR_OPEN = 1375;
     public final double CLOSED_VALUE = 1850;
 
@@ -40,7 +40,7 @@ public class Grabber {
 
         grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
 
-        grabber.setPwmRange(new PwmControl.PwmRange(MAX_OPEN, CLOSED_VALUE));
+        grabber.setPwmRange(new PwmControl.PwmRange(REGULAR_OPEN, CLOSED_VALUE));
 
     }
 
@@ -71,7 +71,7 @@ public class Grabber {
     }
 
     public void open() {
-        grabber.setPosition(REGULAR_OPEN/CLOSED_VALUE);
+        grabber.setPosition(0);
     }
 
     public void maxOpen(){grabber.setPosition(0);}
@@ -79,20 +79,5 @@ public class Grabber {
     public boolean shouldGrab(Lift lift) {
         return lift.getPosition() < lift.LIFT_POSITION_GROUND &&
                 ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
-    }
-
-    public void actuallySettingGrabberState(String state){
-        stateMap.put(SYSTEM_NAME, state);
-    }
-
-    public void runGrabber(String grabberState){
-        if(stateMap.get(SYSTEM_NAME) == grabberState){
-            return;
-        }
-        if(grabberState == this.OPEN_STATE){
-            grabber.setPosition(1);
-        } else {
-            grabber.setPosition(0);
-        }
     }
 }

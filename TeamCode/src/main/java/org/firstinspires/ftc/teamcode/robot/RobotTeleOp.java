@@ -122,8 +122,9 @@ public class RobotTeleOp extends LinearOpMode {
             telemetry.addData("Robot ::", "Init");
             telemetry.update();
 
-            robot.lights.setRightLEDGreen();
-            robot.lights.setLeftLEDRed();
+            robot.lights.setBothLEDRed();
+
+
         }
 
 
@@ -323,7 +324,7 @@ public class RobotTeleOp extends LinearOpMode {
                 if (robot.lift.LIFT_POSITION_HIGHPOLE == 730) {
 
                 } else {
-                    robot.lift.LIFT_POSITION_HIGHPOLE += 30;
+                    robot.lift.LIFT_POSITION_HIGHPOLE += 25;
                 }
 
             }
@@ -333,19 +334,19 @@ public class RobotTeleOp extends LinearOpMode {
                 if (robot.lift.LIFT_POSITION_HIGHPOLE == 0) {
 
                 } else {
-                    robot.lift.LIFT_POSITION_HIGHPOLE -= 30;
+                    robot.lift.LIFT_POSITION_HIGHPOLE -= 25;
                 }
             }
 
 //            if (gamepad2.right_trigger > 0.2) {
-////                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_FINEADJ_UP);
+//                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_FINEADJ_UP);
 //            } else if (gamepad2.left_trigger > 0.2) {
-////                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_FINEADJ_DOWN);
+//                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_FINEADJ_DOWN);
 //            }
-
-            if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
-                robot.lift.liftMotor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-            }
+//
+//            if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
+//                robot.lift.liftMotor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+//            }
 
             driveCancelable.update();
 

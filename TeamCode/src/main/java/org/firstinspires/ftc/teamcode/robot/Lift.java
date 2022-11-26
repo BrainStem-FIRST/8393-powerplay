@@ -42,7 +42,7 @@ public class Lift {
     public final int MINIMUM_CLEARANCE_HEIGHT = 43;    // inches to lift to clear side panels
 
     public final int LIFT_POSITION_RESET = 0;
-    public final int LIFT_POSITION_GROUND = 10;
+    public final int LIFT_POSITION_GROUND = 25;
     public final int LIFT_POSITION_LOWPOLE = 330;
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;
@@ -51,9 +51,9 @@ public class Lift {
     public final int CYCLE_LIFT_DOWN_TIME_BOTTOM = 300;
     public final int CYCLE_LIFT_UP_TIME_BOTTOM = 300;
     public final int CYCLE_LIFT_DOWN_TIME_TOP = 50;
-    public final int CYCLE_LIFT_UP_TIME_TOP = 200;
-//    public final int LIFT_FINE_UP = 25;
-//    public final int LIFT_FINE_DOWN = 25;
+    public final int CYCLE_LIFT_UP_TIME_TOP = 250;
+    public final int LIFT_FINE_UP = 25;
+    public final int LIFT_FINE_DOWN = 25;
 
 
     Constants constants = new Constants();
@@ -74,8 +74,8 @@ public class Lift {
     public final String APPROACH_HEIGHT = "APPROACH_HEIGHT";
     public final String PLACEMENT_HEIGHT = "PLACEMENT_HEIGHT";
     public final String LIFT_SUBHEIGHT = "SUB_HEIGHT";
-//    public final String LIFT_FINEADJ_DOWN = "LIFT_FINEADJ_DOWN";
-//    public final String LIFT_FINEADJ_UP = "LIFT_FINEADJ_UP";
+    public final String LIFT_FINEADJ_DOWN = "LIFT_FINEADJ_DOWN";
+    public final String LIFT_FINEADJ_UP = "LIFT_FINEADJ_UP";
 
     public final String TRANSITION_STATE = "TRANSITION";
     public final int DELIVERY_ADJUSTMENT = -3;
@@ -238,14 +238,14 @@ public class Lift {
                 position = LIFT_POSITION_GROUND;
                 break;
             }
-//            case LIFT_FINEADJ_UP: {
-//                position = liftMotor3.getCurrentPosition() + LIFT_FINE_UP;
-//                break;
-//            }
-//            case LIFT_FINEADJ_DOWN: {
-//                position = liftMotor3.getCurrentPosition() - LIFT_FINE_DOWN;
-//                break;
-//            }
+            case LIFT_FINEADJ_UP: {
+                position = getAvgLiftPosition() + LIFT_FINE_UP;
+                break;
+            }
+            case LIFT_FINEADJ_DOWN: {
+                position = getAvgLiftPosition() - LIFT_FINE_DOWN;
+                break;
+            }
         }
         return position;
     }
@@ -269,14 +269,14 @@ public class Lift {
                 transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
                 break;
             }
-//            case LIFT_FINEADJ_UP: {
-//                transitionToLiftPosition(liftMotor3.getCurrentPosition() + deliveryHeight(subheight));
-//                break;
-//            }
-//            case LIFT_FINEADJ_DOWN: {
-//                transitionToLiftPosition(liftMotor3.getCurrentPosition() - deliveryHeight(subheight));
-//                break;
-//            }
+            case LIFT_FINEADJ_UP: {
+                transitionToLiftPosition(getAvgLiftPosition() + deliveryHeight(subheight));
+                break;
+            }
+            case LIFT_FINEADJ_DOWN: {
+                transitionToLiftPosition(getAvgLiftPosition() - deliveryHeight(subheight));
+                break;
+            }
         }
 
     }
@@ -297,11 +297,11 @@ public class Lift {
         } else if (inHeightTolerance(currentPosition, LIFT_POSITION_HIGHPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_HIGH;
         }
-//        else if (inHeightTolerance(currentPosition, LIFT_FINE_UP + deliveryHeight(subheight))) {
-//            state = LIFT_FINEADJ_UP;
-//        } else if (inHeightTolerance(currentPosition, LIFT_FINE_DOWN + deliveryHeight(subheight))) {
-//            state = LIFT_FINEADJ_DOWN;
-//        }
+        else if (inHeightTolerance(currentPosition, LIFT_FINE_UP + deliveryHeight(subheight))) {
+            state = LIFT_FINEADJ_UP;
+        } else if (inHeightTolerance(currentPosition, LIFT_FINE_DOWN + deliveryHeight(subheight))) {
+            state = LIFT_FINEADJ_DOWN;
+        }
         return state;
     }
 
@@ -425,18 +425,23 @@ public class Lift {
                 telemetry.addData("Using Run To Position; ", "NO");
                 telemetry.update();
                 setAllMotorPowers(-0.1);
-            } else {
+            } else if  (position < 35 && heightInTicks < 35 ) {
+                telemetry.addData("Setting Raw Power; ", "YES");
+                telemetry.addData("Using Run To Position; ", "NO");
+                telemetry.update();
+                setAllMotorPowers(0);
+            }else {
                 telemetry.addData("Setting Raw Power; ", "NOOOO");
                 telemetry.addData("Using Run To Position; ", "YESSSS");
                 telemetry.update();
                 runAllMotorsToPosition(heightInTicks, 1);
             }
         } else {
-            if (position < heightInTicks - 10) {
+            if (position < heightInTicks - 3) {
                 telemetry.addData("Setting Raw Power; ", "YESSS");
                 telemetry.addData("Using Run To Position; ", "NOOOO");
                 telemetry.update();
-                setAllMotorPowers(0.7);
+                setAllMotorPowers(1);
             } else {
                 telemetry.addData("Using Run To Position; ", "YESSS");
                 telemetry.addData("Setting Raw Power; ", "NOOOOO");
