@@ -78,10 +78,13 @@ public class Auto2 extends LinearOpMode {
 
 
         while (!this.opModeIsActive()) {
-            runTime.reset();
+//            runTime.reset();
             // april tag open cv here
 //
-            robot.updateSystems();
+//            robot.updateSystems();
+
+//            robot.lights.setRightLEDGreen();
+//            robot.lights.setLeftLEDRed();
         }
 
 

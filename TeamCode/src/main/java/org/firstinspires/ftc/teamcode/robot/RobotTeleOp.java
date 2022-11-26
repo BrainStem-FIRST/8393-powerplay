@@ -122,8 +122,8 @@ public class RobotTeleOp extends LinearOpMode {
             telemetry.addData("Robot ::", "Init");
             telemetry.update();
 
-            robot.lights.setLeftLEDGreen();
-            robot.lights.setRightLEDAmber();
+            robot.lights.setRightLEDGreen();
+            robot.lights.setLeftLEDRed();
         }
 
 

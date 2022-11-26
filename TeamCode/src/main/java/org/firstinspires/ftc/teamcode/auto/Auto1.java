@@ -82,6 +82,9 @@ public class Auto1 extends LinearOpMode {
             // april tag open cv here
 //
             robot.updateSystems();
+
+//            robot.lights.setRightLEDGreen();
+//            robot.lights.setLeftLEDRed();
         }
 
 
