@@ -65,14 +65,13 @@ public class Auto1 extends LinearOpMode {
         ElapsedTime totalTime = new ElapsedTime();
         SampleMecanumDrive sampleMecanumDrive = new SampleMecanumDrive(this.hardwareMap);
 
-        this.stateMap = new HashMap<String, String>() {{
-        }};
+        this.stateMap = new HashMap<String, String>() {{}};
         BrainSTEMRobot robot = new BrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap);
 
 
         this.stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-        //this.stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-        //this.stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
+        this.stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
+        this.stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
         this.stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         this.stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
 
@@ -83,8 +82,8 @@ public class Auto1 extends LinearOpMode {
 //
             robot.updateSystems();
 
-//            robot.lights.setRightLEDGreen();
-//            robot.lights.setLeftLEDRed();
+            robot.lights.setRightLEDGreen();
+            robot.lights.setLeftLEDRed();
         }
 
 
@@ -95,8 +94,8 @@ public class Auto1 extends LinearOpMode {
         robot.arm.extendHome();
 //        robot.grabber.runGrabber(robot.grabber.CLOSED_STATE);
 //        robot.grabber.actuallySettingGrabberState(robot.grabber.CLOSED_STATE);
-        //stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-        //robot.lift.setState();
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
+        robot.lift.setState();
 
         totalTime.reset();
         //   1   /////////////////////////////////////////////////////////////////////;
@@ -130,14 +129,14 @@ public class Auto1 extends LinearOpMode {
         sampleMecanumDrive.followTrajectoryAsync(depositPreLoadTraj);
 
 
-        //stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
         runTime.reset();
         while (step2) {
             if (runTime.milliseconds() < 750) {
                 telemetry.addData("Lift: ", "running Lift");
                 telemetry.update();
-                //robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_LOWPOLE);
-                //robot.lift.setState();
+                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_LOWPOLE);
+                robot.lift.setState();
             } else {
                 telemetry.addData("else:", "else");
                 telemetry.update();
@@ -148,19 +147,19 @@ public class Auto1 extends LinearOpMode {
         sampleMecanumDrive.waitForIdle();
 
         //   2.5 / Deposit Pre Load /////////////////////////////////////////////////////
-//        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
-//        robot.arm.extendMax();
-//        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
-//        robot.turret.setState(robot.lift);
-//        while (runTime.seconds() < 0.65) ;
-//        runTime.reset();
-//        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+        robot.arm.extendMax();
+        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
+        robot.turret.setState(robot.lift);
+        while (runTime.seconds() < 0.65) ;
+        runTime.reset();
+        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
 //        robot.grabber.runGrabber(robot.grabber.OPEN_STATE);
-//        while (runTime.milliseconds() < 750) ;
-//        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-        //robot.turret.setState(robot.lift);
-        //stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-        //robot.arm.extendHome();
+        while (runTime.milliseconds() < 750) ;
+        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+        robot.turret.setState(robot.lift);
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+        robot.arm.extendHome();
 
 
         //   3   ////////////////////////////////////////////////////////////////////
@@ -173,14 +172,14 @@ public class Auto1 extends LinearOpMode {
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(collectConePoseTraj);
 
-        //stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
         runTime.reset();
         while (step3) {
             if (runTime.seconds() < 1.3) {
                 telemetry.addData("While Loop ::", "Step 3");
                 telemetry.update();
-//                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_PICKUP);
-//                robot.lift.setState();
+                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_PICKUP);
+                robot.lift.setState();
             } else {
                 step4 = true;
                 step3 = false;
@@ -201,11 +200,11 @@ public class Auto1 extends LinearOpMode {
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(depositOnHighGoalTraj);
         runTime.reset();
-        //stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
         while (step4) {
             if (runTime.seconds() < 1) {
-//                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_HIGHPOLE);
-//                robot.lift.setState();
+                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_HIGHPOLE);
+                robot.lift.setState();
             } else {
                 step5 = true;
                 step4 = false;
@@ -214,19 +213,19 @@ public class Auto1 extends LinearOpMode {
         }
         sampleMecanumDrive.waitForIdle();
 
-//        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
-//        robot.arm.extendMax();
-//        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
-//        robot.turret.setState(robot.lift);
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+        robot.arm.extendMax();
+        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
+        robot.turret.setState(robot.lift);
         while (runTime.seconds() < 0.65) ;
         runTime.reset();
-//        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
 //        robot.grabber.runGrabber(robot.grabber.OPEN_STATE);
         while (runTime.milliseconds() < 750) ;
-//        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-//        robot.turret.setState(robot.lift);
-//        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-//        robot.arm.extendHome();
+        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+        robot.turret.setState(robot.lift);
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+        robot.arm.extendHome();
 
 
         while (true) {
@@ -246,8 +245,8 @@ public class Auto1 extends LinearOpMode {
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
             while (step5) {
                 if (runTime.seconds() < 0.5) {
-//                    robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_GROUND);
-//                    robot.lift.setState();
+                    robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_GROUND);
+                    robot.lift.setState();
                     telemetry.addData("while loop", "step 5");
                     telemetry.update();
                 } else {
@@ -259,19 +258,19 @@ public class Auto1 extends LinearOpMode {
 
             sampleMecanumDrive.waitForIdle();
 
-//            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
-//            robot.arm.extendMax();
-//            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
-//            robot.turret.setState(robot.lift);
-//            while (runTime.seconds() < 0.65);
-//            runTime.reset();
-//            stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+            robot.arm.extendMax();
+            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
+            robot.turret.setState(robot.lift);
+            while (runTime.seconds() < 0.65);
+            runTime.reset();
+            stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
 //            robot.grabber.runGrabber(robot.grabber.OPEN_STATE);
-//            while (runTime.milliseconds() < 750);
-//            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-//            robot.turret.setState(robot.lift);
-//            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-//            robot.arm.extendHome();
+            while (runTime.milliseconds() < 750);
+            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+            robot.turret.setState(robot.lift);
+            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+            robot.arm.extendHome();
 
 
             // 6? (technically) ///////////////////////////////////////
@@ -283,12 +282,12 @@ public class Auto1 extends LinearOpMode {
                     .build();
             sampleMecanumDrive.followTrajectoryAsync(depositConeCollected);
 
-            //stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
             runTime.reset();
             while (step5a) {
                 if (runTime.seconds() < 0.5) {
-//                    robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_HIGHPOLE);
-//                    robot.lift.setState();
+                    robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_HIGHPOLE);
+                    robot.lift.setState();
                 } else {
                     step5a = false;
                     step5 = true;

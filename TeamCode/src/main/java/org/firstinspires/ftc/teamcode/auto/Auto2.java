@@ -110,8 +110,8 @@ public class Auto2 extends LinearOpMode {
 
         // State Map ////////////////////////////////////////////////////////////////
         this.stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-        //this.stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-        //this.stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
+        this.stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
+        this.stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
         this.stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         this.stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
 
@@ -147,8 +147,8 @@ public class Auto2 extends LinearOpMode {
         robot.arm.extendHome();
 //        robot.grabber.runGrabber(robot.grabber.CLOSED_STATE);
 //        robot.grabber.actuallySettingGrabberState(robot.grabber.CLOSED_STATE);
-        //stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-        //robot.lift.setState();
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
+        robot.lift.setState();
 
         totalTime.reset();
         //   1   /////////////////////////////////////////////////////////////////////;
@@ -182,7 +182,7 @@ public class Auto2 extends LinearOpMode {
         sampleMecanumDrive.followTrajectoryAsync(depositPreLoadTraj);
 
 
-        //stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
         runTime.reset();
         while (step2) {
             if (runTime.milliseconds() < 750) {
