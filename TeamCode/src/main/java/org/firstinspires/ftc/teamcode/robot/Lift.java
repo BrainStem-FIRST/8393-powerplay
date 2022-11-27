@@ -466,7 +466,10 @@ public class Lift {
 //
         telemetry.addData("ERROR", error);
         telemetry.addData("Current Positions: ", getLiftPositions());
-
+        telemetry.addData("Lift Power (M1): ", liftMotor1.getPower());
+        telemetry.addData("Lift Power (M2): ", liftMotor2.getPower());
+        telemetry.addData("Lift Power (M3): ", liftMotor3.getPower());
+        telemetry.addData("Lift Power (M4): ", liftMotor4.getPower());
         //double power = errorToPowerLookup(error, heightInTicks);
 
         //runAllMotorsToPosition(400, 0.8);
@@ -602,6 +605,10 @@ public class Lift {
     public boolean isLiftUp() {
 
         return (getPosition() > LIFT_POSITION_GROUND);
+    }
+
+    public void lowerWithGravity(){
+
     }
 
 }
