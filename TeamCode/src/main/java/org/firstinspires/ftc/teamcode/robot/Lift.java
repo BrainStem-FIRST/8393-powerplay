@@ -1,40 +1,92 @@
 package org.firstinspires.ftc.teamcode.robot;
 
-import com.acmerobotics.roadrunner.control.PIDCoefficients;
-import com.acmerobotics.roadrunner.control.PIDFController;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-
+import org.firstinspires.ftc.teamcode.util.CachingMotor;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
-
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-
 import java.util.ArrayList;
 import java.util.Map;
-
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class Lift {
+
+    private static final class LiftConstants {
+        //encoder positions
+        static final int BOTTOM_ENCODER_TICKS = 0;
+        static final int LOW_POLE_ENCODER_TICKS = 330;
+        static final int MIDDLE_POLE_ENCODER_TICKS = 530;
+        static final int HIGH_POLE_ENCODER_TICKS = 720;
+        static final int JUNCTION_ENCODER_TICKS = 1; //FIXME
+        static final int COLLECTING_ENCODER_TICKS = 25;
+        static final int LIFT_POSITION_TOLERANCE = 8;
+        static final int CONE_CYCLE_POSITION_TOLERANCE = 3;
+
+        //motor id's
+        static final String LIFT_MOTOR_1_ID = "Lift-1";
+        static final String LIFT_MOTOR_2_ID = "Lift-2";
+        static final String LIFT_MOTOR_3_ID = "Lift-3";
+        static final String LIFT_MOTOR_4_ID = "Lift-4";
+
+        //lift motor power
+        static final double STAY_AT_POSITION_BOTTOM_POWER = 0.1;
+        static final double STAY_AT_POSITION_TOP_POWER = 0.45;
+        static final double GO_UP_LIFT_MOTOR_POWER = 1;
+        static final double GO_UP_SLOW_LIFT_POWER = 0.8;
+        static final double GO_DOWN_LIFT_POWER = -1;
+        static final double GO_UP_CONE_CYCLE_BOTTOM_POWER = 1;
+        static final double GO_DOWN_CONE_CYCLE_BOTTOM_POWER = -1;
+        static final double GO_UP_CONE_CYCLE_TOP_POWER = 1;
+        static final double GO_DOWN_CONE_CYCLE_TOP_POWER = -1;
+
+        //lift motors reversed
+        static final boolean LIFT_MOTOR_1_REVERSED = false;
+        static final boolean LIFT_MOTOR_2_REVERSED = false;
+        static final boolean LIFT_MOTOR_3_REVERSED = false;
+        static final boolean LIFT_MOTOR_4_REVERSED = false;
+    }
+
+    public enum LiftHeight {
+        //constants with encoder values
+        BOTTOM(LiftConstants.BOTTOM_ENCODER_TICKS), LOW(LiftConstants.LOW_POLE_ENCODER_TICKS),
+        MIDDLE(LiftConstants.MIDDLE_POLE_ENCODER_TICKS), HIGH(LiftConstants.HIGH_POLE_ENCODER_TICKS),
+        JUNCTION(LiftConstants.JUNCTION_ENCODER_TICKS), COLLECTING(LiftConstants.COLLECTING_ENCODER_TICKS),
+        TRANSITIONING(null);
+
+        private Integer ticks;
+
+        LiftHeight(Integer ticks) {
+            this.ticks = ticks;
+        }
+
+
+        public Integer getTicks() {
+            return this.ticks;
+        }
+
+    }
+
+    public enum LiftActivation {
+        ACTIVATED, DEACTIVATED
+    }
+
+    //telemetry
     private Telemetry telemetry;
-    public DcMotor liftMotor1;
-    public DcMotor liftMotor2;
-    public DcMotor liftMotor3;
-    public DcMotor liftMotor4;
 
-    static final double MM_TO_INCHES = 0.0393700787;
+    //lift height state
+    private LiftHeight desiredLiftHeight = LiftHeight.COLLECTING;
 
-    static final double COUNTS_PER_MOTOR_REV = 28;     // ticks at the motor shaft
-    static final double DRIVE_GEAR_REDUCTION = 5.23;     // TODO: Fix to 3:1 gear reduction (slowing down)
-    static final double PULLEY_WHEEL_DIAMETER_INCHES = 24.25 * MM_TO_INCHES;     // convert mm to inches
-    static final double TICK_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (PULLEY_WHEEL_DIAMETER_INCHES * 3.1415);
+    //lift action state
+    private LiftActivation liftActivation = LiftActivation.DEACTIVATED;
+
+    //declare lift motors
+    public DcMotorEx liftMotor1;
+    public DcMotorEx liftMotor2;
+    public DcMotorEx liftMotor3;
+    public DcMotorEx liftMotor4;
+
 
     static final double LIFT_UP_SPEED = 1.0;
     static final double LIFT_DOWN_SPEED = -0.1;
@@ -83,28 +135,29 @@ public class Lift {
     public final int CYCLE_TOLERANCE = 5;
     public final String LIFT_CURRENT_STATE = "LIFT CURRENT STATE";
 
-    static final String LIFT_MOTOR_1_ID = "Lift-1";
-    static final String LIFT_MOTOR_2_ID = "Lift-2";
-    static final String LIFT_MOTOR_3_ID = "Lift-3";
-    static final String LIFT_MOTOR_4_ID = "Lift-4";
-
     //declaring list of lift motors
     private ArrayList<DcMotor> liftMotors;
 
-    public static double Kp = 1.5;
-    public static double Ki = 0.025;
-    public static double Kd = 0;
-    public static double Kv = 0.1;
-    public static double Ka = 0.01;
+    //is lift going down variable
+    private boolean isLiftGoingDown;
+
+    //autonomous variable
+    private boolean isAuto;
+
     private Map stateMap;
 
-    public Lift(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
+    public Lift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap) {
+
+        //telemetry
         this.telemetry = telemetry;
+
         this.stateMap = stateMap;
-        liftMotor1 = hwMap.dcMotor.get(LIFT_MOTOR_1_ID);
-        liftMotor2 = hwMap.dcMotor.get(LIFT_MOTOR_2_ID);
-        liftMotor3 = hwMap.dcMotor.get(LIFT_MOTOR_3_ID);
-        liftMotor4 = hwMap.dcMotor.get(LIFT_MOTOR_4_ID);
+
+        //initialize lift motors
+        liftMotor1 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_1_ID));
+        liftMotor2 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_2_ID));
+        liftMotor3 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_3_ID));
+        liftMotor4 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_4_ID));
 
         initializeLiftMotor(liftMotor1);
         initializeLiftMotor(liftMotor2);
@@ -112,6 +165,7 @@ public class Lift {
         initializeLiftMotor(liftMotor4);
 
 
+        //creating list of lift motors for iteration
         liftMotors = new ArrayList<>();
 
         //add lift motors to list
@@ -120,14 +174,26 @@ public class Lift {
         liftMotors.add(liftMotor3);
         liftMotors.add(liftMotor4);
 
+        //setting lift behaviors
+        for(DcMotor liftMotor : liftMotors){
+            liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+            liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        }
+
+        //setting directions
+        liftMotor1.setDirection(LiftConstants.LIFT_MOTOR_1_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+        liftMotor2.setDirection(LiftConstants.LIFT_MOTOR_2_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+        liftMotor3.setDirection(LiftConstants.LIFT_MOTOR_3_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+        liftMotor4.setDirection(LiftConstants.LIFT_MOTOR_4_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
     }
 
     private void initializeLiftMotor(DcMotor liftMotor) {
         liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        //liftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
+
+
 
     public void setAllMotorPowers(double power) {
         for (DcMotor liftMotor : liftMotors) {
