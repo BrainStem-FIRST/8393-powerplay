@@ -133,6 +133,9 @@ public class RobotTeleOp extends LinearOpMode {
 
         while (!isStopRequested()) {
             if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
+                robot.arm.extendHome();
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                robot.turret.selectTransition(robot.turret.CENTER_POSITION);
                 robot.lift.setAllMotorPowers(-0.2);
                 robot.lift.resetAllLiftMotorEncoders();
             } else {
