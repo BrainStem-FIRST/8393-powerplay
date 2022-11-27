@@ -384,6 +384,8 @@ public class RobotTeleOp extends LinearOpMode {
                     }
                 }
             }
+        }
+    }
 
             private void setButtons () {
                 toggleButton(GAMEPAD_1_A_STATE, GAMEPAD_1_A_IS_PRESSED, gamepad1.a);
@@ -414,5 +416,4 @@ public class RobotTeleOp extends LinearOpMode {
                 return toggleMap.get(buttonStateName);
             }
         }
-    }
-}
+
