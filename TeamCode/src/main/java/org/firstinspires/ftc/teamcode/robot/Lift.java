@@ -611,4 +611,11 @@ public class Lift {
 
     }
 
+    public void resetEncoders() {
+        for (DcMotor liftMotor : liftMotors) {
+            liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        }
+    }
+
+
 }
