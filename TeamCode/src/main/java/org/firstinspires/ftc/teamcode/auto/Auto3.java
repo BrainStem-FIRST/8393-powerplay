@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.util.ElapsedTime;
+
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.auto.imagecv.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -12,20 +13,21 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
+
 import java.util.HashMap;
 import java.util.Map;
 
-public class Auto2 extends LinearOpMode {
+public class Auto3 extends LinearOpMode {
     private final AllianceColor color;
     private Map stateMap;
 
 
     // Locations - For Red /////////////////////////////////////////////////////////////////////
-    private Pose2d startPosition = new Pose2d(-36, -65, Math.toRadians(90));
-    private Pose2d centerofBlueChannel = new Pose2d(-36, -12.5, Math.toRadians(180));
-    private Pose2d depositPreLoad = new Pose2d(-48, -12.5, Math.toRadians(180));
-    private Pose2d collectConesPosition = new Pose2d(-64, -12.5, Math.toRadians(180));
-    private Pose2d depositOnHighPole = new Pose2d(-23, -12.5, Math.toRadians(180));
+    private Pose2d startPosition = new Pose2d(36, -65, Math.toRadians(90));
+    private Pose2d centerofBlueChannel = new Pose2d(36, -12.5, Math.toRadians(0));
+    private Pose2d depositPreLoad = new Pose2d(48, -12.5, Math.toRadians(0));
+    private Pose2d collectConesPosition = new Pose2d(62, -12.5, Math.toRadians(0));
+    private Pose2d depositOnHighPole = new Pose2d(23, -12.5, Math.toRadians(0));
 
 
     // Async Vars /////////////////////////////////////////////////////////////////////
@@ -61,7 +63,7 @@ public class Auto2 extends LinearOpMode {
         RED, BLUE
     }
 
-    public Auto2(AllianceColor color) {
+    public Auto3(AllianceColor color) {
         this.color = color;
         switch (color) {
             case RED:
@@ -192,7 +194,7 @@ public class Auto2 extends LinearOpMode {
         robot.turret.setState(robot.lift);
         while (runTime.seconds() < 0.65) ;
         runTime.reset();
-       stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
         robot.grabber.open();
         while (runTime.milliseconds() < 750) ;
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);

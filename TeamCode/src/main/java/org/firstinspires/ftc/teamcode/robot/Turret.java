@@ -51,7 +51,7 @@ public class Turret {
 
     public void setState(Lift lift){
         if(isLiftTooLow(lift)){
-            return;
+            selectTransition((String) CENTER_POSITION);
         }
         else{
             selectTransition((String) stateMap.get(SYSTEM_NAME));

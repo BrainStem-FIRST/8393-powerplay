@@ -76,6 +76,8 @@ public class Grabber {
 
     public void maxOpen(){grabber.setPosition(0);}
 
+    public void close(){grabber.setPosition(1);}
+
     public boolean shouldGrab(Lift lift) {
         return lift.getPosition() < lift.LIFT_POSITION_GROUND &&
                 ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
