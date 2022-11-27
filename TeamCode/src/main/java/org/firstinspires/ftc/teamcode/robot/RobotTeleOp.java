@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PwmControl;
 
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.StickyButton;
@@ -132,10 +133,10 @@ public class RobotTeleOp extends LinearOpMode {
 
 
         while (!isStopRequested()) {
-            if(gamepad2.left_trigger > 0.4){
+            if (gamepad2.left_trigger > 0.4) {
                 robot.lift.setAllMotorPowers(-gamepad2.right_trigger);
             }
-            if(gamepad2.right_bumper){
+            if (gamepad2.right_bumper) {
                 //robot.lift
             }
             setButtons();
@@ -199,20 +200,29 @@ public class RobotTeleOp extends LinearOpMode {
                 toggleMap.put(GAMEPAD_1_A_STATE, true);
 
                 Pose2d currentPosition = driveCancelable.getPoseEstimate();
-                Pose2d targetPosition = new Pose2d(currentPosition.getX() - 40, currentPosition.getY(), currentPosition.getHeading());
+                Pose2d targetPosition = new Pose2d(currentPosition.getX() - 30, currentPosition.getY(), currentPosition.getHeading());
+                Pose2d targetPosition2 = new Pose2d(currentPosition.getX() - 10, currentPosition.getY(), currentPosition.getHeading());
+
+
                 TrajectorySequence forwardTrajectory = driveCancelable.trajectorySequenceBuilder(currentPosition)
                         .lineToLinearHeading(targetPosition)
-                        .UNSTABLE_addTemporalMarkerOffset(-2.0, () -> {
+                        .build();
+                driveCancelable.followTrajectorySequenceAsync(forwardTrajectory);
+
+
+                TrajectorySequence forwardTrajectory2 = driveCancelable.trajectorySequenceBuilder(currentPosition)
+                        .lineToLinearHeading(targetPosition2, SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                                SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                        .UNSTABLE_addDisplacementMarkerOffset(2, () -> {
                             toggleMap.put(GAMEPAD_1_A_STATE, true);
                             toggleMap.put(GAMEPAD_1_Y_STATE, true);
                             stateMap.put(constants.EXTENSION_TARGET, String.valueOf(Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET)) - AUTO_EXTENSION_ADJUSTMENT));
-
                         })
-                        .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                        .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
                             stateMap.put(DRIVE_MODE, MANUAL_DRIVE_MODE);
                         })
                         .build();
-                driveCancelable.followTrajectorySequenceAsync(forwardTrajectory);
+                driveCancelable.followTrajectorySequenceAsync(forwardTrajectory2);
             } else if (gamepad1.left_bumper) {
                 driveCancelable.setPoseEstimate(zeroPose);
                 stateMap.put(DRIVE_MODE, AUTO_DRIVE_MODE);
