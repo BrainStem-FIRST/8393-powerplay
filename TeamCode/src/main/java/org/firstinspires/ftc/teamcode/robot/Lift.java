@@ -100,8 +100,8 @@ public class Lift {
     public int LIFT_POSITION_HIGHPOLE = 720;
     public final int LIFT_POSITION_PICKUP = 1;
     public final int LIFT_ADJUSTMENT = -30;
-    public final int CYCLE_LIFT_DOWN_TIME_BOTTOM = 300;
-    public final int CYCLE_LIFT_UP_TIME_BOTTOM = 300;
+    public final int CYCLE_LIFT_DOWN_TIME_BOTTOM = 200;
+    public final int CYCLE_LIFT_UP_TIME_BOTTOM = 200;
     public final int CYCLE_LIFT_DOWN_TIME_TOP = 50;
     public final int CYCLE_LIFT_UP_TIME_TOP = 250;
     public final int LIFT_FINE_UP = 25;
@@ -396,7 +396,7 @@ public class Lift {
     public int deliveryHeight(String subheight) {
         int height = 0;
         if (subheight.equalsIgnoreCase(PLACEMENT_HEIGHT)) {
-            height += LIFT_ADJUSTMENT + 25;
+            height += LIFT_ADJUSTMENT;
         }
         return height;
     }
