@@ -123,7 +123,6 @@ public class RobotTeleOp extends LinearOpMode {
 
             robot.lights.setBothLEDRed();
 
-            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             robot.updateSystems();
 
