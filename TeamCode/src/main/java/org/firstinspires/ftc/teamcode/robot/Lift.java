@@ -55,6 +55,14 @@ public class Lift {
     public final int LIFT_FINE_UP = 25;
     public final int LIFT_FINE_DOWN = 25;
 
+    public final int LIFT_POSITION_AUTO_RESTING = 0;
+    public final int LIFT_POSITION_AUTO_CYCLE_1 = 0;
+    public final int LIFT_POSITION_AUTO_CYCLE_2 = 0;
+    public final int LIFT_POSITION_AUTO_CYCLE_3 = 0;
+    public final int LIFT_POSITION_AUTO_CYCLE_4 = 0;
+    public final int LIFT_POSITION_AUTO_CYCLE_5 = 0;
+
+
 
     Constants constants = new Constants();
 
@@ -76,6 +84,12 @@ public class Lift {
     public final String LIFT_SUBHEIGHT = "SUB_HEIGHT";
     public final String LIFT_FINEADJ_DOWN = "LIFT_FINEADJ_DOWN";
     public final String LIFT_FINEADJ_UP = "LIFT_FINEADJ_UP";
+    public final String LIFT_CYCLE_COLLECT_1 = "LIFT_CYCLE_COLLECT_1";
+    public final String LIFT_CYCLE_COLLECT_2 = "LIFT_CYCLE_COLLECT_2";
+    public final String LIFT_CYCLE_COLLECT_3 = "LIFT_CYCLE_COLLECT_3";
+    public final String LIFT_CYCLE_COLLECT_4 = "LIFT_CYCLE_COLLECT_4";
+    public final String LIFT_CYCLE_COLLECT_5 = "LIFT_CYCLE_COLLECT_5";
+    public final String LIFT_RESTING_IN_AUTO = "LIFT_RESTING_IN_AUTO";
 
     public final String TRANSITION_STATE = "TRANSITION";
     public final int DELIVERY_ADJUSTMENT = -3;
