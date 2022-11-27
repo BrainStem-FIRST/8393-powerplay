@@ -107,12 +107,12 @@ public class Lift {
     public final int LIFT_FINE_UP = 25;
     public final int LIFT_FINE_DOWN = 25;
 
-    public final int LIFT_POSITION_AUTO_RESTING = 0;
-    public final int LIFT_POSITION_AUTO_CYCLE_1 = 0;
-    public final int LIFT_POSITION_AUTO_CYCLE_2 = 0;
-    public final int LIFT_POSITION_AUTO_CYCLE_3 = 0;
-    public final int LIFT_POSITION_AUTO_CYCLE_4 = 0;
-    public final int LIFT_POSITION_AUTO_CYCLE_5 = 0;
+    public final int LIFT_POSITION_AUTO_RESTING = 250;
+    public final int LIFT_POSITION_AUTO_CYCLE_1 = 110;
+    public final int LIFT_POSITION_AUTO_CYCLE_2 = 76;
+    public final int LIFT_POSITION_AUTO_CYCLE_3 = 55;
+    public final int LIFT_POSITION_AUTO_CYCLE_4 = 22;
+    public final int LIFT_POSITION_AUTO_CYCLE_5 = 2;
 
 
 
@@ -326,6 +326,9 @@ public class Lift {
                 position = getAvgLiftPosition() - LIFT_FINE_DOWN;
                 break;
             }
+            case LIFT_RESTING_IN_AUTO: {
+                position = LIFT_POSITION_AUTO_RESTING;
+            }
         }
         return position;
     }
@@ -357,6 +360,9 @@ public class Lift {
                 transitionToLiftPosition(getAvgLiftPosition() - deliveryHeight(subheight));
                 break;
             }
+            case LIFT_RESTING_IN_AUTO: {
+                transitionToLiftPosition(LIFT_POSITION_AUTO_RESTING + deliveryHeight(subheight));
+            }
         }
 
     }
@@ -381,6 +387,8 @@ public class Lift {
             state = LIFT_FINEADJ_UP;
         } else if (inHeightTolerance(currentPosition, LIFT_FINE_DOWN + deliveryHeight(subheight))) {
             state = LIFT_FINEADJ_DOWN;
+        } else if (inHeightTolerance(currentPosition, LIFT_POSITION_AUTO_RESTING + deliveryHeight(subheight))) {
+            state = LIFT_RESTING_IN_AUTO;
         }
         return state;
     }
@@ -388,7 +396,7 @@ public class Lift {
     public int deliveryHeight(String subheight) {
         int height = 0;
         if (subheight.equalsIgnoreCase(PLACEMENT_HEIGHT)) {
-            height += LIFT_ADJUSTMENT;
+            height += LIFT_ADJUSTMENT + 25;
         }
         return height;
     }

@@ -73,6 +73,7 @@ public class Extension {
     public void extendHome() {
         telemetry.addData("Bringing in: ", "true");
         extension.setPosition(0);
+        telemetry.addData("Position goal:", extension.getPosition());
     }
 
     // Extends the arm to its maximum reach

@@ -116,15 +116,16 @@ public class RobotTeleOp extends LinearOpMode {
 
         while (!opModeIsActive()) {
 
-            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-            robot.arm.extendHome();
-            robot.updateSystems();
+
 
             telemetry.addData("Robot ::", "Init");
             telemetry.update();
 
             robot.lights.setBothLEDRed();
 
+            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+            robot.updateSystems();
 
         }
 

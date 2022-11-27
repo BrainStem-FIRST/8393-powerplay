@@ -24,12 +24,12 @@ public class Turret {
     public final String     LEFT_POSITION = "LEFT_STATE";
     public final String     RIGHT_POSITION = "RIGHT_STATE";
     public final String     CENTER_POSITION = "CENTER_STATE";
-    public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 400;
-    public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 400;
-    public final double     CENTER_POSITION_LEFT_SERVO_VALUE = 1407;
-    public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 1407;
-    public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2165;
-    public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2165;
+    public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 349;
+    public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 349;
+    public final double     CENTER_POSITION_LEFT_SERVO_VALUE = 1282;
+    public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 1282;
+    public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2215;
+    public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2215;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 75;
 
     public Telemetry telemetry;
