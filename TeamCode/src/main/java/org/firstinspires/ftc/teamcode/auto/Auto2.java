@@ -32,7 +32,7 @@ public class Auto2 extends LinearOpMode {
     private Pose2d depositPreLoad = new Pose2d(-47.35, -11.75, Math.toRadians(180));
     private Pose2d collectConesPosition = new Pose2d(-63.75, -11.75, Math.toRadians(180));
     private Pose2d depositOnHighPole1 = new Pose2d(-30, -11.75, Math.toRadians(180));
-    private Pose2d depositOnHighPole2 = new Pose2d(-25, -11.75, Math.toRadians(180));
+    private Pose2d depositOnHighPole2 = new Pose2d(-21.5, -11.75, Math.toRadians(180));
 
     private Pose2d parkingLeft = new Pose2d(-12, -12.5, Math.toRadians(-90));
     private Pose2d parkingMid = new Pose2d(-36, -12.5, Math.toRadians(-90));
@@ -350,7 +350,7 @@ public class Auto2 extends LinearOpMode {
 
 
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION);
-        robot.arm.extendInAuto(0.3);
+        robot.arm.extendInAuto(0.6);
         if (!isRed) {
             stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
             robot.turret.setState(robot.lift);
@@ -373,35 +373,111 @@ public class Auto2 extends LinearOpMode {
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         robot.arm.extendHome();
         stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_RESTING_IN_AUTO);
-        robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING);
+        robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING - 40);
         robot.lift.setState();
 
 
         telemetry.addData("traj", "5");
         telemetry.update();
 
-        Trajectory cycleCollectTraj2 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                .lineToLinearHeading(collectConesPosition)
-                .build();
-        sampleMecanumDrive.followTrajectoryAsync(cycleCollectTraj2);
+        for (int i = 2; i < 6; i++){
+            Trajectory cycleCollectTraj2 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                    .lineToLinearHeading(collectConesPosition)
+                    .build();
+            sampleMecanumDrive.followTrajectoryAsync(cycleCollectTraj2);
 
-        runTime.reset();
-        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
-        while (step5) {
-            if (runTime.seconds() < 0.5) {
-                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_CYCLE_1);
-                robot.lift.setState();
-                telemetry.addData("while loop", "step 5");
-                telemetry.update();
-            } else {
-                step5 = false;
-                step5a = true;
+            runTime.reset();
+            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
+            while (step5) {
+                if (runTime.seconds() < 0.5) {
+                    robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING - 40);
+                    robot.lift.setState();
+                    telemetry.addData("while loop", "step 5");
+                    telemetry.update();
+                } else {
+                    step5 = false;
+                    step4 = true;
+                }
             }
+            sampleMecanumDrive.waitForIdle();
+
+            stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+            robot.grabber.close();
+
+            Trajectory depositOnHighGoalTraj3 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                    .lineToLinearHeading(depositOnHighPole1)
+                    .build();
+            sampleMecanumDrive.followTrajectoryAsync(depositOnHighGoalTraj3);
+            runTime.reset();
+            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_RESTING_IN_AUTO);
+            while (step4) {
+                if (runTime.seconds() < 0.5) {
+                    robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING);
+                    robot.lift.setState();
+                } else {
+                    step4a = true;
+                    step4 = false;
+                }
+
+            }
+            sampleMecanumDrive.waitForIdle();
+
+            Trajectory depositOnHighGoalTraj4 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                    .lineToLinearHeading(depositOnHighPole2)
+                    .build();
+            sampleMecanumDrive.followTrajectoryAsync(depositOnHighGoalTraj4);
+            runTime.reset();
+            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_DEPOSIT_IN_AUTO);
+            while (step4a) {
+                if (runTime.seconds() < 0.5) {
+                    robot.lift.raiseHeightTo(robot.lift.LIFT_DEPOSIT_POSITION_HIGHPOLE_IN_AUTO);
+                    robot.lift.setState();
+                } else {
+                    step5 = true;
+                    step4a = false;
+                }
+
+            }
+
+            sampleMecanumDrive.waitForIdle();
+
+
+
+            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION);
+            robot.arm.extendInAuto(0.6);
+            if (!isRed) {
+                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
+                robot.turret.setState(robot.lift);
+            } else {
+                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
+                robot.turret.setState(robot.lift);
+            }
+
+            runTime.reset();
+            while (runTime.seconds() < 1) ;
+
+
+            stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+            robot.grabber.open();
+
+            runTime.reset();
+            while (runTime.milliseconds() < 750) ;
+            stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+            robot.turret.setState(robot.lift);
+            stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+            robot.arm.extendHome();
+            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_RESTING_IN_AUTO);
+            robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING - (40 * i));
+            robot.lift.setState();
+
+
+            telemetry.addData("traj", "5");
+            telemetry.update();
+
         }
 
 
-        sampleMecanumDrive.waitForIdle();
-        // fixme when were not about to run in like 5 mins (rest of class)
+        //fixme add parking traj
 
         if (location == ParkingLocation.RIGHT){
             endParking = new Pose2d(parkingRight.getX(), parkingRight.getY(), parkingRight.getHeading());
