@@ -68,7 +68,7 @@ public class BrainSTEMRobot {
             lift.setState();
             grabber.setState(lift);
             turret.setState(lift);
-            arm.setState((String) stateMap.get(arm.SYSTEM_NAME));
+            arm.setState((String) stateMap.get(arm.SYSTEM_NAME), lift);
         }
 
     }

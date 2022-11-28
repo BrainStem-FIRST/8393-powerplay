@@ -21,6 +21,8 @@ public class Extension {
 
     static final double MM_TO_INCHES = 0.0393700787;
     static final double MINIMUM_CLEARANCE_DISTANCE = 95.875 * MM_TO_INCHES;
+    public final int LIFT_MIN_HEIGHT_TO_MOVE_EXTENSION = 75;
+
 
     // Servo Positions
 
@@ -31,6 +33,7 @@ public class Extension {
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
     public final String DEFAULT_VALUE = "RETRACTED";
     public final String FULL_EXTEND = "EXTENDED";
+    public final String AUTO_EXTENSION = "AUTO_EXTEND";
     public final String TRANSITION_STATE = "TRANSITION";
     Constants constants = new Constants();
 
@@ -85,8 +88,18 @@ public class Extension {
         extension.setPosition(Double.valueOf((String) stateMap.get(constants.EXTENSION_TARGET)));
     }
 
-    public void setState(String desiredState){
-        selectTransition(desiredState);
+    public void extendInAuto(double pos){
+        extension.setPosition(pos);
+    }
+
+    public void setState(String desiredState, Lift lift){
+        if(isLiftTooLow(lift)){
+            selectTransition((String) DEFAULT_VALUE);
+        }
+        else{
+            selectTransition(desiredState);
+        }
+
     }
 
     private void selectTransition(String desiredLevel){
@@ -99,11 +112,19 @@ public class Extension {
                 extendToTarget();
                 break;
             }
+            case AUTO_EXTENSION: {
+                extendInAuto(0.7);
+                break;
+            }
         }
     }
 
     public double getExtensionPosition() {
         return extension.getPosition();
+    }
+
+    public boolean isLiftTooLow(Lift lift) {
+        return lift.getPosition() < LIFT_MIN_HEIGHT_TO_MOVE_EXTENSION;
     }
 
 }

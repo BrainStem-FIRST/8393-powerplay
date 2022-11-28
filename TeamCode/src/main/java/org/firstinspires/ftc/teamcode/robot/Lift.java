@@ -13,39 +13,39 @@ import com.acmerobotics.dashboard.config.Config;
 @Config
 public class Lift {
 
-    private static final class LiftConstants {
+    public static class LiftConstants {
         //encoder positions
-        static final int BOTTOM_ENCODER_TICKS = 0;
-        static final int LOW_POLE_ENCODER_TICKS = 330;
-        static final int MIDDLE_POLE_ENCODER_TICKS = 530;
-        static final int HIGH_POLE_ENCODER_TICKS = 720;
-        static final int JUNCTION_ENCODER_TICKS = 1; //FIXME
-        static final int COLLECTING_ENCODER_TICKS = 25;
-        static final int LIFT_POSITION_TOLERANCE = 8;
-        static final int CONE_CYCLE_POSITION_TOLERANCE = 3;
+        private static final int BOTTOM_ENCODER_TICKS = 0;
+        private static final int LOW_POLE_ENCODER_TICKS = 330;
+        private static final int MIDDLE_POLE_ENCODER_TICKS = 530;
+        public static int HIGH_POLE_ENCODER_TICKS = 720;
+        private static final int JUNCTION_ENCODER_TICKS = 1; //FIXME
+        private static final int COLLECTING_ENCODER_TICKS = 25;
+        private static final int LIFT_POSITION_TOLERANCE = 8;
+        private static final int CONE_CYCLE_POSITION_TOLERANCE = 3;
 
         //motor id's
-        static final String LIFT_MOTOR_1_ID = "Lift-1";
-        static final String LIFT_MOTOR_2_ID = "Lift-2";
-        static final String LIFT_MOTOR_3_ID = "Lift-3";
-        static final String LIFT_MOTOR_4_ID = "Lift-4";
+        private static final String LIFT_MOTOR_1_ID = "Lift-1";
+        private static final String LIFT_MOTOR_2_ID = "Lift-2";
+        private static final String LIFT_MOTOR_3_ID = "Lift-3";
+        private static final String LIFT_MOTOR_4_ID = "Lift-4";
 
         //lift motor power
-        static final double STAY_AT_POSITION_BOTTOM_POWER = 0.1;
-        static final double STAY_AT_POSITION_TOP_POWER = 0.45;
-        static final double GO_UP_LIFT_MOTOR_POWER = 1;
-        static final double GO_UP_SLOW_LIFT_POWER = 0.8;
-        static final double GO_DOWN_LIFT_POWER = -1;
-        static final double GO_UP_CONE_CYCLE_BOTTOM_POWER = 1;
-        static final double GO_DOWN_CONE_CYCLE_BOTTOM_POWER = -1;
-        static final double GO_UP_CONE_CYCLE_TOP_POWER = 1;
-        static final double GO_DOWN_CONE_CYCLE_TOP_POWER = -1;
+        private final double STAY_AT_POSITION_BOTTOM_POWER = 0.1;
+        private final double STAY_AT_POSITION_TOP_POWER = 0.45;
+        private final double GO_UP_LIFT_MOTOR_POWER = 1;
+        private final double GO_UP_SLOW_LIFT_POWER = 0.8;
+        private final double GO_DOWN_LIFT_POWER = -1;
+        private final double GO_UP_CONE_CYCLE_BOTTOM_POWER = 1;
+        private final double GO_DOWN_CONE_CYCLE_BOTTOM_POWER = -1;
+        private final double GO_UP_CONE_CYCLE_TOP_POWER = 1;
+        private final double GO_DOWN_CONE_CYCLE_TOP_POWER = -1;
 
         //lift motors reversed
-        static final boolean LIFT_MOTOR_1_REVERSED = false;
-        static final boolean LIFT_MOTOR_2_REVERSED = false;
-        static final boolean LIFT_MOTOR_3_REVERSED = false;
-        static final boolean LIFT_MOTOR_4_REVERSED = false;
+        private static final boolean LIFT_MOTOR_1_REVERSED = false;
+        private static final boolean LIFT_MOTOR_2_REVERSED = false;
+        private static final boolean LIFT_MOTOR_3_REVERSED = false;
+        private static final boolean LIFT_MOTOR_4_REVERSED = false;
     }
 
     public enum LiftHeight {
@@ -108,7 +108,8 @@ public class Lift {
     public final int LIFT_FINE_DOWN = 25;
 
     public final int LIFT_POSITION_AUTO_RESTING = 250;
-    public final int LIFT_POSITION_AUTO_CYCLE_1 = 110;
+    public final int LIFT_POSITION_AUTO_CYCLE_1 = 105;
+    public final int LIFT_DEPOSIT_POSITION_HIGHPOLE_IN_AUTO = 705;
     public final int LIFT_POSITION_AUTO_CYCLE_2 = 76;
     public final int LIFT_POSITION_AUTO_CYCLE_3 = 55;
     public final int LIFT_POSITION_AUTO_CYCLE_4 = 22;
@@ -142,6 +143,7 @@ public class Lift {
     public final String LIFT_CYCLE_COLLECT_4 = "LIFT_CYCLE_COLLECT_4";
     public final String LIFT_CYCLE_COLLECT_5 = "LIFT_CYCLE_COLLECT_5";
     public final String LIFT_RESTING_IN_AUTO = "LIFT_RESTING_IN_AUTO";
+    public final String LIFT_DEPOSIT_IN_AUTO = "LIFT_DEPOSIT_IN_AUTO";
 
     public final String TRANSITION_STATE = "TRANSITION";
     public final int DELIVERY_ADJUSTMENT = -3;

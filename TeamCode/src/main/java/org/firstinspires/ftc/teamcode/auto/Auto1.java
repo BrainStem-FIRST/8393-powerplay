@@ -185,7 +185,7 @@ public class Auto1 extends LinearOpMode {
         this.waitForStart();
         sampleMecanumDrive.setPoseEstimate(startPosition);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-        robot.arm.setState(robot.arm.DEFAULT_VALUE);
+        robot.arm.setState(robot.arm.DEFAULT_VALUE, robot.lift);
         robot.arm.extendHome();
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
         robot.grabber.close();

@@ -38,6 +38,8 @@ public class RobotTeleOp extends LinearOpMode {
 
 
     private String LIFT_HEIGHT = "POLE_HIGH";
+    private String TURRET_POS = "CENTER_POSITION";
+    private String EXTENSION_POS = "DEFAULT_VALUE";
 
     private final String GAMEPAD_1_RIGHT_TRIGGER_STATE = "GAMEPAD_1_RIGHT_TRIGGER_STATE";
     private final String GAMEPAD_1_RIGHT_TRIGGER_PRESSED = "GAMEPAD_1_RIGHT_TRIGGER_PRESSED";
@@ -75,6 +77,7 @@ public class RobotTeleOp extends LinearOpMode {
     private int liftDownIncrement;
 
     Constants constants = new Constants();
+    Lift.LiftConstants liftconstants = new Lift.LiftConstants();
 
 
     Map<String, Boolean> toggleMap = new HashMap<String, Boolean>() {{
@@ -169,6 +172,8 @@ public class RobotTeleOp extends LinearOpMode {
             if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                 slowMode = true;
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
+                stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
+                stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
             } else {
                 slowMode = false;
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
@@ -183,12 +188,18 @@ public class RobotTeleOp extends LinearOpMode {
 //            }
 
             if (gamepad2.dpad_left) {
+                TURRET_POS = robot.turret.LEFT_POSITION;
+                EXTENSION_POS = robot.arm.FULL_EXTEND;
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
                 stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             } else if (gamepad2.dpad_up || coneCycleCenterAdjust) {
+                TURRET_POS = robot.turret.CENTER_POSITION;
+                EXTENSION_POS = robot.arm.DEFAULT_VALUE;
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                 stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             } else if (gamepad2.dpad_right) {
+                TURRET_POS = robot.turret.RIGHT_POSITION;
+                EXTENSION_POS = robot.arm.FULL_EXTEND;
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
                 stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
             }
@@ -207,6 +218,8 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS);
                     stateMap.put(constants.CONE_CYCLE_START_TIME, String.valueOf(System.currentTimeMillis()));
                     coneCycleCenterAdjust = true;
+                } else {
+                    coneCycleCenterAdjust = false;
                 }
             }
 
@@ -347,24 +360,33 @@ public class RobotTeleOp extends LinearOpMode {
                 d2LeftTriggerPressed = false;
             }
 
-            liftFineAdjustUp.update(d2LeftTriggerPressed);
-            if (liftFineAdjustUp.getState()) {
-                if (robot.lift.LIFT_POSITION_HIGHPOLE == 730) {
+            // fixme lift fine adjust - lift moves to new pos and then goes back to old pos
 
-                } else {
-                    robot.lift.LIFT_POSITION_HIGHPOLE += 25;
-                }
-
-            }
-
-            liftFineAdjustDown.update(d2RightTriggerPressed);
-            if (liftFineAdjustDown.getState()) {
-                if (robot.lift.LIFT_POSITION_HIGHPOLE == 0) {
-
-                } else {
-                    robot.lift.LIFT_POSITION_HIGHPOLE -= 25;
-                }
-            }
+//            liftFineAdjustUp.update(d2LeftTriggerPressed);
+//            if (liftFineAdjustUp.getState()) {
+//                if (robot.lift.LIFT_POSITION_HIGHPOLE == 730) {
+//
+//                } else {
+//                    robot.lift.LIFT_POSITION_HIGHPOLE += 25;
+//                    liftconstants.HIGH_POLE_ENCODER_TICKS += 25;
+//                    stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_HIGH);
+//                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
+//
+//                }
+//
+//            }
+//
+//            liftFineAdjustDown.update(d2RightTriggerPressed);
+//            if (liftFineAdjustDown.getState()) {
+//                if (robot.lift.LIFT_POSITION_HIGHPOLE == 0) {
+//
+//                } else {
+//                    robot.lift.LIFT_POSITION_HIGHPOLE -= 25;
+//                    liftconstants.HIGH_POLE_ENCODER_TICKS -= 25;
+//                    stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_HIGH);
+//                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
+//                }
+//            }
 
 //            if (gamepad2.right_trigger > 0.2) {
 //                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_FINEADJ_UP);

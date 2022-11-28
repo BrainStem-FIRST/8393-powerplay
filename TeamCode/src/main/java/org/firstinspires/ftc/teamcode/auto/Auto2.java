@@ -14,7 +14,6 @@ import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 
-import java.security.cert.TrustAnchor;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,9 +30,9 @@ public class Auto2 extends LinearOpMode {
     private Pose2d centerofBlueChannel1 = new Pose2d(-36, -39, Math.toRadians(180));
     private Pose2d centerofBlueChannel2 = new Pose2d(-36, -12.5, Math.toRadians(180));
     private Pose2d depositPreLoad = new Pose2d(-47.35, -11.75, Math.toRadians(180));
-    private Pose2d collectConesPosition = new Pose2d(-64, -12.5, Math.toRadians(180));
-    private Pose2d depositOnHighPole1 = new Pose2d(-30, -12.5, Math.toRadians(180));
-    private Pose2d depositOnHighPole2 = new Pose2d(-23, -13, Math.toRadians(180));
+    private Pose2d collectConesPosition = new Pose2d(-63.75, -11.75, Math.toRadians(180));
+    private Pose2d depositOnHighPole1 = new Pose2d(-30, -11.75, Math.toRadians(180));
+    private Pose2d depositOnHighPole2 = new Pose2d(-25, -11.75, Math.toRadians(180));
 
     private Pose2d parkingLeft = new Pose2d(-12, -12.5, Math.toRadians(-90));
     private Pose2d parkingMid = new Pose2d(-36, -12.5, Math.toRadians(-90));
@@ -185,7 +184,7 @@ public class Auto2 extends LinearOpMode {
         this.waitForStart();
         sampleMecanumDrive.setPoseEstimate(startPosition);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-        robot.arm.setState(robot.arm.DEFAULT_VALUE);
+        robot.arm.setState(robot.arm.DEFAULT_VALUE, robot.lift);
         robot.arm.extendHome();
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
         robot.grabber.close();
@@ -236,6 +235,8 @@ public class Auto2 extends LinearOpMode {
         while (step2) {
             if (runTime.milliseconds() < 750) {
                 telemetry.addData("Lift: ", "running Lift");
+                telemetry.addData("Lift Targ Pos:", robot.lift.getLiftTargetPositions());
+                telemetry.addData("Lift Current Pos:", robot.lift.getLiftPositions());
                 telemetry.update();
                 robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_LOWPOLE);
                 robot.lift.setState();
@@ -249,8 +250,8 @@ public class Auto2 extends LinearOpMode {
         sampleMecanumDrive.waitForIdle();
 
         //   2.5 / Deposit Pre Load /////////////////////////////////////////////////////
-        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
-        robot.arm.extendMax();
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION);
+        robot.arm.extendInAuto(0.8);
         if (!isRed) {
             stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
             robot.turret.setState(robot.lift);
@@ -332,10 +333,10 @@ public class Auto2 extends LinearOpMode {
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(depositOnHighGoalTraj2);
         runTime.reset();
-        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_DEPOSIT_IN_AUTO);
         while (step4a) {
             if (runTime.seconds() < 1) {
-                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_HIGHPOLE);
+                robot.lift.raiseHeightTo(robot.lift.LIFT_DEPOSIT_POSITION_HIGHPOLE_IN_AUTO);
                 robot.lift.setState();
             } else {
                 step5 = true;
@@ -348,8 +349,8 @@ public class Auto2 extends LinearOpMode {
 
 
 
-        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
-        robot.arm.extendMax();
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION);
+        robot.arm.extendInAuto(0.3);
         if (!isRed) {
             stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
             robot.turret.setState(robot.lift);
@@ -371,9 +372,35 @@ public class Auto2 extends LinearOpMode {
         robot.turret.setState(robot.lift);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         robot.arm.extendHome();
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_RESTING_IN_AUTO);
+        robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING);
+        robot.lift.setState();
 
 
+        telemetry.addData("traj", "5");
+        telemetry.update();
 
+        Trajectory cycleCollectTraj2 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                .lineToLinearHeading(collectConesPosition)
+                .build();
+        sampleMecanumDrive.followTrajectoryAsync(cycleCollectTraj2);
+
+        runTime.reset();
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
+        while (step5) {
+            if (runTime.seconds() < 0.5) {
+                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_CYCLE_1);
+                robot.lift.setState();
+                telemetry.addData("while loop", "step 5");
+                telemetry.update();
+            } else {
+                step5 = false;
+                step5a = true;
+            }
+        }
+
+
+        sampleMecanumDrive.waitForIdle();
         // fixme when were not about to run in like 5 mins (rest of class)
 
         if (location == ParkingLocation.RIGHT){
@@ -384,24 +411,6 @@ public class Auto2 extends LinearOpMode {
             endParking = new Pose2d(parkingLeft.getX(), parkingLeft.getY(), parkingLeft.getHeading());
         }
 
-        Trajectory cycleCollectTraj = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                .lineToLinearHeading(endParking)
-                .build();
-        sampleMecanumDrive.followTrajectoryAsync(cycleCollectTraj);
-
-        runTime.reset();
-        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-        while (step5) {
-            if (runTime.seconds() < 0.5) {
-                robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_GROUND - 5);
-                robot.lift.setState();
-                telemetry.addData("while loop", "step 5");
-                telemetry.update();
-            } else {
-                step5 = false;
-                step5a = true;
-            }
-        }
 
 
         while (this.opModeIsActive());
