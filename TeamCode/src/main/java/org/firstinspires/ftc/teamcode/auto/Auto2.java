@@ -50,6 +50,9 @@ public class Auto2 extends LinearOpMode {
 
     private boolean isRed = true;
 
+    private ArrayList liftCollectionHeights;
+
+
 
     // Open CV //////////////////////////////////////////////////////////////////////////
     private ParkingLocation location = ParkingLocation.LEFT;
@@ -114,6 +117,16 @@ public class Auto2 extends LinearOpMode {
         this.stateMap = new HashMap<String, String>() {{}};
         BrainSTEMRobot robot = new BrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap);
         Constants constants = new Constants();
+
+        liftCollectionHeights = new ArrayList();
+        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_1);
+        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_2);
+        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_3);
+        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_4);
+        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_5);
+        liftCollectionHeights.add(0);
+
+
 
         // State Map ////////////////////////////////////////////////////////////////
         this.stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
@@ -381,7 +394,7 @@ public class Auto2 extends LinearOpMode {
         telemetry.addData("traj", "5");
         telemetry.update();
 
-        for (int i = 2; i < 6; i++){
+        for (int i = 0; i < 4; i++){
             Trajectory cycleCollectTraj2 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                     .lineToLinearHeading(collectConesPosition)
                     .build();
@@ -391,7 +404,7 @@ public class Auto2 extends LinearOpMode {
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
             while (step5) {
                 if (runTime.seconds() < 0.5) {
-                    robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_CYCLE_2);
+                    robot.lift.raiseHeightTo((Integer) liftCollectionHeights.get((i + 1)));
                     robot.lift.setState();
                     telemetry.addData("while loop", "step 5");
                     telemetry.update();
@@ -468,7 +481,7 @@ public class Auto2 extends LinearOpMode {
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             robot.arm.extendHome();
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
-            robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_CYCLE_3);
+            robot.lift.raiseHeightTo((Integer) liftCollectionHeights.get(i + 2));
             robot.lift.setState();
 
 
