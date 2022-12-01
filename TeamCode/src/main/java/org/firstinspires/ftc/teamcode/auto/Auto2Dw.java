@@ -37,11 +37,12 @@ public class Auto2Dw extends LinearOpMode {
     private Pose2d signalConeKnockout = new Pose2d(-36, -24, Math.toRadians(180));
     private Pose2d centerOfChannelInitial = new Pose2d(-36, -12.5, Math.toRadians(90));
     private Pose2d depositPreLoad = new Pose2d(-48, -12, Math.toRadians(180));
-    private Pose2d approachPosition = new Pose2d(-57.5, -12, Math.toRadians(180));
-    private Pose2d collectConesPosition = new Pose2d(-64, -12, Math.toRadians(180));
-    private Pose2d depositOnHighPole1 = new Pose2d(-30, -12, Math.toRadians(180));
+    private Pose2d approachPosition = new Pose2d(-56, -12, Math.toRadians(180));
+    private Pose2d collectConesPosition = new Pose2d(-63, -12, Math.toRadians(180));
+    private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(180));
+    private Pose2d depositOnHighPole1 = new Pose2d(-23.5, -12, Math.toRadians(180));
     private Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(180));
-    private Pose2d depositOnHighPole1approach = new Pose2d(-23.5, -12, Math.toRadians(180));
+
     private int initialTurn = 90;
 
     private Pose2d parkingLeft = new Pose2d(-12, -12.5, Math.toRadians(-90));
@@ -108,9 +109,10 @@ public class Auto2Dw extends LinearOpMode {
                 depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(180));
                 approachPosition = new Pose2d(approachPosition.getX(), -approachPosition.getY(), Math.toRadians(180));
                 collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(180));
+                depositOnHighPole1approach = new Pose2d(depositOnHighPole1approach.getX(), -depositOnHighPole1approach.getY(), Math.toRadians(180));
                 depositOnHighPole1 = new Pose2d(depositOnHighPole1.getX(), -depositOnHighPole1.getY(), Math.toRadians(180));
                 depositOnHighPole2 = new Pose2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY(), Math.toRadians(180));
-                depositOnHighPole1approach = new Pose2d(depositOnHighPole1approach.getX(), -depositOnHighPole1approach.getY(), Math.toRadians(180));
+
 
                 parkingLeft = new Pose2d(-12, 12.5, Math.toRadians(90));
                 parkingMid = new Pose2d(-36, 12.5, Math.toRadians(90));
@@ -239,15 +241,15 @@ public class Auto2Dw extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION); })
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5); })
                 .lineToLinearHeading(approachPosition)
-                .lineToLinearHeading(collectConesPosition, SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .lineToLinearHeading(collectConesPosition, SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { robot.grabber.close(); })
                 .waitSeconds(0.25)
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
                 .lineToLinearHeading(depositOnHighPole1approach)
-                .lineToLinearHeading(depositOnHighPole1, SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .lineToLinearHeading(depositOnHighPole1, SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                .UNSTABLE_addTemporalMarkerOffset(-0.2, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH); })
+                .UNSTABLE_addTemporalMarkerOffset(-1, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH); })
                 .waitSeconds(0.25)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION); })
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND); })
@@ -260,7 +262,7 @@ public class Auto2Dw extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5); })
                 .waitSeconds(0.25)
                 .lineToLinearHeading(approachPosition)
-                .lineToLinearHeading(collectConesPosition, SampleMecanumDrive.getVelocityConstraint(35, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .lineToLinearHeading(collectConesPosition, SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { robot.grabber.close(); })
                 .waitSeconds(0.25)
