@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.auto;
 
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
@@ -7,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.auto.imagecv.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.BrainSTEMRobot;
 import org.firstinspires.ftc.teamcode.robot.Constants;
@@ -31,9 +33,9 @@ public class Auto2 extends LinearOpMode {
     private Pose2d centerofBlueChannel1 = new Pose2d(-36, -39, Math.toRadians(180));
     private Pose2d centerofBlueChannel2 = new Pose2d(-36, -12.5, Math.toRadians(180));
     private Pose2d depositPreLoad = new Pose2d(-47.35, -11.75, Math.toRadians(180));
-    private Pose2d collectConesPosition = new Pose2d(-63.75, -11.75, Math.toRadians(180));
-    private Pose2d depositOnHighPole1 = new Pose2d(-30, -11.75, Math.toRadians(180));
-    private Pose2d depositOnHighPole2 = new Pose2d(-21.5, -11.75, Math.toRadians(180));
+    private Vector2d collectConesPosition = new Vector2d(-63.75, -11.75);
+    private Vector2d depositOnHighPole1 = new Vector2d(-30, -11.75);
+    private Vector2d depositOnHighPole2 = new Vector2d(-21.5, -11.75);
 
     private Pose2d parkingLeft = new Pose2d(-12, -12.5, Math.toRadians(-90));
     private Pose2d parkingMid = new Pose2d(-36, -12.5, Math.toRadians(-90));
@@ -94,9 +96,9 @@ public class Auto2 extends LinearOpMode {
                 centerofBlueChannel1 = new Pose2d(centerofBlueChannel1.getX(), -centerofBlueChannel1.getY(), Math.toRadians(180));
                 centerofBlueChannel2 = new Pose2d(centerofBlueChannel2.getX(), -centerofBlueChannel2.getY(), Math.toRadians(180));
                 depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(180));
-                collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(180));
-                depositOnHighPole1 = new Pose2d(depositOnHighPole1.getX(), -depositOnHighPole1.getY(), Math.toRadians(180));
-                depositOnHighPole2 = new Pose2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY(), Math.toRadians(180));
+                collectConesPosition = new Vector2d(collectConesPosition.getX(), -collectConesPosition.getY());
+                depositOnHighPole1 = new Vector2d(depositOnHighPole1.getX(), -depositOnHighPole1.getY());
+                depositOnHighPole2 = new Vector2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY());
 
                 parkingLeft = new Pose2d(-12, 12.5, Math.toRadians(90));
                 parkingMid = new Pose2d(-36, 12.5, Math.toRadians(90));
@@ -119,6 +121,7 @@ public class Auto2 extends LinearOpMode {
         this.stateMap = new HashMap<String, String>() {{}};
         BrainSTEMRobot robot = new BrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap);
         Constants constants = new Constants();
+        DriveConstants driveConstants = new DriveConstants();
 
         liftCollectionHeights = new ArrayList();
         liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_1);
@@ -300,7 +303,8 @@ public class Auto2 extends LinearOpMode {
         telemetry.update();
 
         Trajectory collectConePoseTraj = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                .lineToLinearHeading(collectConesPosition)
+                .lineToConstantHeading(collectConesPosition, SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(collectConePoseTraj);
 
@@ -330,7 +334,8 @@ public class Auto2 extends LinearOpMode {
 
 
         Trajectory depositOnHighGoalTraj = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                .lineToLinearHeading(depositOnHighPole1)
+                .lineToConstantHeading(depositOnHighPole1, SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(depositOnHighGoalTraj);
         runTime.reset();
@@ -348,7 +353,8 @@ public class Auto2 extends LinearOpMode {
         sampleMecanumDrive.waitForIdle();
 
         Trajectory depositOnHighGoalTraj2 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                .lineToLinearHeading(depositOnHighPole2)
+                .lineToConstantHeading(depositOnHighPole2, SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(depositOnHighGoalTraj2);
         runTime.reset();
@@ -402,7 +408,8 @@ public class Auto2 extends LinearOpMode {
         for (int i = 0; i < 4; i++){
 
             Trajectory cycleCollectTraj2 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                    .lineToLinearHeading(collectConesPosition)
+                    .lineToConstantHeading(collectConesPosition, SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                            SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
             sampleMecanumDrive.followTrajectoryAsync(cycleCollectTraj2);
 
@@ -410,9 +417,11 @@ public class Auto2 extends LinearOpMode {
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
             while (step5) {
                 if (runTime.seconds() < 0.5) {
-                    robot.lift.raiseHeightTo((Integer) liftCollectionHeights.get((i + 1)));
+                    int liftheight = (int) liftCollectionHeights.get(i + 1);
+                    robot.lift.raiseHeightTo((liftheight));
                     robot.lift.setState();
                     telemetry.addData("while loop", "step 5");
+                    telemetry.addData("lift height:", liftheight);
                     telemetry.update();
                 } else {
                     step5 = false;
@@ -425,7 +434,8 @@ public class Auto2 extends LinearOpMode {
             robot.grabber.close();
 
             Trajectory depositOnHighGoalTraj3 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                    .lineToLinearHeading(depositOnHighPole1)
+                    .lineToConstantHeading(depositOnHighPole1, SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                            SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
             sampleMecanumDrive.followTrajectoryAsync(depositOnHighGoalTraj3);
             runTime.reset();
@@ -443,7 +453,8 @@ public class Auto2 extends LinearOpMode {
             sampleMecanumDrive.waitForIdle();
 
             Trajectory depositOnHighGoalTraj4 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                    .lineToLinearHeading(depositOnHighPole2)
+                    .lineToConstantHeading(depositOnHighPole2, SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                            SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                     .build();
             sampleMecanumDrive.followTrajectoryAsync(depositOnHighGoalTraj4);
             runTime.reset();
@@ -487,11 +498,13 @@ public class Auto2 extends LinearOpMode {
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             robot.arm.extendHome();
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
-            robot.lift.raiseHeightTo((Integer) liftCollectionHeights.get(i + 2));
+            int liftheight2 = (int) liftCollectionHeights.get(i + 2);
+            robot.lift.raiseHeightTo(liftheight2);
             robot.lift.setState();
 
 
             telemetry.addData("traj", "5");
+            telemetry.addData("lift height:", liftheight2);
             telemetry.update();
 
             if (totalTime.seconds() > 26) {
