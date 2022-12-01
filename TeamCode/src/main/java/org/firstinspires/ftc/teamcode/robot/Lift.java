@@ -494,7 +494,8 @@ public class Lift {
             telemetry.addData("Using Run To Position; ", "YESSSS");
             telemetry.update();
             if (getAvgLiftPosition() < 400) {
-                runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT_LOW, 1);
+                setAllMotorPowers(-0.2);
+                //runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT_LOW, 1);
             } else {
                 runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT_HIGH, 1);
             }

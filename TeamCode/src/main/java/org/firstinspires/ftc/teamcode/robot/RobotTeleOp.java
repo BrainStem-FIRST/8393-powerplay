@@ -168,11 +168,7 @@ public class RobotTeleOp extends LinearOpMode {
             if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                 slowMode = true;
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
-                if(stateMap.get(robot.lift.LIFT_SYSTEM_NAME).equalsIgnoreCase(robot.lift.LIFT_POLE_GROUND)){
-                    robot.turret.centerTurret();
-                } else {
-                    stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
-                }
+                stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
                 stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
             } else {
                 slowMode = false;
