@@ -405,7 +405,7 @@ public class Auto2 extends LinearOpMode {
         telemetry.addData("traj", "5");
         telemetry.update();
 
-        for (int i = 0; i < 2; i++){
+//        for (int i = 0; i < 2; i++){
 
             Trajectory cycleCollectTraj2 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                     .lineToConstantHeading(collectConesPosition, SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
@@ -418,7 +418,7 @@ public class Auto2 extends LinearOpMode {
             while (step5) {
                 if (runTime.seconds() < 0.5) {
                     telemetry.addData("step 5", "true");
-                    int liftheight = (int) liftCollectionHeights.get(i + 1);
+                    int liftheight = (int) liftCollectionHeights.get(1);
                     robot.lift.raiseHeightTo((liftheight));
                     robot.lift.setState();
                     telemetry.addData("while loop", "step 5");
@@ -445,7 +445,7 @@ public class Auto2 extends LinearOpMode {
             runTime.reset();
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_RESTING_IN_AUTO);
             while (step4) {
-                if (runTime.seconds() < 0.5) {
+                if (!robot.lift.hasLiftReachedPosition(250, 7)) {
                     telemetry.addData("step 4", "true");
                     robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING);
                     robot.lift.setState();
@@ -510,7 +510,7 @@ public class Auto2 extends LinearOpMode {
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             robot.arm.extendHome();
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
-            int liftheight2 = (int) liftCollectionHeights.get(i + 2);
+            int liftheight2 = (int) liftCollectionHeights.get(2);
             robot.lift.raiseHeightTo(liftheight2);
             robot.lift.setState();
 
@@ -519,29 +519,29 @@ public class Auto2 extends LinearOpMode {
             telemetry.addData("lift height:", liftheight2);
             telemetry.update();
 
-            if (totalTime.seconds() > 24) {
-                i = 6;
-                telemetry.addLine("breaking out of for loop");
-            }
+//            if (totalTime.seconds() > 24) {
+//                i = 6;
+//                telemetry.addLine("breaking out of for loop");
+//            }
 
-        }
+//        }
 
 
         if (parking == 3){
             Trajectory parking = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                     .lineToLinearHeading(parkingRight)
                     .build();
-            sampleMecanumDrive.followTrajectoryAsync(parking);
+            sampleMecanumDrive.followTrajectory(parking);
         } else if (parking == 2) {
             Trajectory parking = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                     .lineToLinearHeading(parkingMid)
                     .build();
-            sampleMecanumDrive.followTrajectoryAsync(parking);
+            sampleMecanumDrive.followTrajectory(parking);
         }  else  {
             Trajectory parking = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                     .lineToLinearHeading(parkingLeft)
                     .build();
-            sampleMecanumDrive.followTrajectoryAsync(parking);
+            sampleMecanumDrive.followTrajectory(parking);
         }
 
 
@@ -549,9 +549,6 @@ public class Auto2 extends LinearOpMode {
 
 
 
-
-
-        while (this.opModeIsActive());
 
 
         /*
