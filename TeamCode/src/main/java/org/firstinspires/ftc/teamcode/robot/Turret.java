@@ -31,6 +31,7 @@ public class Turret {
     public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2155;
     public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2155;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 75;
+    public final double TURRET_CENTER_POSITION = 0.5;
 
     public Telemetry telemetry;
     private ServoImplEx leftTurretServo;
