@@ -81,7 +81,7 @@ public class Extension {
 
     // Extends the arm to its maximum reach
     public void extendMax() {
-        extension.setPosition(1);
+        extension.setPosition(0.8);
     }
 
     public void extendToTarget() {

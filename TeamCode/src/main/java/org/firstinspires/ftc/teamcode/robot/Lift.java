@@ -2,12 +2,16 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
+
 import java.util.ArrayList;
 import java.util.Map;
+
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
@@ -99,10 +103,11 @@ public class Lift {
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;
     public final int LIFT_POSITION_PICKUP = 1;
-    public final int LIFT_ADJUSTMENT = -30;
+    public final int LIFT_ADJUSTMENT_LOW = -30;
+    public final int LIFT_ADJUSTMENT_HIGH = -60;
     public final int CYCLE_LIFT_DOWN_TIME_BOTTOM = 200;
     public final int CYCLE_LIFT_UP_TIME_BOTTOM = 200;
-    public final int CYCLE_LIFT_DOWN_TIME_TOP = 50;
+    public final int CYCLE_LIFT_DOWN_TIME_TOP = 250;
     public final int CYCLE_LIFT_UP_TIME_TOP = 250;
     public final int LIFT_FINE_UP = 25;
     public final int LIFT_FINE_DOWN = 25;
@@ -114,7 +119,6 @@ public class Lift {
     public final int LIFT_POSITION_AUTO_CYCLE_3 = 55;
     public final int LIFT_POSITION_AUTO_CYCLE_4 = 22;
     public final int LIFT_POSITION_AUTO_CYCLE_5 = 2;
-
 
 
     Constants constants = new Constants();
@@ -191,7 +195,7 @@ public class Lift {
         liftMotors.add(liftMotor4);
 
         //setting lift behaviors
-        for(DcMotor liftMotor : liftMotors){
+        for (DcMotor liftMotor : liftMotors) {
             liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
@@ -208,7 +212,6 @@ public class Lift {
         liftMotor.setDirection(DcMotor.Direction.FORWARD);
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
-
 
 
     public void setAllMotorPowers(double power) {
@@ -279,10 +282,10 @@ public class Lift {
         } else {
             int position = getStateValue();
             if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
-                if (getPosition() < position + LIFT_ADJUSTMENT || isCycleExpired(CYCLE_LIFT_DOWN_TIME_BOTTOM)) {
+                if (haveLiftMotorsReachedTheirDesiredPositions() || isCycleExpired(CYCLE_LIFT_DOWN_TIME_BOTTOM)) {
                     stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
                 }
-            } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (getPosition() > position || isCycleExpired(CYCLE_LIFT_UP_TIME_BOTTOM))) {
+            } else if (isCycleInProgress(constants.CYCLE_LIFT_UP) && (haveLiftMotorsReachedTheirDesiredPositions() || isCycleExpired(CYCLE_LIFT_UP_TIME_BOTTOM))) {
                 stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
             }
         }
@@ -384,8 +387,7 @@ public class Lift {
             state = LIFT_POLE_MEDIUM;
         } else if (inHeightTolerance(currentPosition, LIFT_POSITION_HIGHPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_HIGH;
-        }
-        else if (inHeightTolerance(currentPosition, LIFT_FINE_UP + deliveryHeight(subheight))) {
+        } else if (inHeightTolerance(currentPosition, LIFT_FINE_UP + deliveryHeight(subheight))) {
             state = LIFT_FINEADJ_UP;
         } else if (inHeightTolerance(currentPosition, LIFT_FINE_DOWN + deliveryHeight(subheight))) {
             state = LIFT_FINEADJ_DOWN;
@@ -398,7 +400,7 @@ public class Lift {
     public int deliveryHeight(String subheight) {
         int height = 0;
         if (subheight.equalsIgnoreCase(PLACEMENT_HEIGHT)) {
-            height += LIFT_ADJUSTMENT;
+            height += LIFT_ADJUSTMENT_LOW;
         }
         return height;
     }
@@ -426,7 +428,6 @@ public class Lift {
         } else {
             power = heightFactor(heightInTicks);
         }
-
         return power;
     }
 
@@ -492,15 +493,20 @@ public class Lift {
             telemetry.addData("Setting Raw Power; ", "NOOOO");
             telemetry.addData("Using Run To Position; ", "YESSSS");
             telemetry.update();
-            runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT, 1);
+            if (getAvgLiftPosition() < 400) {
+                runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT_LOW, 1);
+            } else {
+                runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT_HIGH, 1);
+            }
             //setAllMotorPowers(-0.3);
         } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
             telemetry.addData("Setting Raw Power; ", "NOOOO");
             telemetry.addData("Using Run To Position; ", "YESSSS");
             telemetry.update();
             runAllMotorsToPosition(heightInTicks, 1);
+
             //setAllMotorPowers(1);
-        } else if (position >= heightInTicks - 8 && position <= heightInTicks + 8) {
+        } else if (position >= heightInTicks - 10 && position <= heightInTicks + 10) {
             if (heightInTicks > 400) {
                 telemetry.addData("Setting Raw Power; ", "YESS");
                 telemetry.addData("Using Run To Position; ", "NOO");
@@ -518,19 +524,19 @@ public class Lift {
                 telemetry.addData("Using Run To Position; ", "NO");
                 telemetry.update();
                 setAllMotorPowers(-0.1);
-            } else if  (position < 35 && heightInTicks < 35 ) {
+            } else if (position < 35 && heightInTicks < 35) {
                 telemetry.addData("Setting Raw Power; ", "YES");
                 telemetry.addData("Using Run To Position; ", "NO");
                 telemetry.update();
                 setAllMotorPowers(0);
-            }else {
+            } else {
                 telemetry.addData("Setting Raw Power; ", "NOOOO");
                 telemetry.addData("Using Run To Position; ", "YESSSS");
                 telemetry.update();
                 runAllMotorsToPosition(heightInTicks, 1);
             }
         } else {
-            if (position < heightInTicks - 3) {
+            if (position < heightInTicks - 15) {
                 telemetry.addData("Setting Raw Power; ", "YESSS");
                 telemetry.addData("Using Run To Position; ", "NOOOO");
                 telemetry.update();
@@ -550,16 +556,16 @@ public class Lift {
         //setAllMotorPowers(1);
     }
 
-    public int getAvgLiftPosition(){
+    public int getAvgLiftPosition() {
         double positionSum = 0;
-        for(DcMotor liftMotor : liftMotors){
+        for (DcMotor liftMotor : liftMotors) {
             positionSum += liftMotor.getCurrentPosition();
         }
-        return (int)(positionSum/liftMotors.size());
+        return (int) (positionSum / liftMotors.size());
     }
 
-    public void resetAllLiftMotorEncoders(){
-        for(DcMotor liftMotor : liftMotors){
+    public void resetAllLiftMotorEncoders() {
+        for (DcMotor liftMotor : liftMotors) {
             liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         }
     }
@@ -596,29 +602,20 @@ public class Lift {
         return liftMotorPowers;
     }
 
-    public ArrayList<Integer> getLiftTargetPositions(){
+    public ArrayList<Integer> getLiftTargetPositions() {
         ArrayList<Integer> liftTargetPositions = new ArrayList<>();
-        for(DcMotor liftMotor : liftMotors){
+        for (DcMotor liftMotor : liftMotors) {
             liftTargetPositions.add(liftMotor.getTargetPosition());
         }
         return liftTargetPositions;
     }
 
-    public ArrayList<Integer> getLiftPositions(){
+    public ArrayList<Integer> getLiftPositions() {
         ArrayList<Integer> liftPositions = new ArrayList<>();
-        for(DcMotor liftMotor : liftMotors){
+        for (DcMotor liftMotor : liftMotors) {
             liftPositions.add(liftMotor.getCurrentPosition());
         }
         return liftPositions;
-    }
-
-    public boolean isLiftUp() {
-
-        return (getPosition() > LIFT_POSITION_GROUND);
-    }
-
-    public void lowerWithGravity(){
-
     }
 
     public void resetEncoders() {

@@ -30,7 +30,8 @@ public class Turret {
     public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 1282;
     public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2215;
     public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2215;
-    public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 75;
+    public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 200;
+    public final double TURRET_CENTER_POSITION = .5;
 
     public Telemetry telemetry;
     private ServoImplEx leftTurretServo;
@@ -68,7 +69,7 @@ public class Turret {
                 transitionToPosition(0.025, 0.0025);
                 break;
             } case CENTER_POSITION:{
-                transitionToPosition(0.55, 0.55);
+                transitionToPosition(TURRET_CENTER_POSITION, TURRET_CENTER_POSITION);
                 break;
             } case RIGHT_POSITION:{
                 transitionToPosition(0.975, 0.975);
@@ -81,5 +82,9 @@ public class Turret {
         //raising heights to reach different junctions, so four values
         leftTurretServo.setPosition(leftPosition);
         rightTurretServo.setPosition(rightPosition);
+    }
+
+    public void centerTurret(){
+        transitionToPosition(TURRET_CENTER_POSITION, TURRET_CENTER_POSITION);
     }
 }
