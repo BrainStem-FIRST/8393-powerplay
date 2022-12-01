@@ -234,7 +234,7 @@ public class Auto2Dw extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE); })
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION); })
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5); })
-                .lineToLinearHeading(collectConesPosition, )
+                .lineToLinearHeading(collectConesPosition)
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { robot.grabber.close(); })
                 .waitSeconds(0.25)
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
