@@ -191,7 +191,7 @@ public class Auto2 extends LinearOpMode {
                         tagOfInterest = tag;
                         location = ParkingLocation.LEFT;
                         tagFound = true;
-                        parking = 3;
+                        parking = 1;
                         telemetry.addData("Open CV :", "Left");
                         telemetry.update();
                         endParking = new Pose2d(parkingLeft.getX(), parkingLeft.getY(), parkingLeft.getHeading());
@@ -405,7 +405,7 @@ public class Auto2 extends LinearOpMode {
         telemetry.addData("traj", "5");
         telemetry.update();
 
-        for (int i = 0; i < 4; i++){
+        for (int i = 0; i < 2; i++){
 
             Trajectory cycleCollectTraj2 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                     .lineToConstantHeading(collectConesPosition, SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
@@ -417,6 +417,7 @@ public class Auto2 extends LinearOpMode {
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
             while (step5) {
                 if (runTime.seconds() < 0.5) {
+                    telemetry.addData("step 5", "true");
                     int liftheight = (int) liftCollectionHeights.get(i + 1);
                     robot.lift.raiseHeightTo((liftheight));
                     robot.lift.setState();
@@ -424,6 +425,9 @@ public class Auto2 extends LinearOpMode {
                     telemetry.addData("lift height:", liftheight);
                     telemetry.update();
                 } else {
+                    telemetry.addData("step 5", "false");
+                    telemetry.addLine("step 4 true");
+                    telemetry.update();
                     step5 = false;
                     step4 = true;
                 }
@@ -442,9 +446,13 @@ public class Auto2 extends LinearOpMode {
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_RESTING_IN_AUTO);
             while (step4) {
                 if (runTime.seconds() < 0.5) {
+                    telemetry.addData("step 4", "true");
                     robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING);
                     robot.lift.setState();
                 } else {
+                    telemetry.addData("step 4", "false");
+                    telemetry.addLine("step 4a true");
+                    telemetry.update();
                     step4a = true;
                     step4 = false;
                 }
@@ -460,10 +468,14 @@ public class Auto2 extends LinearOpMode {
             runTime.reset();
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_DEPOSIT_IN_AUTO);
             while (step4a) {
-                if (runTime.seconds() < 0.75) {
+                if (!robot.lift.hasLiftReachedPosition(705, 7)) {
+                    telemetry.addData("step 4a", "true");
                     robot.lift.raiseHeightTo(robot.lift.LIFT_DEPOSIT_POSITION_HIGHPOLE_IN_AUTO);
                     robot.lift.setState();
                 } else {
+                    telemetry.addData("step 4a", "false");
+                    telemetry.addLine("step 5 true");
+                    telemetry.update();
                     step5 = true;
                     step4a = false;
                 }
@@ -507,8 +519,9 @@ public class Auto2 extends LinearOpMode {
             telemetry.addData("lift height:", liftheight2);
             telemetry.update();
 
-            if (totalTime.seconds() > 26) {
+            if (totalTime.seconds() > 24) {
                 i = 6;
+                telemetry.addLine("breaking out of for loop");
             }
 
         }
