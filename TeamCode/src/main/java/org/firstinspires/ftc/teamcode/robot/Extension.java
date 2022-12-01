@@ -64,7 +64,6 @@ public class Extension {
         //scale speed value so the extension moves in increments of 10% of the range at max speed
         double targetPosition = Range.clip(currentPosition + speed*0.10, 0, 1);
         extension.setPosition(targetPosition/EXTENSION_POSITION_MAX);
-
         //Send telemetry message for debugging purposes
         telemetry.addData("Speed of move:","%.2f", speed);
         telemetry.addData("Extension Position:","%.2f", targetPosition);
@@ -81,11 +80,11 @@ public class Extension {
 
     // Extends the arm to its maximum reach
     public void extendMax() {
-        extension.setPosition(0.8);
+        extension.setPosition(0.6);
     }
 
     public void extendToTarget() {
-        extension.setPosition(Double.valueOf((String) stateMap.get(constants.EXTENSION_TARGET)));
+        extension.setPosition(0.75);
     }
 
     public void extendInAuto(double pos){
@@ -113,7 +112,7 @@ public class Extension {
                 break;
             }
             case AUTO_EXTENSION: {
-                extendInAuto(0.7);
+                extendInAuto(0.55);
                 break;
             }
         }

@@ -494,7 +494,7 @@ public class Lift {
             telemetry.addData("Using Run To Position; ", "YESSSS");
             telemetry.update();
             if (getAvgLiftPosition() < 400) {
-                setAllMotorPowers(-0.2);
+                setAllMotorPowers(-0.3);
                 //runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT_LOW, 1);
             } else {
                 runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT_HIGH, 1);
@@ -517,7 +517,7 @@ public class Lift {
                 telemetry.addData("Setting Raw Power; ", "YESS");
                 telemetry.addData("Using Run To Position; ", "NOOO");
                 telemetry.update();
-                setAllMotorPowers(0.1);
+                setAllMotorPowers(0.2);
             }
         } else if (position > heightInTicks) {
             if (position > heightInTicks + 200) {
