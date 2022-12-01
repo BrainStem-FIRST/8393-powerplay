@@ -28,7 +28,7 @@ public class Grabber {
 
 
     public final double DONT_USE_THIS = 900;
-    public final double REGULAR_OPEN = 1375;
+    public final double REGULAR_OPEN = 1425;
     public final double CLOSED_VALUE = 1850;
 
     private Map stateMap;
