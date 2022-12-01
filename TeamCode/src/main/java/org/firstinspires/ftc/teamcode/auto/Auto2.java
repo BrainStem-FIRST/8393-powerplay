@@ -31,9 +31,9 @@ public class Auto2 extends LinearOpMode {
     // Locations - For Red /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -65, Math.toRadians(90));
     private Pose2d centerofBlueChannel1 = new Pose2d(-36, -39, Math.toRadians(180));
-    private Pose2d centerofBlueChannel2 = new Pose2d(-36, -12.5, Math.toRadians(180));
-    private Pose2d depositPreLoad = new Pose2d(-47.35, -11.75, Math.toRadians(180));
-    private Vector2d collectConesPosition = new Vector2d(-63.75, -11.75);
+    private Vector2d centerofBlueChannel2 = new Vector2d(-36, -12.5);
+    private Vector2d depositPreLoad = new Vector2d(-47.35, -11.75);
+    private Vector2d collectConesPosition = new Vector2d(-64.75, -11.75);
     private Vector2d depositOnHighPole1 = new Vector2d(-30, -11.75);
     private Vector2d depositOnHighPole2 = new Vector2d(-21.5, -11.75);
 
@@ -94,8 +94,8 @@ public class Auto2 extends LinearOpMode {
 
                 startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
                 centerofBlueChannel1 = new Pose2d(centerofBlueChannel1.getX(), -centerofBlueChannel1.getY(), Math.toRadians(180));
-                centerofBlueChannel2 = new Pose2d(centerofBlueChannel2.getX(), -centerofBlueChannel2.getY(), Math.toRadians(180));
-                depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(180));
+                centerofBlueChannel2 = new Vector2d(centerofBlueChannel2.getX(), -centerofBlueChannel2.getY());
+                depositPreLoad = new Vector2d(depositPreLoad.getX(), -depositPreLoad.getY());
                 collectConesPosition = new Vector2d(collectConesPosition.getX(), -collectConesPosition.getY());
                 depositOnHighPole1 = new Vector2d(depositOnHighPole1.getX(), -depositOnHighPole1.getY());
                 depositOnHighPole2 = new Vector2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY());
@@ -226,7 +226,7 @@ public class Auto2 extends LinearOpMode {
         telemetry.addData("Trajectory: ", "setting trajectory");
         telemetry.update();
         Trajectory alignCenterOfBlueAutoChannel = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                .lineToLinearHeading(centerofBlueChannel2)
+                .lineToConstantHeading(centerofBlueChannel2)
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(alignCenterOfBlueAutoChannel);
 
@@ -247,7 +247,7 @@ public class Auto2 extends LinearOpMode {
         //   2   ////////////////////////////////////////////////////////////////////
 
         Trajectory depositPreLoadTraj = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
-                .lineToLinearHeading(depositPreLoad)
+                .lineToConstantHeading(depositPreLoad)
                 .build();
         sampleMecanumDrive.followTrajectoryAsync(depositPreLoadTraj);
 
