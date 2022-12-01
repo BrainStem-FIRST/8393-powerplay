@@ -268,33 +268,7 @@ public class RobotTeleOp extends LinearOpMode {
                             })
                             .build();
                     driveCancelable.followTrajectorySequenceAsync(reverseTrajectory);
-                } /*else if (gamepad1.dpad_up || gamepad2.right_bumper) {
-                    Double targetPosition;
-                    targetPosition += 0.02;
-                    EXTENSION_POS = targetPosition.toString();
-                    stateMap.put(constants.EXTENSION_TARGET, String.valueOf(targetPosition));
-                } else if (gamepad1.dpad_down || gamepad2.left_bumper) {
-                    Double targetPosition = Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET));
-                    targetPosition -= 0.02;
-                    EXTENSION_POS = targetPosition.toString();
-                    stateMap.put(constants.EXTENSION_TARGET, String.valueOf(targetPosition));
-                } else if (gamepad1.dpad_left) {
-                    driveCancelable.setPoseEstimate(zeroPose);
-                    Pose2d currentPosition = driveCancelable.getPoseEstimate();
-                    Pose2d targetPosition = new Pose2d(currentPosition.getX(), currentPosition.getY() + 2, currentPosition.getHeading());
-                    TrajectorySequence strafeTrajectory = driveCancelable.trajectorySequenceBuilder(currentPosition)
-                            .lineToLinearHeading(targetPosition)
-                            .build();
-                    driveCancelable.followTrajectorySequenceAsync(strafeTrajectory);
-                } else if (gamepad1.dpad_right) {
-                    driveCancelable.setPoseEstimate(zeroPose);
-                    Pose2d currentPosition = driveCancelable.getPoseEstimate();
-                    Pose2d targetPosition = new Pose2d(currentPosition.getX(), currentPosition.getY() - 2, currentPosition.getHeading());
-                    TrajectorySequence strafeTrajectory = driveCancelable.trajectorySequenceBuilder(currentPosition)
-                            .lineToLinearHeading(targetPosition)
-                            .build();
-                    driveCancelable.followTrajectorySequenceAsync(strafeTrajectory);
-                }*/
+                }
 
                 if (stateMap.get(DRIVE_MODE).equals(MANUAL_DRIVE_MODE)) {
                     if (slowMode) {
