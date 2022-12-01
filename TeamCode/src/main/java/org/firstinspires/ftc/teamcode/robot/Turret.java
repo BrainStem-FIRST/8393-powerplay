@@ -82,4 +82,8 @@ public class Turret {
         leftTurretServo.setPosition(leftPosition);
         rightTurretServo.setPosition(rightPosition);
     }
+
+    public void centerTurret(){
+        transitionToPosition(TURRET_CENTER_POSITION, TURRET_CENTER_POSITION);
+    }
 }
