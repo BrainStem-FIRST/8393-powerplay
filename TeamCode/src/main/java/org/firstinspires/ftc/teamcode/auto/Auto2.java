@@ -48,6 +48,8 @@ public class Auto2 extends LinearOpMode {
     private boolean step5 = false;
     private boolean step5a = false;
 
+    private int parking;
+
     private boolean isRed = true;
 
     private ArrayList liftCollectionHeights;
@@ -165,6 +167,7 @@ public class Auto2 extends LinearOpMode {
                     if (tag.id == MIDDLE) {
                         tagOfInterest = tag;
                         location = ParkingLocation.MID;
+                        parking = 2;
                         tagFound = true;
                         telemetry.addData("Open CV :", "Mid");
                         telemetry.update();
@@ -174,6 +177,7 @@ public class Auto2 extends LinearOpMode {
                     } else if (tag.id == RIGHT) {
                         tagOfInterest = tag;
                         location = ParkingLocation.RIGHT;
+                        parking = 3;
                         tagFound = true;
                         telemetry.addData("Open CV :", "Right");
                         telemetry.update();
@@ -184,6 +188,7 @@ public class Auto2 extends LinearOpMode {
                         tagOfInterest = tag;
                         location = ParkingLocation.LEFT;
                         tagFound = true;
+                        parking = 3;
                         telemetry.addData("Open CV :", "Left");
                         telemetry.update();
                         endParking = new Pose2d(parkingLeft.getX(), parkingLeft.getY(), parkingLeft.getHeading());
@@ -395,6 +400,7 @@ public class Auto2 extends LinearOpMode {
         telemetry.update();
 
         for (int i = 0; i < 4; i++){
+
             Trajectory cycleCollectTraj2 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                     .lineToLinearHeading(collectConesPosition)
                     .build();
@@ -488,18 +494,34 @@ public class Auto2 extends LinearOpMode {
             telemetry.addData("traj", "5");
             telemetry.update();
 
+            if (totalTime.seconds() > 26) {
+                i = 6;
+            }
+
         }
 
 
-        //fixme add parking traj
-
-        if (location == ParkingLocation.RIGHT){
-            endParking = new Pose2d(parkingRight.getX(), parkingRight.getY(), parkingRight.getHeading());
-        } else if (location == ParkingLocation.MID){
-            endParking = new Pose2d(parkingMid.getX(), parkingMid.getY(), parkingMid.getHeading());
-        } else {
-            endParking = new Pose2d(parkingLeft.getX(), parkingLeft.getY(), parkingLeft.getHeading());
+        if (parking == 3){
+            Trajectory parking = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                    .lineToLinearHeading(parkingRight)
+                    .build();
+            sampleMecanumDrive.followTrajectoryAsync(parking);
+        } else if (parking == 2) {
+            Trajectory parking = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                    .lineToLinearHeading(parkingMid)
+                    .build();
+            sampleMecanumDrive.followTrajectoryAsync(parking);
+        }  else  {
+            Trajectory parking = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                    .lineToLinearHeading(parkingLeft)
+                    .build();
+            sampleMecanumDrive.followTrajectoryAsync(parking);
         }
+
+
+        // Parking
+
+
 
 
 
