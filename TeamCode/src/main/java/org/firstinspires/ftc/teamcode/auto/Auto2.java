@@ -33,7 +33,7 @@ public class Auto2 extends LinearOpMode {
     private Pose2d centerofBlueChannel1 = new Pose2d(-36, -39, Math.toRadians(180));
     private Vector2d centerofBlueChannel2 = new Vector2d(-36, -12.5);
     private Vector2d depositPreLoad = new Vector2d(-47, -11.75);
-    private Vector2d collectConesPosition = new Vector2d(-60, -11.75);
+    private Vector2d collectConesPosition = new Vector2d(-62, -11.75);
     private Vector2d depositOnHighPole1 = new Vector2d(-30, -11.75);
     private Vector2d depositOnHighPole2 = new Vector2d(-21.5, -11.75);
 
@@ -445,7 +445,7 @@ public class Auto2 extends LinearOpMode {
             runTime.reset();
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_RESTING_IN_AUTO);
             while (step4) {
-                if (!robot.lift.hasLiftReachedPosition(250, 7)) {
+                if (!robot.lift.hasLiftReachedPosition(250, 7) && runTime.seconds() < 1) {
                     telemetry.addData("step 4", "true");
                     robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING);
                     robot.lift.setState();
