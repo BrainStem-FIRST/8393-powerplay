@@ -269,12 +269,12 @@ public class RobotTeleOp extends LinearOpMode {
                             .build();
                     driveCancelable.followTrajectorySequenceAsync(reverseTrajectory);
                 } else if (gamepad1.dpad_up || gamepad2.right_bumper) {
-                    Double targetPosition = Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET));
+                    Double targetPosition = Double.parseDouble((String) EXTENSION_POS);
                     targetPosition += 0.02;
                     EXTENSION_POS = targetPosition.toString();
                     stateMap.put(constants.EXTENSION_TARGET, String.valueOf(targetPosition));
                 } else if (gamepad1.dpad_down || gamepad2.left_bumper) {
-                    Double targetPosition = Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET));
+                    Double targetPosition = Double.parseDouble((String) EXTENSION_POS);
                     targetPosition -= 0.02;
                     EXTENSION_POS = targetPosition.toString();
                     stateMap.put(constants.EXTENSION_TARGET, String.valueOf(targetPosition));
