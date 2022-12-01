@@ -112,9 +112,9 @@ public class Lift {
     public final int LIFT_FINE_UP = 25;
     public final int LIFT_FINE_DOWN = 25;
 
-    public final int LIFT_POSITION_AUTO_RESTING = 181;
+    public final int LIFT_POSITION_AUTO_RESTING = 190;
     public final int LIFT_POSITION_AUTO_CYCLE_1 = 95;
-    public final int LIFT_DEPOSIT_POSITION_HIGHPOLE_IN_AUTO = 710;
+    public final int LIFT_DEPOSIT_POSITION_HIGHPOLE_IN_AUTO = 705;
     public final int LIFT_POSITION_AUTO_CYCLE_2 = 76;
     public final int LIFT_POSITION_AUTO_CYCLE_3 = 60;
     public final int LIFT_POSITION_AUTO_CYCLE_4 = 22;

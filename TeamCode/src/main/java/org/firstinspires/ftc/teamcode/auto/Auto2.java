@@ -33,7 +33,7 @@ public class Auto2 extends LinearOpMode {
     private Pose2d centerofBlueChannel1 = new Pose2d(-36, -39, Math.toRadians(180));
     private Vector2d centerofBlueChannel2 = new Vector2d(-36, -12.5);
     private Vector2d depositPreLoad = new Vector2d(-47, -11.75);
-    private Vector2d collectConesPosition = new Vector2d(-64.75, -11.75);
+    private Vector2d collectConesPosition = new Vector2d(-60, -11.75);
     private Vector2d depositOnHighPole1 = new Vector2d(-30, -11.75);
     private Vector2d depositOnHighPole2 = new Vector2d(-21.5, -11.75);
 
