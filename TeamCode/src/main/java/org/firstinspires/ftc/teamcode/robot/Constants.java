@@ -17,5 +17,8 @@ public class Constants {
     public final int GRABBER_CYCLE_TIME = 250;
     public final String SYSTEM_TIME = "SYSTEM TIME";
     public final String EXTENSION_TARGET = "EXTENSION TARGET";
+    public final String GRABBER_MODE = "GRABBER_MODE";
+    public final String COLLECTING = "COLLECTING";
+    public final String DEPOSITING = "DEPOSITING";
 
 }

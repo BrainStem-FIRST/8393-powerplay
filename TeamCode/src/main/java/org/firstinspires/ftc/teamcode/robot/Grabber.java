@@ -28,7 +28,7 @@ public class Grabber {
 
 
     public final double DONT_USE_THIS = 900;
-    public final double REGULAR_OPEN = 1375;
+    public final double REGULAR_OPEN = 1425;
     public final double CLOSED_VALUE = 1850;
 
     private Map stateMap;
@@ -41,6 +41,7 @@ public class Grabber {
         grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
 
         grabber.setPwmRange(new PwmControl.PwmRange(REGULAR_OPEN, CLOSED_VALUE));
+        stateMap.put(constants.GRABBER_MODE, constants.DEPOSITING);
 
     }
 
@@ -79,7 +80,7 @@ public class Grabber {
     public void close(){grabber.setPosition(1);}
 
     public boolean shouldGrab(Lift lift) {
-        return lift.getPosition() < lift.LIFT_POSITION_GROUND &&
+        return (lift.getPosition() < lift.LIFT_POSITION_GROUND) &&
                 ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
     }
 }

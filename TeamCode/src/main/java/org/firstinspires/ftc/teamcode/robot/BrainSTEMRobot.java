@@ -75,6 +75,7 @@ public class BrainSTEMRobot {
 
     public void coneCycle() {
         if(startliftDown()) {
+            stateMap.put(constants.CONE_CYCLE_START_TIME, String.valueOf(System.currentTimeMillis()));
             stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_IN_PROGRESS);
             stateMap.put(lift.LIFT_SUBHEIGHT, lift.PLACEMENT_HEIGHT);
             telemetry.addData("Cone Cycle Loop", "startliftDown");

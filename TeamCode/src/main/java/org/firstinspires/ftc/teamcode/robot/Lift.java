@@ -102,6 +102,8 @@ public class Lift {
     public final int LIFT_POSITION_LOWPOLE = 330;
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;
+    public int REMOVE_STACK_POSITION = 300;
+    public int STACK_5_POSITION = 95;
     public final int LIFT_POSITION_PICKUP = 1;
     public final int LIFT_ADJUSTMENT_LOW = -30;
     public final int LIFT_ADJUSTMENT_HIGH = -60;
@@ -135,6 +137,8 @@ public class Lift {
     public final String LIFT_POLE_LOW = "POLE_LOW";
     public final String LIFT_POLE_MEDIUM = "POlE_MEDIUM";
     public final String LIFT_POLE_HIGH = "POLE_HIGH";
+    public final String STACK_5 = "STACK_5";
+    public final String REMOVE_STACK = "REMOVE_STACK";
     public final String LIFT_TARGET_HEIGHT = "LIFT TARGET HEIGHT";
     public final String APPROACH_HEIGHT = "APPROACH_HEIGHT";
     public final String PLACEMENT_HEIGHT = "PLACEMENT_HEIGHT";
@@ -315,6 +319,14 @@ public class Lift {
                 position = LIFT_POSITION_MIDPOLE;
                 break;
             }
+            case REMOVE_STACK: {
+                position = REMOVE_STACK_POSITION;
+                break;
+            }
+            case STACK_5: {
+                position = STACK_5_POSITION;
+                break;
+            }
             case LIFT_POLE_LOW: {
                 position = LIFT_POSITION_LOWPOLE;
                 break;
@@ -367,6 +379,12 @@ public class Lift {
             }
             case LIFT_RESTING_IN_AUTO: {
                 transitionToLiftPosition(LIFT_POSITION_AUTO_RESTING + deliveryHeight(subheight));
+            }
+            case REMOVE_STACK: {
+                transitionToLiftPosition(REMOVE_STACK_POSITION);
+            }
+            case STACK_5: {
+                transitionToLiftPosition(STACK_5_POSITION);
             }
         }
 
@@ -431,7 +449,7 @@ public class Lift {
         return power;
     }
 
-    private void runAllMotorsToPosition(int position, double power) {
+    public void runAllMotorsToPosition(int position, double power) {
         for (DcMotor liftMotor : liftMotors) {
             liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftMotor.setTargetPosition(position);
