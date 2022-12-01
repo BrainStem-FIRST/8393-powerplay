@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.auto.imagecv.AprilTagDetectionPipeline;
@@ -47,7 +48,12 @@ public class Auto2 extends LinearOpMode {
     private boolean step5 = false;
     private boolean step5a = false;
 
+    private int parking;
+
     private boolean isRed = true;
+
+    private ArrayList liftCollectionHeights;
+
 
 
     // Open CV //////////////////////////////////////////////////////////////////////////
@@ -114,6 +120,16 @@ public class Auto2 extends LinearOpMode {
         BrainSTEMRobot robot = new BrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap);
         Constants constants = new Constants();
 
+        liftCollectionHeights = new ArrayList();
+        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_1);
+        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_2);
+        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_3);
+        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_4);
+        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_5);
+        liftCollectionHeights.add(0);
+
+
+
         // State Map ////////////////////////////////////////////////////////////////
         this.stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
         this.stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
@@ -151,6 +167,7 @@ public class Auto2 extends LinearOpMode {
                     if (tag.id == MIDDLE) {
                         tagOfInterest = tag;
                         location = ParkingLocation.MID;
+                        parking = 2;
                         tagFound = true;
                         telemetry.addData("Open CV :", "Mid");
                         telemetry.update();
@@ -160,6 +177,7 @@ public class Auto2 extends LinearOpMode {
                     } else if (tag.id == RIGHT) {
                         tagOfInterest = tag;
                         location = ParkingLocation.RIGHT;
+                        parking = 3;
                         tagFound = true;
                         telemetry.addData("Open CV :", "Right");
                         telemetry.update();
@@ -170,6 +188,7 @@ public class Auto2 extends LinearOpMode {
                         tagOfInterest = tag;
                         location = ParkingLocation.LEFT;
                         tagFound = true;
+                        parking = 3;
                         telemetry.addData("Open CV :", "Left");
                         telemetry.update();
                         endParking = new Pose2d(parkingLeft.getX(), parkingLeft.getY(), parkingLeft.getHeading());
@@ -372,15 +391,16 @@ public class Auto2 extends LinearOpMode {
         robot.turret.setState(robot.lift);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         robot.arm.extendHome();
-        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_RESTING_IN_AUTO);
-        robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING - 40);
+        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
+        robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_CYCLE_2);
         robot.lift.setState();
 
 
         telemetry.addData("traj", "5");
         telemetry.update();
 
-        for (int i = 2; i < 6; i++){
+        for (int i = 0; i < 4; i++){
+
             Trajectory cycleCollectTraj2 = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
                     .lineToLinearHeading(collectConesPosition)
                     .build();
@@ -390,7 +410,7 @@ public class Auto2 extends LinearOpMode {
             stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
             while (step5) {
                 if (runTime.seconds() < 0.5) {
-                    robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING - 40);
+                    robot.lift.raiseHeightTo((Integer) liftCollectionHeights.get((i + 1)));
                     robot.lift.setState();
                     telemetry.addData("while loop", "step 5");
                     telemetry.update();
@@ -466,26 +486,42 @@ public class Auto2 extends LinearOpMode {
             robot.turret.setState(robot.lift);
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             robot.arm.extendHome();
-            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_RESTING_IN_AUTO);
-            robot.lift.raiseHeightTo(robot.lift.LIFT_POSITION_AUTO_RESTING - (40 * i));
+            stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_PICKUP);
+            robot.lift.raiseHeightTo((Integer) liftCollectionHeights.get(i + 2));
             robot.lift.setState();
 
 
             telemetry.addData("traj", "5");
             telemetry.update();
 
+            if (totalTime.seconds() > 26) {
+                i = 6;
+            }
+
         }
 
 
-        //fixme add parking traj
-
-        if (location == ParkingLocation.RIGHT){
-            endParking = new Pose2d(parkingRight.getX(), parkingRight.getY(), parkingRight.getHeading());
-        } else if (location == ParkingLocation.MID){
-            endParking = new Pose2d(parkingMid.getX(), parkingMid.getY(), parkingMid.getHeading());
-        } else {
-            endParking = new Pose2d(parkingLeft.getX(), parkingLeft.getY(), parkingLeft.getHeading());
+        if (parking == 3){
+            Trajectory parking = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                    .lineToLinearHeading(parkingRight)
+                    .build();
+            sampleMecanumDrive.followTrajectoryAsync(parking);
+        } else if (parking == 2) {
+            Trajectory parking = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                    .lineToLinearHeading(parkingMid)
+                    .build();
+            sampleMecanumDrive.followTrajectoryAsync(parking);
+        }  else  {
+            Trajectory parking = sampleMecanumDrive.trajectoryBuilder(sampleMecanumDrive.getPoseEstimate())
+                    .lineToLinearHeading(parkingLeft)
+                    .build();
+            sampleMecanumDrive.followTrajectoryAsync(parking);
         }
+
+
+        // Parking
+
+
 
 
 
