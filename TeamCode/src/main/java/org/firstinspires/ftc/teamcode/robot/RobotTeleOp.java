@@ -268,8 +268,8 @@ public class RobotTeleOp extends LinearOpMode {
                             })
                             .build();
                     driveCancelable.followTrajectorySequenceAsync(reverseTrajectory);
-                } else if (gamepad1.dpad_up || gamepad2.right_bumper) {
-                    Double targetPosition = Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET));
+                } /*else if (gamepad1.dpad_up || gamepad2.right_bumper) {
+                    Double targetPosition;
                     targetPosition += 0.02;
                     EXTENSION_POS = targetPosition.toString();
                     stateMap.put(constants.EXTENSION_TARGET, String.valueOf(targetPosition));
@@ -294,7 +294,7 @@ public class RobotTeleOp extends LinearOpMode {
                             .lineToLinearHeading(targetPosition)
                             .build();
                     driveCancelable.followTrajectorySequenceAsync(strafeTrajectory);
-                }
+                }*/
 
                 if (stateMap.get(DRIVE_MODE).equals(MANUAL_DRIVE_MODE)) {
                     if (slowMode) {
@@ -341,12 +341,14 @@ public class RobotTeleOp extends LinearOpMode {
                 if (extensionFineAdjustUp.getState()) {
                     robot.arm.EXTENSION_POSITION_MAX += 20;
                     robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
+                    robot.arm.extendMax();
                 }
 
                 extensionFineAdjustDown.update(gamepad2.right_bumper);
                 if (extensionFineAdjustDown.getState()) {
                     robot.arm.EXTENSION_POSITION_MAX -= 20;
                     robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
+                    robot.arm.extendMax();
                 }
 
                 // Change highpole preset value
