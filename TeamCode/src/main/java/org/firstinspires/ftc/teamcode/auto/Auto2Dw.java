@@ -273,8 +273,33 @@ public class Auto2Dw extends LinearOpMode {
         // at 29 seconds the lift runs down in auto
 
         while (opModeIsActive()) {
-            drive.update();
-            robot.updateSystems();
+
+            if (totalTime.seconds() < 27) {
+                drive.update();
+                robot.updateSystems();
+            } else {
+                if (parking == 3){
+                    Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .lineToLinearHeading(parkingRight)
+                            .build();
+                    drive.followTrajectory(parking);
+                } else if (parking == 2) {
+                    Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .lineToLinearHeading(parkingMid)
+                            .build();
+                    drive.followTrajectory(parking);
+                }  else  {
+                    Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
+                            .lineToLinearHeading(parkingLeft)
+                            .build();
+                    drive.followTrajectory(parking);
+                }
+
+            }
+
+            if (totalTime.seconds() >= 29){
+                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POSITION_RESET);
+            }
         }
 
 
