@@ -337,15 +337,15 @@ public class RobotTeleOp extends LinearOpMode {
 
                 //Change extension preset values
 
-                extensionFineAdjustUp.update(gamepad2.left_bumper);
-                if (extensionFineAdjustUp.getState()) {
+                //extensionFineAdjustUp.update(gamepad2.left_bumper);
+                if (gamepad2.left_bumper) {
                     robot.arm.EXTENSION_EDITABLE_POSITION += 0.027;
                     robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
                     robot.arm.extendToTarget();
                 }
 
-                extensionFineAdjustDown.update(gamepad2.right_bumper);
-                if (extensionFineAdjustDown.getState()) {
+                //extensionFineAdjustDown.update(gamepad2.right_bumper);
+                if (gamepad2.right_bumper) {
                     robot.arm.EXTENSION_EDITABLE_POSITION -= 0.027;
                     robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
                     robot.arm.extendToTarget();
