@@ -38,7 +38,7 @@ public class Auto2Dw extends LinearOpMode {
     private Pose2d centerOfChannelInitial = new Pose2d(-36, -12.5, Math.toRadians(90));
     private Pose2d depositPreLoad = new Pose2d(-48, -12, Math.toRadians(180));
     private Pose2d approachPosition = new Pose2d(-56, -12, Math.toRadians(180));
-    private Pose2d collectConesPosition = new Pose2d(-63, -12, Math.toRadians(180));
+    private Pose2d collectConesPosition = new Pose2d(-64.25, -12, Math.toRadians(180));
     private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(180));
     private Pose2d depositOnHighPole1 = new Pose2d(-23.5, -12, Math.toRadians(180));
     private Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(180));
