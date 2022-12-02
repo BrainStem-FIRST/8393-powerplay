@@ -29,7 +29,7 @@ public class LeftSideAuto extends LinearOpMode {
 
 
     // Locations - For Red /////////////////////////////////////////////////////////////////////
-    private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(90));
+    private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
     private Pose2d signalConeKnockout = new Pose2d(-36, -24, Math.toRadians(180));
     private Pose2d centerOfChannelInitial = new Pose2d(-36, -12.5, Math.toRadians(90));
     private Pose2d depositPreLoad = new Pose2d(-48, -12, Math.toRadians(180));
@@ -41,9 +41,9 @@ public class LeftSideAuto extends LinearOpMode {
 
     private int initialTurn = -90;
 
-    private Pose2d parkingLeft = new Pose2d(-12, -12.5, Math.toRadians(-90));
-    private Pose2d parkingMid = new Pose2d(-36, -12.5, Math.toRadians(-90));
-    private Pose2d parkingRight = new Pose2d(-60, -12.5, Math.toRadians(-90));
+    private Pose2d parkingLeft = new Pose2d(-12, -12.5, Math.toRadians(90));
+    private Pose2d parkingMid = new Pose2d(-36, -12.5, Math.toRadians(90));
+    private Pose2d parkingRight = new Pose2d(-60, -12.5, Math.toRadians(90));
 
     // Async Vars /////////////////////////////////////////////////////////////////////
     private boolean step1 = false;
