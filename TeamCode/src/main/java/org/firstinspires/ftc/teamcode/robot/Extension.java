@@ -113,7 +113,7 @@ public class Extension {
                 break;
             }
             case AUTO_EXTENSION: {
-                extendInAuto(0.55);
+                extendInAuto(0.7);
                 break;
             }
         }
