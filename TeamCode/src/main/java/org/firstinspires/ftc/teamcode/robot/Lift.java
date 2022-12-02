@@ -103,7 +103,9 @@ public class Lift {
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;
     public int REMOVE_STACK_POSITION = 300;
-    public int STACK_5_POSITION = 95;
+    public int STACK_5_POSITION = 105;
+    public int STACK_4_POSITION = 85;
+    public int STACK_3_POSITION = 65;
     public final int LIFT_POSITION_PICKUP = 1;
     public final int LIFT_ADJUSTMENT_LOW = -30;
     public final int LIFT_ADJUSTMENT_HIGH = -60;
@@ -138,6 +140,8 @@ public class Lift {
     public final String LIFT_POLE_MEDIUM = "POlE_MEDIUM";
     public final String LIFT_POLE_HIGH = "POLE_HIGH";
     public final String STACK_5 = "STACK_5";
+    public final String STACK_4 = "STACK_4";
+    public final String STACK_3 = "STACK_3";
     public final String REMOVE_STACK = "REMOVE_STACK";
     public final String LIFT_TARGET_HEIGHT = "LIFT TARGET HEIGHT";
     public final String APPROACH_HEIGHT = "APPROACH_HEIGHT";
@@ -386,6 +390,13 @@ public class Lift {
             case STACK_5: {
                 transitionToLiftPosition(STACK_5_POSITION);
             }
+            case STACK_4: {
+                transitionToLiftPosition(STACK_4_POSITION);
+            }
+            case STACK_3: {
+                transitionToLiftPosition(STACK_3_POSITION);
+            }
+
         }
 
     }
