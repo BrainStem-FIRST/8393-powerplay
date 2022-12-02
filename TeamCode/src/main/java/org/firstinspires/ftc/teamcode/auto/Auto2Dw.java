@@ -253,7 +253,7 @@ public class Auto2Dw extends LinearOpMode {
               //  .waitSeconds(0.25)
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION); })
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION); })
-                .waitSeconds(0.25)
+                .waitSeconds(0.65)
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS); })
                 .waitSeconds(0.5)
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { resetLift(); })
@@ -284,8 +284,9 @@ public class Auto2Dw extends LinearOpMode {
                 .waitSeconds(0.25)
 
                 // third cycle
-                .lineToLinearHeading(approachPosition)
-                .lineToLinearHeading(collectConesPosition, SampleMecanumDrive.getVelocityConstraint(15, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                .lineToLinearHeading(approachPosition , SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
+                .lineToLinearHeading(collectConesPosition, SampleMecanumDrive.getVelocityConstraint(20, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
                 .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { robot.grabber.close(); })
                 .waitSeconds(0.6)
