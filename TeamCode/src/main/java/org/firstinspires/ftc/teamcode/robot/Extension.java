@@ -29,7 +29,7 @@ public class Extension {
     public final double EXTENSION_POSITION_HOME = 1800;    // Fully retracted
     public double EXTENSION_POSITION_MAX  = 2372;    // Fully extended
 
-
+    public double EXTENSION_EDITABLE_POSITION = 0.75;
     // extension statemap values
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
     public final String DEFAULT_VALUE = "RETRACTED";
@@ -81,11 +81,11 @@ public class Extension {
 
     // Extends the arm to its maximum reach
     public void extendMax() {
-        extension.setPosition(0.6);
+        extension.setPosition(EXTENSION_EDITABLE_POSITION);
     }
 
     public void extendToTarget() {
-        extension.setPosition(0.75);
+        extension.setPosition(EXTENSION_EDITABLE_POSITION);
     }
 
     public void extendInAuto(double pos){

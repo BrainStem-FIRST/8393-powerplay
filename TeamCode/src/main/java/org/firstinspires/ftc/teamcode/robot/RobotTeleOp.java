@@ -339,16 +339,16 @@ public class RobotTeleOp extends LinearOpMode {
 
                 extensionFineAdjustUp.update(gamepad2.left_bumper);
                 if (extensionFineAdjustUp.getState()) {
-                    robot.arm.EXTENSION_POSITION_MAX += 20;
+                    robot.arm.EXTENSION_EDITABLE_POSITION += 0.009;
                     robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
-                    robot.arm.extendMax();
+                    robot.arm.extendToTarget();
                 }
 
                 extensionFineAdjustDown.update(gamepad2.right_bumper);
                 if (extensionFineAdjustDown.getState()) {
-                    robot.arm.EXTENSION_POSITION_MAX -= 20;
+                    robot.arm.EXTENSION_EDITABLE_POSITION -= 0.009;
                     robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
-                    robot.arm.extendMax();
+                    robot.arm.extendToTarget();
                 }
 
                 // Change highpole preset value
