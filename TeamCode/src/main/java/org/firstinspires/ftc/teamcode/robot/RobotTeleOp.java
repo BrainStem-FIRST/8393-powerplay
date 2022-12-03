@@ -32,6 +32,7 @@ public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_LEFT_STICK_STATE = "GAMEPAD_1_LEFT_STICK_STATE";
     private final String GAMEPAD_1_LEFT_TRIGGER_STATE = "GAMEPAD_1_LEFT_TRIGGER_STATE";
     private final String GAMEPAD_1_LEFT_TRIGGER_PRESSED = "GAMEPAD_1_LEFT_TRIGGER_PRESSED";
+    private final String GAMEPAD_2_X_BUTTON_TOGGLE = "GAMEPAD_2_X_BUTTON_TOGGLE";
     private final String GAMEPAD_1_Y_STATE = "GAMEPAD_1_Y_STATE";
     private final String GAMEPAD_1_Y_PRESSED = "GAMEPAD_1_Y_IS_PRESSED";
     private final double AUTO_EXTENSION_ADJUSTMENT = 0.0;
@@ -43,6 +44,7 @@ public class RobotTeleOp extends LinearOpMode {
 
     private final String GAMEPAD_1_RIGHT_TRIGGER_STATE = "GAMEPAD_1_RIGHT_TRIGGER_STATE";
     private final String GAMEPAD_1_RIGHT_TRIGGER_PRESSED = "GAMEPAD_1_RIGHT_TRIGGER_PRESSED";
+    private final String GAMEPAD_2_X_BUTTON_PRESSED = "GAMEPAD_1_RIGHT_TRIGGER_PRESSED";
     private final String MANUAL_DRIVE_MODE = "MANUAL";
     private final String AUTO_DRIVE_MODE = "AUTO";
     private final String DRIVE_MODE = "DRIVE";
@@ -55,6 +57,7 @@ public class RobotTeleOp extends LinearOpMode {
 
 
     private ToggleButton coneCycleToggleG = new ToggleButton();
+    private ToggleButton gamepad2xbutton = new ToggleButton();
     private StickyButton coneCyleStickyG = new StickyButton();
     private boolean coneCycleToggleGBoolean = false;
     private boolean coneCycleStickyBoolean = false;
@@ -136,6 +139,10 @@ public class RobotTeleOp extends LinearOpMode {
 
         while (!isStopRequested()) {
 
+            if(gamepad2.x){
+
+            }
+
             if(gamepad2.right_stick_button && gamepad2.left_stick_button){
                 robot.lift.setAllMotorPowers(-0.25);
                 robot.turret.centerTurret();
@@ -174,6 +181,10 @@ public class RobotTeleOp extends LinearOpMode {
                     robot.turret.centerTurret();
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
+                }
+
+                if(toggleMap.get(GAMEPAD_2_X_BUTTON_TOGGLE)){
+
                 }
 
 //            if (toggleMap.get(GAMEPAD_1_Y_STATE)) {
@@ -385,6 +396,7 @@ public class RobotTeleOp extends LinearOpMode {
 
 
     private void setButtons() {
+        toggleButton(GAMEPAD_2_X_BUTTON_TOGGLE, GAMEPAD_2_X_BUTTON_PRESSED, gamepad2.x);
         toggleButton(GAMEPAD_1_A_STATE, GAMEPAD_1_A_IS_PRESSED, gamepad1.a);
         toggleButton(GAMEPAD_1_B_STATE, GAMEPAD_1_B_IS_PRESSED, gamepad1.b);
         toggleButton(GAMEPAD_1_X_STATE, GAMEPAD_1_X_IS_PRESSED, gamepad1.x);
