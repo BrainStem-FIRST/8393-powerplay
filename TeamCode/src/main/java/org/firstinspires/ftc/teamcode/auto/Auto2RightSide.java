@@ -1,11 +1,7 @@
 package org.firstinspires.ftc.teamcode.auto;
 
-import androidx.annotation.NonNull;
-
 import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.constraints.TrajectoryVelocityConstraint;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -25,7 +21,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Auto2Dw extends LinearOpMode {
+public class Auto2RightSide extends LinearOpMode {
     private final AllianceColor color;
     private Map stateMap;
 
@@ -94,7 +90,7 @@ public class Auto2Dw extends LinearOpMode {
         RED, BLUE
     }
 
-    public Auto2Dw(AllianceColor color, boolean rightSideAuto) {
+    public Auto2RightSide(AllianceColor color, boolean rightSideAuto) {
         this.color = color;
         this.rightSideAuto = rightSideAuto;
         switch (color) {
@@ -136,15 +132,6 @@ public class Auto2Dw extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(this.hardwareMap);
         this.stateMap = new HashMap<String, String>() {{}};
         BrainSTEMRobot robot = new BrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap);
-
-        liftCollectionHeights = new ArrayList();
-        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_1);
-        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_2);
-        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_3);
-        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_4);
-        liftCollectionHeights.add(robot.lift.LIFT_POSITION_AUTO_CYCLE_5);
-        liftCollectionHeights.add(0);
-
 
 
         // State Map ////////////////////////////////////////////////////////////////
