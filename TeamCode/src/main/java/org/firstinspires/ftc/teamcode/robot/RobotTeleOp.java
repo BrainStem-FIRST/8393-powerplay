@@ -185,6 +185,7 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
                 } else {
                     slowMode = false;
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                     robot.turret.centerTurret();
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
