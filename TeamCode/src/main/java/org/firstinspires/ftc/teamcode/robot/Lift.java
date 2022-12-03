@@ -98,7 +98,7 @@ public class Lift {
     public final int MINIMUM_CLEARANCE_HEIGHT = 43;    // inches to lift to clear side panels
 
     public final int LIFT_POSITION_RESET = 0;
-    public final int LIFT_POSITION_GROUND = 25;
+    public int LIFT_POSITION_GROUND = 25;
     public final int LIFT_POSITION_LOWPOLE = 330;
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;

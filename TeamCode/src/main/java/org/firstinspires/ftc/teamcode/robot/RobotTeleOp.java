@@ -99,6 +99,8 @@ public class RobotTeleOp extends LinearOpMode {
         put(GAMEPAD_1_Y_PRESSED, false);
         put(GAMEPAD_1_RIGHT_TRIGGER_PRESSED, false);
         put(GAMEPAD_1_RIGHT_TRIGGER_STATE, false);
+        put(GAMEPAD_2_X_BUTTON_TOGGLE, false);
+        put(GAMEPAD_2_X_BUTTON_PRESSED, false);
 
     }};
 
@@ -139,19 +141,23 @@ public class RobotTeleOp extends LinearOpMode {
 
         while (!isStopRequested()) {
 
+            if(gamepad2.right_trigger > 0.4){
+                robot.lift.LIFT_POSITION_GROUND +=15;
+            }
+            if(gamepad2.left_trigger > 0.4){
+                robot.lift.LIFT_POSITION_GROUND -= 15;
+            }
             if(gamepad2.x){
-
+                robot.lift.LIFT_POSITION_GROUND = 25;
             }
 
             if(gamepad2.right_stick_button && gamepad2.left_stick_button){
                 robot.lift.setAllMotorPowers(-0.25);
+                robot.lift.LIFT_POSITION_GROUND = 25;
                 robot.turret.centerTurret();
                 robot.arm.extendHome();
                 robot.lift.resetAllLiftMotorEncoders();
             } else {
-                if (gamepad2.left_trigger > 0.4) {
-                    robot.lift.setAllMotorPowers(-gamepad2.right_trigger);
-                }
 
                 setButtons();
                 if (gamepad1.a || gamepad1.right_trigger > 0.5) {
@@ -337,11 +343,8 @@ public class RobotTeleOp extends LinearOpMode {
                 }
 
                 // Change highpole preset value
-                if (gamepad2.left_trigger > 0.2) {
-                    d2LeftTriggerPressed = true;
-                } else if (gamepad2.left_trigger < 0.2) {
-                    d2LeftTriggerPressed = false;
-                }
+
+
 
                 // fixme lift fine adjust - lift moves to new pos and then goes back to old pos
 
