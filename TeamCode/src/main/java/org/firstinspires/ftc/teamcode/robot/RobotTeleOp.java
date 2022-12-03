@@ -128,7 +128,7 @@ public class RobotTeleOp extends LinearOpMode {
             telemetry.addData("Robot ::", "Init");
             telemetry.update();
 
-            robot.lights.setBothLEDRed();
+            robot.lights.setBothLEDAmber();
             robot.grabber.open();
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             robot.updateSystems();
@@ -140,6 +140,7 @@ public class RobotTeleOp extends LinearOpMode {
 
 
         while (!isStopRequested()) {
+            robot.lights.setBothLEDRed();
 
             if(gamepad2.right_trigger > 0.4){
                 robot.lift.LIFT_POSITION_GROUND +=15;

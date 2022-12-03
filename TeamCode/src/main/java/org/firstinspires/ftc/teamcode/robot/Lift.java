@@ -22,7 +22,7 @@ public class Lift {
         private static final int BOTTOM_ENCODER_TICKS = 0;
         private static final int LOW_POLE_ENCODER_TICKS = 330;
         private static final int MIDDLE_POLE_ENCODER_TICKS = 530;
-        public static int HIGH_POLE_ENCODER_TICKS = 725;
+        public static int HIGH_POLE_ENCODER_TICKS = 735;
         private static final int JUNCTION_ENCODER_TICKS = 1; //FIXME
         private static final int COLLECTING_ENCODER_TICKS = 25;
         private static final int LIFT_POSITION_TOLERANCE = 8;
@@ -104,7 +104,7 @@ public class Lift {
     public int LIFT_POSITION_HIGHPOLE = 720;
     public int REMOVE_STACK_POSITION = 300;
     public int STACK_5_POSITION = 105 + 10;
-    public int STACK_4_POSITION = 85 + 10;
+    public int STACK_4_POSITION = 70;
     public int STACK_3_POSITION = 65 + 10;
     public final int LIFT_POSITION_PICKUP = 1;
     public final int LIFT_ADJUSTMENT_LOW = -30;
