@@ -8,8 +8,12 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import static java.lang.Thread.sleep;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Extension;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Grabber;
+import org.firstinspires.ftc.teamcode.robot.subsystems.LEDLights;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Lift;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
 
-import java.util.HashMap;
 import java.util.Map;
 //import java.util.Map;
 
@@ -32,17 +36,20 @@ public class BrainSTEMRobot {
     private Map stateMap;
     Constants constants = new Constants();
 
-    public BrainSTEMRobot(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
+    private boolean isAuto;
+
+    public BrainSTEMRobot(HardwareMap hwMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
         this.opMode = opMode;
+        this.isAuto = isAuto;
         // instantiate components turret, lift, arm, grabber
-        turret  = new Turret(hwMap, telemetry, stateMap);
-        lift    = new Lift(hwMap, telemetry, stateMap);
-        arm     = new Extension(hwMap, telemetry, stateMap);
+        turret  = new Turret(hwMap, telemetry, stateMap, isAuto);
+        lift    = new Lift(hwMap, telemetry, stateMap, isAuto);
+        arm     = new Extension(hwMap, telemetry, stateMap, isAuto);
         drive   = new SampleMecanumDrive(hwMap);
-        grabber   = new Grabber(hwMap, telemetry, stateMap);
-        lights = new LEDLights(hwMap, telemetry);
+        grabber   = new Grabber(hwMap, telemetry, stateMap, isAuto);
+        lights = new LEDLights(hwMap, telemetry, isAuto);
 
 
         stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);

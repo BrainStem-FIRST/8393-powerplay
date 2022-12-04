@@ -132,7 +132,7 @@ public class Auto2RightSide extends LinearOpMode {
         // Hardwhare ///////////////////////////////////////////////////////////////////
         SampleMecanumDrive drive = new SampleMecanumDrive(this.hardwareMap);
         this.stateMap = new HashMap<String, String>() {{}};
-        BrainSTEMRobot robot = new BrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap);
+        BrainSTEMRobot robot = new BrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap, true);
 
 
         // State Map ////////////////////////////////////////////////////////////////

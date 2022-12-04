@@ -1,9 +1,10 @@
-package org.firstinspires.ftc.teamcode.robot;
+package org.firstinspires.ftc.teamcode.robot.subsystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
+import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -33,9 +34,12 @@ public class Grabber {
 
     private Map stateMap;
 
-    public Grabber(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
+    private boolean isAuto;
+
+    public Grabber(HardwareMap hwMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
+        this.isAuto = isAuto;
 
 
         grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
@@ -80,7 +84,7 @@ public class Grabber {
     public void close(){grabber.setPosition(1);}
 
     public boolean shouldGrab(Lift lift) {
-        return (lift.getPosition() < lift.LIFT_POSITION_GROUND) &&
+        return (lift.getPosition() < Lift.LiftHeight.COLLECTING.getTicks()) &&
                 ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
     }
 }

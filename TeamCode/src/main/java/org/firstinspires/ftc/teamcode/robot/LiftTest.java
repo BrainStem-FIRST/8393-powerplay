@@ -19,7 +19,7 @@ public class LiftTest extends LinearOpMode {
 
         HashMap<String, String> stateMap = new HashMap<String, String>() {{
         }};
-        BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap);
+        BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap, false);
 
         int liftPose;
 

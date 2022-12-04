@@ -1,20 +1,12 @@
-package org.firstinspires.ftc.teamcode.robot;
+package org.firstinspires.ftc.teamcode.robot.subsystems;
 
-import android.annotation.SuppressLint;
-
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import java.util.Map;
@@ -30,17 +22,19 @@ public class Turret {
     public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 1373;
     public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2155;
     public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2155;
-    public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 0;
+    public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 309;
     public final double TURRET_CENTER_POSITION = 0.5;
 
     public Telemetry telemetry;
     private ServoImplEx leftTurretServo;
     private ServoImplEx rightTurretServo;
     private Map stateMap;
+    private boolean isAuto;
 
-    public Turret(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
+    public Turret(HardwareMap hwMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
+        this.isAuto = isAuto;
 
         leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretLeft"));
         rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
@@ -60,7 +54,11 @@ public class Turret {
     }
 
     public boolean isLiftTooLow(Lift lift) {
-        return lift.getPosition() < LIFT_MIN_HEIGHT_TO_MOVE_TURRET;
+        if(isAuto){
+            return false;
+        } else {
+            return lift.getPosition() < LIFT_MIN_HEIGHT_TO_MOVE_TURRET;
+        }
     }
 
     public void selectTransition(String desiredLevel){
