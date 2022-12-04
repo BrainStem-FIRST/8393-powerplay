@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.robot.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.StickyButton;
 import org.firstinspires.ftc.teamcode.util.ToggleButton;
@@ -80,8 +81,6 @@ public class RobotTeleOp extends LinearOpMode {
     private int liftDownIncrement;
 
     Constants constants = new Constants();
-    Lift.LiftConstants liftconstants = new Lift.LiftConstants();
-
 
     Map<String, Boolean> toggleMap = new HashMap<String, Boolean>() {{
         put(GAMEPAD_1_A_STATE, false);
@@ -108,7 +107,7 @@ public class RobotTeleOp extends LinearOpMode {
 
         HashMap<String, String> stateMap = new HashMap<String, String>() {{
         }};
-        BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap);
+        BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap, false);
 
         SampleMecanumDrive driveCancelable = new SampleMecanumDrive(hardwareMap);
         driveCancelable.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -143,13 +142,13 @@ public class RobotTeleOp extends LinearOpMode {
             robot.lights.setBothLEDRed();
 
             if(gamepad2.right_trigger > 0.4){
-                robot.lift.LIFT_POSITION_GROUND +=15;
+                Lift.LiftConstants.COLLECTING_ENCODER_TICKS +=15;
             }
             if(gamepad2.left_trigger > 0.4){
-                robot.lift.LIFT_POSITION_GROUND -= 15;
+                Lift.LiftConstants.COLLECTING_ENCODER_TICKS -= 15;
             }
             if(gamepad2.x){
-                robot.lift.LIFT_POSITION_GROUND = 25;
+                Lift.LiftConstants.COLLECTING_ENCODER_TICKS = 25;
             }
 
             if(gamepad2.right_stick_button && gamepad2.left_stick_button){
@@ -157,7 +156,7 @@ public class RobotTeleOp extends LinearOpMode {
                 robot.lift.LIFT_POSITION_GROUND = 25;
                 robot.turret.centerTurret();
                 robot.arm.extendHome();
-                robot.lift.resetAllLiftMotorEncoders();
+                robot.lift.resetEncoders();
             } else {
 
                 setButtons();
