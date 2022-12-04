@@ -120,6 +120,8 @@ public class Lift {
     public final String LIFT_SYSTEM_NAME = "Lift";
     public final String LIFT_PICKUP = "PICKUP";
     public final String LIFT_POLE_GROUND = "GROUND";
+    public final String LIFT_POLE_DEPOSIT = "DEPOSIT";
+
     public final String LIFT_POLE_LOW = "POLE_LOW";
     public final String LIFT_POLE_MEDIUM = "POlE_MEDIUM";
     public final String LIFT_POLE_HIGH = "POLE_HIGH";
@@ -267,6 +269,10 @@ public class Lift {
                 transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
                 break;
             }
+            case LIFT_POLE_DEPOSIT: {
+                transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
+                break;
+            }
             case LIFT_FINEADJ_UP: {
                 transitionToLiftPosition(getAvgLiftPosition() + deliveryHeight(subheight));
                 break;
@@ -292,7 +298,6 @@ public class Lift {
     private void transitionToLiftPosition(int ticks) {
         raiseHeightTo(ticks);
     }
-
 
     public int deliveryHeight(String subheight) {
         int height = 0;
