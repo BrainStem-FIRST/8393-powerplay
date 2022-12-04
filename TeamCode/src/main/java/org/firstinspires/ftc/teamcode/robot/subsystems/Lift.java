@@ -72,9 +72,9 @@ public class Lift {
         private static final boolean LIFT_MOTOR_4_REVERSED = false;
 
         //lift PID constants
-        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 3;
+        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 0.015;
         private static final double INTEGRAL_COLLECTING_TO_HIGH = 0;
-        private static final double DERIVATIVE_COLLECTING_TO_HIGH = 1;
+        private static final double DERIVATIVE_COLLECTING_TO_HIGH = 0.2;
 
         private static final double PROPORTIONAL_COLLECTING_TO_LOW = 0;
         private static final double INTEGRAL_COLLECTING_TO_LOW = 0;
@@ -358,7 +358,7 @@ public class Lift {
             telemetry.addData("Using Run To Position; ", "YESSSS");
             telemetry.update();
             runAllMotorsToPosition(heightInTicks, 1);
-        } else if (position >= heightInTicks - 10 && position <= heightInTicks + 10) {
+        } else if (position >= heightInTicks - 5 && position <= heightInTicks + 5) {
             if (heightInTicks > 400) {
                 telemetry.addData("Setting Raw Power; ", "YESS");
                 telemetry.addData("Using Run To Position; ", "NOO");
@@ -405,7 +405,6 @@ public class Lift {
 
         telemetry.addData("Lift Motor Powers: ", getLiftMotorPowers());
     }
-
 
     /////////////////////
     //GETTERS & SETTERS//
