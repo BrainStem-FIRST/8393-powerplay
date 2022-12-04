@@ -99,6 +99,7 @@ public class Lift {
 
     public final int LIFT_POSITION_RESET = 0;
     public int LIFT_POSITION_GROUND = 25;
+    public int LIFT_POSITION_DEPOSIT = 10;
     public final int LIFT_POSITION_LOWPOLE = 330;
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;
@@ -136,6 +137,8 @@ public class Lift {
     public final String LIFT_SYSTEM_NAME = "Lift";
     public final String LIFT_PICKUP = "PICKUP";
     public final String LIFT_POLE_GROUND = "GROUND";
+    public final String LIFT_POLE_DEPOSIT = "DEPOSIT";
+
     public final String LIFT_POLE_LOW = "POLE_LOW";
     public final String LIFT_POLE_MEDIUM = "POlE_MEDIUM";
     public final String LIFT_POLE_HIGH = "POLE_HIGH";
@@ -339,6 +342,9 @@ public class Lift {
                 position = LIFT_POSITION_GROUND;
                 break;
             }
+            case LIFT_POLE_DEPOSIT: {
+                position = LIFT_POSITION_DEPOSIT;
+            }
             case LIFT_FINEADJ_UP: {
                 position = getAvgLiftPosition() + LIFT_FINE_UP;
                 break;
@@ -370,6 +376,10 @@ public class Lift {
                 break;
             }
             case LIFT_POLE_GROUND: {
+                transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
+                break;
+            }
+            case LIFT_POLE_DEPOSIT: {
                 transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
                 break;
             }
@@ -410,7 +420,10 @@ public class Lift {
         double currentPosition = getPosition();
         if (inHeightTolerance(currentPosition, LIFT_POSITION_GROUND + deliveryHeight(subheight))) {
             state = LIFT_POLE_GROUND;
-        } else if (inHeightTolerance(currentPosition, LIFT_POSITION_LOWPOLE + deliveryHeight(subheight))) {
+        }
+     else if (inHeightTolerance(currentPosition, LIFT_POSITION_DEPOSIT + deliveryHeight(subheight))) {
+        state = LIFT_POLE_DEPOSIT;
+    } else if (inHeightTolerance(currentPosition, LIFT_POSITION_LOWPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_LOW;
         } else if (inHeightTolerance(currentPosition, LIFT_POSITION_MIDPOLE + deliveryHeight(subheight))) {
             state = LIFT_POLE_MEDIUM;
