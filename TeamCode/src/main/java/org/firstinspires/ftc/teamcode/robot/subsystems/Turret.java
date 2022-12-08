@@ -16,6 +16,7 @@ public class Turret {
     public final String     LEFT_POSITION = "LEFT_STATE";
     public final String     RIGHT_POSITION = "RIGHT_STATE";
     public final String     CENTER_POSITION = "CENTER_STATE";
+    public final String     RIGHT_POSITION_AUTO = "RIGHT_POSITION_AUTO";
     public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 549;
     public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 549;
     public final double     CENTER_POSITION_LEFT_SERVO_VALUE = 1373;
@@ -72,6 +73,9 @@ public class Turret {
             } case RIGHT_POSITION:{
                 transitionToPosition(1, 1);
                 break;
+            }
+            case RIGHT_POSITION_AUTO: {
+                transitionToPosition(0.9, 0.9);
             }
         }
     }

@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -40,11 +42,11 @@ public class Auto2RightSide extends LinearOpMode {
     private Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(180));
     private Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(180));
 
-    private int initialTurn = 90;
+    private int initialTurn = -90;
 
-    private Pose2d parkingLeft = new Pose2d(-12, -12.5, Math.toRadians(-90));
-    private Pose2d parkingMid = new Pose2d(-36, -12.5, Math.toRadians(-90));
-    private Pose2d parkingRight = new Pose2d(-60, -12.5, Math.toRadians(-90));
+    private Pose2d parking3 = new Pose2d(12, 12.5, Math.toRadians(-90));
+    private Pose2d parking2 = new Pose2d(36, 12.5, Math.toRadians(-90));
+    private Pose2d parking1 = new Pose2d(60, 12.5, Math.toRadians(-90));
 
     // Async Vars /////////////////////////////////////////////////////////////////////
     private boolean step1 = false;
@@ -100,22 +102,23 @@ public class Auto2RightSide extends LinearOpMode {
                 break;
             case BLUE:
                 isRed = false;
-
-                initialTurn = -90;
                 startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
 //                signalConeKnockout = new Pose2d(signalConeKnockout.getX(), -signalConeKnockout.getY(), Math.toRadians(180));
                 strafeToDeposit = new Pose2d(strafeToDeposit.getX(), -strafeToDeposit.getY(), Math.toRadians(-90));
                 depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(-60));
+                initialTurn = 90;
+                strafeToDeposit = new Pose2d(strafeToDeposit.getX(), -strafeToDeposit.getY(), Math.toRadians(90));
+                depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(120));
                 approachPosition = new Pose2d(approachPosition.getX(), -approachPosition.getY(), Math.toRadians(180));
-                collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(180));
+                collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(90));
                 depositOnHighPole1approach = new Pose2d(depositOnHighPole1approach.getX(), -depositOnHighPole1approach.getY(), Math.toRadians(180));
                 depositOnHighPole1 = new Pose2d(depositOnHighPole1.getX(), -depositOnHighPole1.getY(), Math.toRadians(180));
                 depositOnHighPole2 = new Pose2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY(), Math.toRadians(180));
 
 
-                parkingLeft = new Pose2d(-12, 12.5, Math.toRadians(90));
-                parkingMid = new Pose2d(-36, 12.5, Math.toRadians(90));
-                parkingRight = new Pose2d(-60, 12.5, Math.toRadians(90));
+                parking3 = new Pose2d(12, 12.5, Math.toRadians(90));
+                parking2 = new Pose2d(36, 12.5, Math.toRadians(90));
+                parking1 = new Pose2d(60, 12.5, Math.toRadians(90));
                 break;
         }
 
@@ -176,7 +179,7 @@ public class Auto2RightSide extends LinearOpMode {
                         tagFound = true;
                         telemetry.addData("Open CV :", "Mid");
                         telemetry.update();
-                        endParking = new Pose2d(parkingMid.getX(), parkingMid.getY(), parkingMid.getHeading());
+                        endParking = new Pose2d(parking2.getX(), parking2.getY(), parking2.getHeading());
                         break;
 
                     } else if (tag.id == RIGHT) {
@@ -186,7 +189,7 @@ public class Auto2RightSide extends LinearOpMode {
                         tagFound = true;
                         telemetry.addData("Open CV :", "Right");
                         telemetry.update();
-                        endParking = new Pose2d(parkingRight.getX(), parkingRight.getY(), parkingRight.getHeading());
+                        endParking = new Pose2d(parking3.getX(), parking3.getY(), parking3.getHeading());
                         break;
 
                     } else {
@@ -196,7 +199,7 @@ public class Auto2RightSide extends LinearOpMode {
                         parking = 1;
                         telemetry.addData("Open CV :", "Left");
                         telemetry.update();
-                        endParking = new Pose2d(parkingLeft.getX(), parkingLeft.getY(), parkingLeft.getHeading());
+                        endParking = new Pose2d(parking1.getX(), parking1.getY(), parking1.getHeading());
                         break;
 
                     }
@@ -264,17 +267,17 @@ public class Auto2RightSide extends LinearOpMode {
                 robot.lift.raiseHeightTo(10);
                 if (parking == 3){
                     Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(parkingRight)
+                            .lineToLinearHeading(parking3)
                             .build();
                     drive.followTrajectory(parking);
                 } else if (parking == 2) {
                     Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(parkingMid)
+                            .lineToLinearHeading(parking2)
                             .build();
                     drive.followTrajectory(parking);
                 }  else  {
                     Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
-                            .lineToLinearHeading(parkingLeft)
+                            .lineToLinearHeading(parking1)
                             .build();
                     drive.followTrajectory(parking);
                 }
