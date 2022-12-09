@@ -34,6 +34,7 @@ public class Extension {
     public final String DEFAULT_VALUE = "RETRACTED";
     public final String FULL_EXTEND = "EXTENDED";
     public final String AUTO_EXTENSION = "AUTO_EXTEND";
+    public final String FULL_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String TRANSITION_STATE = "TRANSITION";
     Constants constants = new Constants();
 
@@ -115,7 +116,11 @@ public class Extension {
                 break;
             }
             case AUTO_EXTENSION: {
-                extendInAuto(0.2);
+                extendInAuto(0.5);
+                break;
+            }
+            case FULL_EXTEND_AUTO: {
+                extendInAuto(0.7);
                 break;
             }
         }

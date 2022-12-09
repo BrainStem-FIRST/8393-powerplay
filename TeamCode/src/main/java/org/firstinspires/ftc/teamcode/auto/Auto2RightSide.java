@@ -108,7 +108,7 @@ public class Auto2RightSide extends LinearOpMode {
                 depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(-60));
                 initialTurn = 90;
                 strafeToDeposit = new Pose2d(strafeToDeposit.getX(), -strafeToDeposit.getY(), Math.toRadians(90));
-                depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(120));
+                depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(102));
                 approachPosition = new Pose2d(approachPosition.getX(), -approachPosition.getY(), Math.toRadians(180));
                 collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(90));
                 depositOnHighPole1approach = new Pose2d(depositOnHighPole1approach.getX(), -depositOnHighPole1approach.getY(), Math.toRadians(180));
