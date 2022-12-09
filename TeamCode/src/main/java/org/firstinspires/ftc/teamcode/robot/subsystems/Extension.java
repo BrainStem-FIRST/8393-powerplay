@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.robot.subsystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -33,7 +32,8 @@ public class Extension {
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
     public final String DEFAULT_VALUE = "RETRACTED";
     public final String FULL_EXTEND = "EXTENDED";
-    public final String AUTO_EXTENSION = "AUTO_EXTEND";
+    public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTEND_DEPOSIT";
+    public final String AUTO_EXTENSION_COLLECT = "AUTO_EXTEND_COLLECT";
     public final String FULL_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String TRANSITION_STATE = "TRANSITION";
     Constants constants = new Constants();
@@ -115,9 +115,12 @@ public class Extension {
                 extendToTarget();
                 break;
             }
-            case AUTO_EXTENSION: {
-                extendInAuto(0.5);
+            case AUTO_EXTENSION_DEPOSIT: {
+                extendInAuto(0.6);
                 break;
+            }
+            case AUTO_EXTENSION_COLLECT: {
+                extendInAuto(0.04);
             }
             case FULL_EXTEND_AUTO: {
                 extendInAuto(0.7);
