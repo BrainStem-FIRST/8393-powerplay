@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -103,9 +102,6 @@ public class AutoCore extends LinearOpMode {
                 break;
             case RIGHT:
                 startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
-//                signalConeKnockout = new Pose2d(signalConeKnockout.getX(), -signalConeKnockout.getY(), Math.toRadians(180));
-                strafeToDeposit = new Pose2d(strafeToDeposit.getX(), -strafeToDeposit.getY(), Math.toRadians(-90));
-                depositPreLoad = new Pose2d(depositPreLoad.getX(), -depositPreLoad.getY(), Math.toRadians(-60));
                 initialTurn = 90;
                 strafeToDeposit = new Pose2d(strafeToDeposit.getX(), -strafeToDeposit.getY(), -strafeToDeposit.getHeading());
                 depositPreloadForward = new Pose2d(depositPreloadForward.getX(), -depositPreloadForward.getY(), -depositPreloadForward.getHeading());
@@ -356,19 +352,11 @@ public class AutoCore extends LinearOpMode {
                 .waitSeconds(0.25)
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS); })
                 .waitSeconds(0.5)
-                .UNSTABLE_addTemporalMarkerOffset(-0.4, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-                .UNSTABLE_addTemporalMarkerOffset(-0.3, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND); })
-                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> { stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION); })
-                .UNSTABLE_addTemporalMarkerOffset(0.2, () -> { stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS); })
-
-
-
-
-
-
-
-
-
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { resetLift(); })
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION); })
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE); })
+                .UNSTABLE_addTemporalMarkerOffset(0.25, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_3); })
+              //  .waitSeconds(0.25)*/
                 .build();
         // second cycle
 

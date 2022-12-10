@@ -144,13 +144,6 @@ public class RobotTeleOp extends LinearOpMode {
 
 
         while (!isStopRequested()) {
-            /*if(gamepad1.a){
-                lift.setAllMotorPowers(1);
-            } else {
-                lift.setAllMotorPowers(0);
-            }
-            telemetry.addData("Lift Encoder Positions: ", lift.getLiftPositions());
-            telemetry.update();*/
             robot.lights.setBothLEDRed();
 
             if (gamepad2.right_trigger > 0.4) {
@@ -192,16 +185,6 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
                 }
-
-                if (toggleMap.get(GAMEPAD_2_X_BUTTON_TOGGLE)) {
-
-                }
-
-//            if (toggleMap.get(GAMEPAD_1_Y_STATE)) {
-//                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
-//            } else {
-//                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-//            }
 
                 if (gamepad2.dpad_left) {
                     TURRET_POS = robot.turret.LEFT_POSITION;
@@ -276,46 +259,6 @@ public class RobotTeleOp extends LinearOpMode {
                     robot.arm.extendToTarget();
                 }
 
-                // Change highpole preset value
-
-
-                // fixme lift fine adjust - lift moves to new pos and then goes back to old pos
-
-//            liftFineAdjustUp.update(d2LeftTriggerPressed);
-//            if (liftFineAdjustUp.getState()) {
-//                if (robot.lift.LIFT_POSITION_HIGHPOLE == 730) {
-//
-//                } else {
-//                    robot.lift.LIFT_POSITION_HIGHPOLE += 25;
-//                    liftconstants.HIGH_POLE_ENCODER_TICKS += 25;
-//                    stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_HIGH);
-//                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
-//
-//                }
-//
-//            }
-//
-//            liftFineAdjustDown.update(d2RightTriggerPressed);
-//            if (liftFineAdjustDown.getState()) {
-//                if (robot.lift.LIFT_POSITION_HIGHPOLE == 0) {
-//
-//                } else {
-//                    robot.lift.LIFT_POSITION_HIGHPOLE -= 25;
-//                    liftconstants.HIGH_POLE_ENCODER_TICKS -= 25;
-//                    stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_HIGH);
-//                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
-//                }
-//            }
-
-//            if (gamepad2.right_trigger > 0.2) {
-//                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_FINEADJ_UP);
-//            } else if (gamepad2.left_trigger > 0.2) {
-//                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_FINEADJ_DOWN);
-//            }
-//
-//            if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
-//                robot.lift.liftMotor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-//            }
                 if (stateMap.get(DRIVE_MODE).equals(MANUAL_DRIVE_MODE)) {
                     if (slowMode) {
                         driveCancelable.setWeightedDrivePower(

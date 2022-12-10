@@ -7,6 +7,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.robot.subsystems.AutoExtension;
+import org.firstinspires.ftc.teamcode.robot.subsystems.AutoGrabber;
+import org.firstinspires.ftc.teamcode.robot.subsystems.AutoLift;
+import org.firstinspires.ftc.teamcode.robot.subsystems.AutoTurret;
+import org.firstinspires.ftc.teamcode.robot.subsystems.LEDLights;
 
 import java.util.Map;
 //import java.util.Map;
@@ -36,11 +41,11 @@ public class AutoBrainSTEMRobot {
         this.opMode = opMode;
         // instantiate components turret, lift, arm, grabber
         turret  = new AutoTurret(hwMap, telemetry, stateMap, isAuto);
-        lift    = new AutoLift(hwMap, telemetry, stateMap);
+        lift    = new AutoLift(hwMap, telemetry, stateMap, isAuto);
         arm     = new AutoExtension(hwMap, telemetry, stateMap, isAuto);
         drive   = new SampleMecanumDrive(hwMap);
         grabber   = new AutoGrabber(hwMap, telemetry, stateMap);
-        lights = new LEDLights(hwMap, telemetry);
+        lights = new LEDLights(hwMap, telemetry, isAuto);
 
 
         stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);

@@ -19,7 +19,7 @@ import java.util.Map;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class Lift {
+public class AutoLift {
 
     public static final class LiftConstants {
 
@@ -39,11 +39,11 @@ public class Lift {
         private static final int CONE_CYCLE_POSITION_TOLERANCE = 3;
 
         //auto stack heights
-        private static final int STACK_5_ENCODER_TICKS = 115;
-        private static final int STACK_4_ENCODER_TICKS = 70;
-        private static final int STACK_3_ENCODER_TICKS = 60;
-        private static final int STACK_2_ENCODER_TICKS = 40; //FIXME
-        private static final int STACK_1_ENCODER_TICKS = COLLECTING_ENCODER_TICKS;
+        private static final int STACK_5_ENCODER_TICKS = 175;
+        private static final int STACK_4_ENCODER_TICKS = 100;
+        private static final int STACK_3_ENCODER_TICKS = 55;
+        private static final int STACK_2_ENCODER_TICKS = 30; //FIXME
+        private static final int STACK_1_ENCODER_TICKS = 0;
 
         //cone cycle adjustments
         private static final int LIFT_ADJUSTMENT_LOW = -30;
@@ -129,6 +129,7 @@ public class Lift {
     public final String LIFT_PICKUP = "PICKUP";
     public final String LIFT_POLE_GROUND = "GROUND";
     public final String LIFT_POLE_DEPOSIT = "DEPOSIT";
+
     public final String LIFT_POLE_LOW = "POLE_LOW";
     public final String LIFT_POLE_MEDIUM = "POlE_MEDIUM";
     public final String LIFT_POLE_HIGH = "POLE_HIGH";
@@ -137,6 +138,7 @@ public class Lift {
     public final String STACK_3 = "STACK_3";
     public final String STACK_2 = "STACK_2";
     public final String STACK_1 = "STACK_1";
+
     public final String REMOVE_STACK = "REMOVE_STACK";
     public final String LIFT_TARGET_HEIGHT = "LIFT TARGET HEIGHT";
     public final String APPROACH_HEIGHT = "APPROACH_HEIGHT";
@@ -168,7 +170,7 @@ public class Lift {
 
     private Map stateMap;
 
-    public Lift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
+    public AutoLift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
 
         //telemetry
         this.telemetry = telemetry;
@@ -314,6 +316,11 @@ public class Lift {
             case STACK_3: {
                 transitionToLiftPosition(LiftHeight.STACK_3.getTicks());
             }
+            case STACK_2: {
+                transitionToLiftPosition(LiftHeight.STACK_2.getTicks());
+            }
+
+
 
         }
 
