@@ -101,11 +101,11 @@ public class AutoLift {
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;
     public int REMOVE_STACK_POSITION = 300;
-    public int STACK_5_POSITION = 105 + 10;
-    public int STACK_4_POSITION = 70;
-    public int STACK_3_POSITION = 40;
-    public int STACK_2_POSITION = 15;
-    public int STACK_1_POSITION = -10;
+    public int STACK_5_POSITION = 150;
+    public int STACK_4_POSITION = 90;
+    public int STACK_3_POSITION = 55;
+    public int STACK_2_POSITION = 30;
+    public int STACK_1_POSITION = 0;
     public final int LIFT_POSITION_PICKUP = 1;
     public final int LIFT_ADJUSTMENT_LOW = -30;
     public final int LIFT_ADJUSTMENT_HIGH = -60;

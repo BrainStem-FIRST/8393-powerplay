@@ -113,11 +113,11 @@ public class AutoExtension {
                 break;
             }
             case AUTO_EXTENSION_COLLECT: {
-                extendInAuto(0.65);
+                extendInAuto(0.6);
                 break;
             }
             case AUTO_EXTENSION_DEPOSIT_TILTED: {
-                extendInAuto(0.625);
+                extendInAuto(0.6);
                 break;
             }
             case FULL_EXTEND_AUTO: {

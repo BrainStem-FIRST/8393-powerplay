@@ -79,10 +79,10 @@ public class AutoTurret {
                 break;
             }
             case LEFT_PICKUP_AUTO: {
-                transitionToPosition(0.0, 0.0);
+                transitionToPosition(0.05, 0.05);
                 break;
             } case RIGHT_DELIVERY_AUTO: {
-                transitionToPosition(0.775, 0.775);
+                transitionToPosition(0.8, 0.8);
                 break;
             }
         }
