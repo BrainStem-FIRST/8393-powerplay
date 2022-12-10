@@ -97,7 +97,7 @@ public class AutoLift {
 
     public final int LIFT_POSITION_RESET = 0;
     public int LIFT_POSITION_GROUND = 25;
-    public final int LIFT_POSITION_LOWPOLE = 335;
+    public final int LIFT_POSITION_LOWPOLE = 325;
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;
     public int REMOVE_STACK_POSITION = 300;
