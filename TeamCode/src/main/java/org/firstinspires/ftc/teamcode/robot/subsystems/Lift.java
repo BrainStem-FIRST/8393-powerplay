@@ -20,6 +20,12 @@ import com.acmerobotics.dashboard.config.Config;
 public class Lift {
 
     public static final class LiftConstants {
+
+        //rev motor constants
+        private static final double LIFT_MOTOR_GEAR_RATIO = 2.89;
+        private static final int ULTRAPLANETARY_MAX_RPM = (int)(6000/LIFT_MOTOR_GEAR_RATIO);
+        private static final int TICKS_PER_REVOLUTION = 28;
+        private static final int MAX_LIFT_TICKS_PER_SECOND = 975;
         //encoder positions
         private static final int BOTTOM_ENCODER_TICKS = 0;
         private static final int LOW_POLE_ENCODER_TICKS = 330;
@@ -72,9 +78,9 @@ public class Lift {
         private static final boolean LIFT_MOTOR_4_REVERSED = false;
 
         //lift PID constants
-        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 0.015;
+        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 0.006;
         private static final double INTEGRAL_COLLECTING_TO_HIGH = 0;
-        private static final double DERIVATIVE_COLLECTING_TO_HIGH = 0.2;
+        private static final double DERIVATIVE_COLLECTING_TO_HIGH = 0.001;
 
         private static final double PROPORTIONAL_COLLECTING_TO_LOW = 0;
         private static final double INTEGRAL_COLLECTING_TO_LOW = 0;
@@ -147,7 +153,7 @@ public class Lift {
     public final String LIFT_CURRENT_STATE = "LIFT CURRENT STATE";
 
     //declaring list of lift motors
-    private ArrayList<DcMotor> liftMotors;
+    private ArrayList<DcMotorEx> liftMotors;
 
     //autonomous variable
     private boolean isAuto;
@@ -248,7 +254,6 @@ public class Lift {
                 stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
             }
         }
-
     }
 
     private void selectTransition(String desiredLevel, String subheight, String currentState) {
@@ -349,7 +354,7 @@ public class Lift {
             telemetry.addData("Using Run To Position; ", "YESSSS");
             telemetry.update();
             if (getAvgLiftPosition() < 400) {
-                setAllMotorPowers(-0.3);
+                setAllMotorPowers(-0.4);
             } else {
                 runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_HIGH, 1);
             }
@@ -400,7 +405,8 @@ public class Lift {
                 runAllMotorsToPosition(heightInTicks, 1);
             }*/
             //setPIDControllerTransition(LiftHeight.LOW.getTicks(), LiftHeight.HIGH.getTicks());
-            setAllMotorPowers(liftPIDController.updateWithError(error) + 0.45);
+
+            setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.45);
         }
 
         telemetry.addData("Lift Motor Powers: ", getLiftMotorPowers());
@@ -433,6 +439,14 @@ public class Lift {
         }
         liftPIDController.setPIDValues(proportional, integral, derivative);
         liftPIDController.setInputBounds(initialHeight, desiredHeight);
+    }
+
+    public double getAvgLiftSpeed(){
+        double avgLiftSpeed = 0;
+        for(DcMotorEx liftMotor : liftMotors){
+            avgLiftSpeed += liftMotor.getVelocity();
+        }
+        return avgLiftSpeed/4;
     }
 
     private int getStateValue() {
@@ -475,6 +489,13 @@ public class Lift {
             state = LIFT_POLE_HIGH;
         }
         return state;
+    }
+
+    public void setAllMotorSpeedsPercentage(double percentSpeed){
+        for(DcMotorEx liftMotor : liftMotors){
+            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+            liftMotor.setVelocity(percentSpeed*LiftConstants.MAX_LIFT_TICKS_PER_SECOND);
+        }
     }
 
     public void setAllMotorPowers(double power) {
@@ -545,7 +566,13 @@ public class Lift {
     //////////////
 
     private boolean isCycleExpired(int cycleTime) {
-        return (System.currentTimeMillis() > Long.valueOf(String.valueOf(stateMap.get(constants.CONE_CYCLE_START_TIME))) + cycleTime);
+        if((System.currentTimeMillis() > Long.valueOf(String.valueOf(stateMap.get(constants.CONE_CYCLE_START_TIME))) + cycleTime)){
+            telemetry.addData("Cycle expired", "true");
+            return true;
+        } else {
+            telemetry.addData("Cycle expired", "false");
+            return false;
+        }
     }
 
     private boolean isCycleInProgress(String cycleName) {
