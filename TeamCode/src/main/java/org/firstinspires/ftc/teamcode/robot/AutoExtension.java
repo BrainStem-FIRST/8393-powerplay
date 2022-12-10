@@ -75,7 +75,7 @@ public class AutoExtension {
 
     // Pulls the extension arm to its starting position (it is NOT in clear)
     public void extendHome() {
-        extension.setPosition(0.01);
+        extension.setPosition(0.5);
     }
 
     // Extends the arm to its maximum reach
@@ -113,7 +113,7 @@ public class AutoExtension {
                 break;
             }
             case AUTO_EXTENSION_COLLECT: {
-                extendInAuto(0.6);
+                extendInAuto(0.66);
                 break;
             }
             case AUTO_EXTENSION_DEPOSIT_TILTED: {

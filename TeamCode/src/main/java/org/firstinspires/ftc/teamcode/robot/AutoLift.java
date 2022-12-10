@@ -101,8 +101,8 @@ public class AutoLift {
     public final int LIFT_POSITION_MIDPOLE = 530;
     public int LIFT_POSITION_HIGHPOLE = 720;
     public int REMOVE_STACK_POSITION = 300;
-    public int STACK_5_POSITION = 150;
-    public int STACK_4_POSITION = 90;
+    public int STACK_5_POSITION = 175;
+    public int STACK_4_POSITION = 100;
     public int STACK_3_POSITION = 55;
     public int STACK_2_POSITION = 30;
     public int STACK_1_POSITION = 0;
@@ -532,7 +532,7 @@ public class AutoLift {
 
         if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
             if (getAvgLiftPosition() < 400) {
-                setAllMotorPowers(-0.3);
+                setAllMotorPowers(-0.45);
                 //runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT_LOW, 1);
             } else {
                 runAllMotorsToPosition(heightInTicks + LIFT_ADJUSTMENT_HIGH, 1);
@@ -542,11 +542,11 @@ public class AutoLift {
             runAllMotorsToPosition(heightInTicks, 1);
 
             //setAllMotorPowers(1);
-        } else if (position >= heightInTicks - 10 && position <= heightInTicks + 10) {
+        } else if (position >= heightInTicks - 5 && position <= heightInTicks + 5) {
             if (heightInTicks > 400) {
                 setAllMotorPowers(0.45);
             } else {
-                setAllMotorPowers(0.2);
+                setAllMotorPowers(0.1);
             }
         } else if (position > heightInTicks) {
             if (position > heightInTicks + 200) {
