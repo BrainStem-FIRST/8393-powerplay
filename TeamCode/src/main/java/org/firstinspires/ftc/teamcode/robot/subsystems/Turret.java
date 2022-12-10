@@ -23,7 +23,7 @@ public class Turret {
     public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2155;
     public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2155;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 309;
-    public final double TURRET_CENTER_POSITION = 0.5;
+    public final double TURRET_CENTER_POSITION = 0.52;
 
     public Telemetry telemetry;
     private ServoImplEx leftTurretServo;
@@ -67,7 +67,7 @@ public class Turret {
                 transitionToPosition(0, 0);
                 break;
             } case CENTER_POSITION:{
-                transitionToPosition(0.5, 0.5);
+                transitionToPosition(0.52, 0.52);
                 break;
             } case RIGHT_POSITION:{
                 transitionToPosition(1, 1);

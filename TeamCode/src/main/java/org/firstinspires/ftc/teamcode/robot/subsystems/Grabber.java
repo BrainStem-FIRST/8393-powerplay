@@ -13,7 +13,6 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import java.util.Map;
 
 
-
 public class Grabber {
     private Telemetry telemetry;
 
@@ -25,7 +24,6 @@ public class Grabber {
     public final String FULLY_OPEN = "FULLYOPEN";
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
-
 
 
     public final double DONT_USE_THIS = 900;
@@ -50,7 +48,9 @@ public class Grabber {
     }
 
     public void setState(Lift lift) {
-        if(((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
+        if (lift.getAvgLiftPosition() < 200) {
+            return;
+        } else if (((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)) {
             if (shouldGrab(lift)) {
                 grabber.setPosition(1);
             } else {
@@ -62,14 +62,14 @@ public class Grabber {
             } else {
                 long grabberStartTime = (long) stateMap.get(constants.GRABBER_START_TIME);
                 long grabberEndTime = grabberStartTime + constants.GRABBER_CYCLE_TIME;
-                if(System.currentTimeMillis() > grabberEndTime) {
+                if (System.currentTimeMillis() > grabberEndTime) {
                     stateMap.put(constants.GRABBER_START_TIME, null);
                     stateMap.put(constants.CYCLE_GRABBER, constants.STATE_COMPLETE);
                 }
             }
 
-        } else if (((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_NOT_STARTED) && shouldGrab(lift)) {
-            grabber.setPosition(0);
+        } else if (((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_NOT_STARTED) && shouldGrab(lift)) {
+            //grabber.setPosition(0);
         }
 
         telemetry.addData("grabberPosition", grabber.getPosition());
@@ -79,12 +79,16 @@ public class Grabber {
         grabber.setPosition(0);
     }
 
-    public void maxOpen(){grabber.setPosition(0);}
+    public void maxOpen() {
+        grabber.setPosition(0);
+    }
 
-    public void close(){grabber.setPosition(1);}
+    public void close() {
+        grabber.setPosition(1);
+    }
 
     public boolean shouldGrab(Lift lift) {
         return (lift.getPosition() < Lift.LiftHeight.COLLECTING.getTicks()) &&
-                ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
+                ((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
     }
 }

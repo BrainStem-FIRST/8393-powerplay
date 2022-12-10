@@ -80,6 +80,9 @@ public class RobotTeleOp extends LinearOpMode {
 
     private int liftDownIncrement;
 
+    //open grabber boolean
+    private boolean openGrabberConeCycle = false;
+
     Constants constants = new Constants();
 
     Map<String, Boolean> toggleMap = new HashMap<String, Boolean>() {{
@@ -108,6 +111,7 @@ public class RobotTeleOp extends LinearOpMode {
         HashMap<String, String> stateMap = new HashMap<String, String>() {{
         }};
         BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap, false);
+        Lift lift = new Lift(hardwareMap, telemetry, stateMap, true);
 
         SampleMecanumDrive driveCancelable = new SampleMecanumDrive(hardwareMap);
         driveCancelable.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -118,6 +122,7 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         stateMap.put(DRIVE_MODE, MANUAL_DRIVE_MODE);
+        //stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
         stateMap.put(constants.EXTENSION_TARGET, String.valueOf(1));
 
 
@@ -139,26 +144,32 @@ public class RobotTeleOp extends LinearOpMode {
 
 
         while (!isStopRequested()) {
+            /*if(gamepad1.a){
+                lift.setAllMotorPowers(1);
+            } else {
+                lift.setAllMotorPowers(0);
+            }
+            telemetry.addData("Lift Encoder Positions: ", lift.getLiftPositions());
+            telemetry.update();*/
             robot.lights.setBothLEDRed();
 
-            if(gamepad2.right_trigger > 0.4){
-                Lift.LiftConstants.COLLECTING_ENCODER_TICKS +=15;
+            if (gamepad2.right_trigger > 0.4) {
+                Lift.LiftConstants.COLLECTING_ENCODER_TICKS += 15;
             }
-            if(gamepad2.left_trigger > 0.4){
+            if (gamepad2.left_trigger > 0.4) {
                 Lift.LiftConstants.COLLECTING_ENCODER_TICKS -= 15;
             }
-            if(gamepad2.x){
+            if (gamepad2.x) {
                 Lift.LiftConstants.COLLECTING_ENCODER_TICKS = 25;
             }
 
-            if(gamepad2.right_stick_button && gamepad2.left_stick_button){
+            if ((gamepad2.right_stick_button && gamepad2.left_stick_button) || (gamepad1.right_stick_button && gamepad1.left_stick_button)) {
                 robot.lift.setAllMotorPowers(-0.25);
                 robot.lift.LIFT_POSITION_GROUND = 25;
                 robot.turret.centerTurret();
                 robot.arm.extendHome();
                 robot.lift.resetEncoders();
             } else {
-
                 setButtons();
                 if (gamepad1.a || gamepad1.right_trigger > 0.5) {
                     stateMap.put(constants.LIFT_START_TIME, String.valueOf(System.currentTimeMillis()));
@@ -168,20 +179,12 @@ public class RobotTeleOp extends LinearOpMode {
                     }
                 }
 
-                    setButtons();
-                    if (gamepad1.a || gamepad1.right_trigger > 0.5) {
-                        stateMap.put(constants.LIFT_START_TIME, String.valueOf(System.currentTimeMillis()));
-                        stateMap.put(constants.LIFT_INTEGRAL_SUM, "0.0");
-                        if (robot.lift.getAvgLiftPosition() > 500) {
-                            robot.grabber.open();
-                        }
-                    }
-
                 if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                     slowMode = true;
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
                     stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
                     stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
+                    robot.lift.LIFT_POSITION_GROUND = 0;
                 } else {
                     slowMode = false;
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
@@ -190,7 +193,7 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
                 }
 
-                if(toggleMap.get(GAMEPAD_2_X_BUTTON_TOGGLE)){
+                if (toggleMap.get(GAMEPAD_2_X_BUTTON_TOGGLE)) {
 
                 }
 
@@ -217,13 +220,16 @@ public class RobotTeleOp extends LinearOpMode {
                     EXTENSION_POS = robot.arm.FULL_EXTEND;
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
                 } else if (toggleMap.get(GAMEPAD_1_LEFT_TRIGGER_STATE)) {
-                    robot.grabber.open();
+                    //robot.grabber.open();
                 }
 
                 if (gamepad1.right_trigger > 0.5) {
                     coneCycleCenterAdjust = false;
                     if (robot.lift.getAvgLiftPosition() > 500) {
+                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                         robot.grabber.maxOpen();
+                    } else {
+                        robot.grabber.close();
                     }
                     toggleMap.put(GAMEPAD_1_LEFT_TRIGGER_STATE, false);
                     if (!((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)) {
@@ -232,79 +238,6 @@ public class RobotTeleOp extends LinearOpMode {
                         coneCycleCenterAdjust = true;
                     } else {
                         coneCycleCenterAdjust = false;
-                    }
-                }
-
-
-                if (gamepad1.right_bumper) {
-                    driveCancelable.setPoseEstimate(zeroPose);
-                    isDriverDriving = false;
-                    stateMap.put(DRIVE_MODE, AUTO_DRIVE_MODE);
-                    toggleMap.put(GAMEPAD_1_A_STATE, true);
-
-                    Pose2d currentPosition = driveCancelable.getPoseEstimate();
-                    Pose2d targetPosition = new Pose2d(currentPosition.getX() - 30, currentPosition.getY(), currentPosition.getHeading());
-                    Pose2d targetPosition2 = new Pose2d(currentPosition.getX() - 10, currentPosition.getY(), currentPosition.getHeading());
-
-
-                    TrajectorySequence forwardTrajectory = driveCancelable.trajectorySequenceBuilder(currentPosition)
-                            .lineToLinearHeading(targetPosition)
-                            .build();
-                    driveCancelable.followTrajectorySequenceAsync(forwardTrajectory);
-
-
-                    TrajectorySequence forwardTrajectory2 = driveCancelable.trajectorySequenceBuilder(currentPosition)
-                            .lineToLinearHeading(targetPosition2, SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                                    SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
-                            .UNSTABLE_addDisplacementMarkerOffset(2, () -> {
-                                toggleMap.put(GAMEPAD_1_A_STATE, true);
-                                toggleMap.put(GAMEPAD_1_Y_STATE, true);
-                                stateMap.put(constants.EXTENSION_TARGET, String.valueOf(Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET)) - AUTO_EXTENSION_ADJUSTMENT));
-                            })
-                            .UNSTABLE_addDisplacementMarkerOffset(0, () -> {
-                                stateMap.put(DRIVE_MODE, MANUAL_DRIVE_MODE);
-                            })
-                            .build();
-                    driveCancelable.followTrajectorySequenceAsync(forwardTrajectory2);
-                } else if (gamepad1.left_bumper) {
-                    driveCancelable.setPoseEstimate(zeroPose);
-                    stateMap.put(DRIVE_MODE, AUTO_DRIVE_MODE);
-                    isDriverDriving = false;
-                    Pose2d currentPosition = driveCancelable.getPoseEstimate();
-                    Pose2d targetPosition = new Pose2d(currentPosition.getX() + 40, currentPosition.getY(), currentPosition.getHeading());
-                    TrajectorySequence reverseTrajectory = driveCancelable.trajectorySequenceBuilder(driveCancelable.getPoseEstimate())
-                            .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                stateMap.put(constants.EXTENSION_TARGET, String.valueOf(Double.parseDouble((String) stateMap.get(constants.EXTENSION_TARGET)) + AUTO_EXTENSION_ADJUSTMENT));
-                            })
-                            .lineToLinearHeading(targetPosition)
-                            .UNSTABLE_addTemporalMarkerOffset(-1.0, () -> {
-                                // This marker runs 2 inches into the trajectory
-                                toggleMap.put(GAMEPAD_1_A_STATE, false);
-                            })
-                            .UNSTABLE_addTemporalMarkerOffset(0, () -> {
-                                stateMap.put(DRIVE_MODE, MANUAL_DRIVE_MODE);
-                            })
-                            .build();
-                    driveCancelable.followTrajectorySequenceAsync(reverseTrajectory);
-                }
-
-                if (stateMap.get(DRIVE_MODE).equals(MANUAL_DRIVE_MODE)) {
-                    if (slowMode) {
-                        driveCancelable.setWeightedDrivePower(
-                                new Pose2d(
-                                        (-gamepad1.left_stick_y) * 0.5,
-                                        (-gamepad1.left_stick_x) * 0.5,
-                                        (-gamepad1.right_stick_x) * 0.4
-                                )
-                        );
-                    } else {
-                        driveCancelable.setWeightedDrivePower(
-                                new Pose2d(
-                                        -gamepad1.left_stick_y,
-                                        -gamepad1.left_stick_x,
-                                        -gamepad1.right_stick_x * 0.5
-                                )
-                        );
                     }
                 }
 
@@ -346,7 +279,6 @@ public class RobotTeleOp extends LinearOpMode {
                 // Change highpole preset value
 
 
-
                 // fixme lift fine adjust - lift moves to new pos and then goes back to old pos
 
 //            liftFineAdjustUp.update(d2LeftTriggerPressed);
@@ -384,6 +316,30 @@ public class RobotTeleOp extends LinearOpMode {
 //            if (gamepad2.right_stick_button && gamepad2.left_stick_button) {
 //                robot.lift.liftMotor3.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 //            }
+                if (stateMap.get(DRIVE_MODE).equals(MANUAL_DRIVE_MODE)) {
+                    if (slowMode) {
+                        driveCancelable.setWeightedDrivePower(
+                                new Pose2d(
+                                        (-gamepad1.left_stick_y) * 0.5,
+                                        (-gamepad1.left_stick_x) * 0.5,
+                                        (-gamepad1.right_stick_x) * 0.4
+                                )
+                        );
+                    } else {
+                        driveCancelable.setWeightedDrivePower(
+                                new Pose2d(
+                                        -gamepad1.left_stick_y,
+                                        -gamepad1.left_stick_x,
+                                        -gamepad1.right_stick_x * 0.5
+                                )
+                        );
+                    }
+                }
+
+                if (((gamepad1.left_stick_y != 0) || (gamepad1.left_stick_x != 0) || (gamepad1.right_stick_x != 0)) && !isDriverDriving) {
+                    driveCancelable.breakFollowing();
+                    stateMap.put(DRIVE_MODE, MANUAL_DRIVE_MODE);
+                }
 
                 driveCancelable.update();
 
@@ -392,9 +348,8 @@ public class RobotTeleOp extends LinearOpMode {
                 telemetry.addData("CURRENT ENCODER HEIGHT", robot.lift.getLiftPositions());
 
                 telemetry.update();
+
             }
-
-
         }
     }
 

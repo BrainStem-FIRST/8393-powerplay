@@ -25,7 +25,7 @@ public class Extension {
 
     // Servo Positions
 
-    public final double EXTENSION_POSITION_HOME = 1800;    // Fully retracted
+    public final double EXTENSION_POSITION_HOME = 1850;    // Fully retracted
     public double EXTENSION_POSITION_MAX  = 2372;    // Fully extended
 
     public double EXTENSION_EDITABLE_POSITION = 0.75;

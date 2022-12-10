@@ -70,7 +70,12 @@ public class BrainSTEMRobot {
         stateMap.put(constants.SYSTEM_TIME, System.currentTimeMillis());
 
         if(((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
-            coneCycle();
+            //coneCycle();
+            grabber.close();
+            stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
+            stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
+            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
+            stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
         } else {
             lift.setState();
             grabber.setState(lift);
@@ -100,9 +105,9 @@ public class BrainSTEMRobot {
             telemetry.addData("Cone Cycle Loop", "startLiftUp");
             telemetry.update();
         } else if(isConeCycleComplete()){
-            if(lift.getAvgLiftPosition() > 400) {
+            /*if(lift.getAvgLiftPosition() > 400) {
                 grabber.open();
-            }
+            }*/
             stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
             stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
             stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
