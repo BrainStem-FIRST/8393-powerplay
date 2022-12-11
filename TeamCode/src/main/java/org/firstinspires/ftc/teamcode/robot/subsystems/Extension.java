@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.robot.subsystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -69,17 +70,12 @@ public class Extension {
         double targetPosition = Range.clip(currentPosition + speed*0.10, 0, 1);
         extension.setPosition(targetPosition/EXTENSION_POSITION_MAX);
         //Send telemetry message for debugging purposes
-        telemetry.addData("Speed of move:","%.2f", speed);
-        telemetry.addData("Extension Position:","%.2f", targetPosition);
-        telemetry.update();
     }
 
 
     // Pulls the extension arm to its starting position (it is NOT in clear)
     public void extendHome() {
-        telemetry.addData("Bringing in: ", "true");
         extension.setPosition(0.01);
-        telemetry.addData("Position goal:", extension.getPosition());
     }
 
     // Extends the arm to its maximum reach

@@ -25,9 +25,7 @@ public class Grabber {
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
-
-    public final double DONT_USE_THIS = 900;
-    public final double REGULAR_OPEN = 1425;
+    public final double REGULAR_OPEN = 900;
     public final double CLOSED_VALUE = 1850;
 
     private Map stateMap;
@@ -48,47 +46,32 @@ public class Grabber {
     }
 
     public void setState(Lift lift) {
-        if (lift.getAvgLiftPosition() < 200) {
-            return;
-        } else if (((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)) {
-            if (shouldGrab(lift)) {
-                grabber.setPosition(1);
+        telemetry.addData("grabber", stateMap.get(SYSTEM_NAME));
+        if (stateMap.get(SYSTEM_NAME) == CLOSED_STATE) {
+            close();
+        } else if (stateMap.get(SYSTEM_NAME) == OPEN_STATE) {
+            open();
+        } else if (stateMap.get(SYSTEM_NAME) == FULLY_OPEN) {
+            if (lift.getAvgLiftPosition() > 240) {
+                maxOpen();
+                telemetry.addData("grabber", "MAX OPEN");
             } else {
-                grabber.setPosition(0);
+                open();
+                telemetry.addData("grabber", "OPEN");
             }
-
-            if (stateMap.get(constants.GRABBER_START_TIME) == null) {
-                stateMap.put(constants.GRABBER_START_TIME, System.currentTimeMillis());
-            } else {
-                long grabberStartTime = (long) stateMap.get(constants.GRABBER_START_TIME);
-                long grabberEndTime = grabberStartTime + constants.GRABBER_CYCLE_TIME;
-                if (System.currentTimeMillis() > grabberEndTime) {
-                    stateMap.put(constants.GRABBER_START_TIME, null);
-                    stateMap.put(constants.CYCLE_GRABBER, constants.STATE_COMPLETE);
-                }
-            }
-
-        } else if (((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_NOT_STARTED) && shouldGrab(lift)) {
-            //grabber.setPosition(0);
         }
-
-        telemetry.addData("grabberPosition", grabber.getPosition());
+        telemetry.addData("grabber position", grabber.getPosition());
     }
 
     public void open() {
-        grabber.setPosition(0);
+        grabber.setPosition(0.525);
     }
 
     public void maxOpen() {
-        grabber.setPosition(0);
+        grabber.setPosition(0.0);
     }
 
     public void close() {
-        grabber.setPosition(1);
-    }
-
-    public boolean shouldGrab(Lift lift) {
-        return (lift.getPosition() < Lift.LiftHeight.COLLECTING.getTicks()) &&
-                ((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
+        grabber.setPosition(1.0);
     }
 }
