@@ -61,7 +61,7 @@ public class BrainSTEMRobot {
         this.isAuto = isAuto;
         // instantiate components turret, lift, arm, grabber
         turret = new Turret(hwMap, telemetry, stateMap, isAuto);
-        lift = new Lift(hwMap, telemetry, stateMap, isAuto);
+        lift = new Lift(hwMap, telemetry, stateMap);
         arm = new Extension(hwMap, telemetry, stateMap, isAuto);
         drive = new SampleMecanumDrive(hwMap);
         grabber = new Grabber(hwMap, telemetry, stateMap, isAuto);
@@ -82,22 +82,12 @@ public class BrainSTEMRobot {
     }
 
     public void updateSystems() {
-        //telemetry.addData("robotStateMap" , stateMap);
         stateMap.put(constants.SYSTEM_TIME, System.currentTimeMillis());
 
-        if (((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)) {
-            //coneCycle();
-            grabber.close();
-            stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
-            stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
-            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
-            stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
-        } else {
-            lift.setState();
-            grabber.setState(lift);
-            turret.setState(lift);
-            arm.setState((String) stateMap.get(arm.SYSTEM_NAME), lift);
-        }
+        lift.setState();
+        grabber.setState(lift);
+        turret.setState(lift);
+        arm.setState((String) stateMap.get(arm.SYSTEM_NAME), lift);
 
     }
 

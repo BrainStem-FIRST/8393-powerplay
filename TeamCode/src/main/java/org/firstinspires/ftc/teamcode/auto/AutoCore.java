@@ -1,3 +1,4 @@
+
 package org.firstinspires.ftc.teamcode.auto;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
@@ -33,6 +34,8 @@ public class AutoCore extends LinearOpMode {
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(90));
     private Pose2d signalConeKnockout = new Pose2d(-36, -24, Math.toRadians(0));
     private Pose2d strafeToDeposit = new Pose2d(-60, -58, Math.toRadians(-90));
+    private Vector2d depositPreloadSpline = new Vector2d(-60, -54.5);
+    private Vector2d depositPreloadSpline2 = new Vector2d(-57, -12);
     private Pose2d depositPreLoad = new Pose2d(-57, -12, Math.toRadians(-100));
     private Pose2d approachPosition = new Pose2d(-60, -24, Math.toRadians(-90));
     private Pose2d collectConesPosition = new Pose2d(-64.25, -12, Math.toRadians(0));
@@ -101,9 +104,11 @@ public class AutoCore extends LinearOpMode {
             case LEFT:
                 break;
             case RIGHT:
-                startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
+                startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(90));
                 initialTurn = 90;
                 strafeToDeposit = new Pose2d(strafeToDeposit.getX(), -strafeToDeposit.getY(), -strafeToDeposit.getHeading());
+                depositPreloadSpline = new Vector2d(depositPreloadSpline.getX(), -depositPreloadSpline.getY());
+                depositPreloadSpline2 = new Vector2d(depositPreloadSpline2.getX(), -depositPreloadSpline2.getY());
                 depositPreloadForward = new Pose2d(depositPreloadForward.getX(), -depositPreloadForward.getY(), -depositPreloadForward.getHeading());
                 depositPreLoadForwardVector = new Vector2d(depositPreLoadForwardVector.getX(), -depositPreLoadForwardVector.getY());
                 depositPreLoadForwardHeading = Math.toRadians(-100);
@@ -231,14 +236,14 @@ public class AutoCore extends LinearOpMode {
         totalTime.reset();
 
         TrajectorySequence deliverPreload = drive.trajectorySequenceBuilder(startPosition)
+                .setReversed(true)
+                .splineToConstantHeading(depositPreloadSpline, Math.toRadians(-90), SampleMecanumDrive.getVelocityConstraint(24, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(25))
+                .splineToConstantHeading(depositPreloadSpline2, Math.toRadians(-90), SampleMecanumDrive.getVelocityConstraint(24, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(25))
 
-                .forward(5)
-                .lineToLinearHeading(strafeToDeposit)
-                .lineToLinearHeading(approachPosition)
-                .lineToLinearHeading(depositPreLoad, SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(DriveConstants.MAX_ACCEL))
 
-
+/*
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);})
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_DEPOSIT); })
                 .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS); })
@@ -330,7 +335,7 @@ public class AutoCore extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
                 .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { resetLift(); })
                 .waitSeconds(1.25)
-
+*/
 
 
 
