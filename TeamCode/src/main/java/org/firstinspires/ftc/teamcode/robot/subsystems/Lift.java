@@ -30,9 +30,9 @@ public class Lift {
         private static final int MAX_LIFT_TICKS_PER_SECOND = 1280;
         //encoder positions
         private static final int BOTTOM_ENCODER_TICKS = 0;
-        private static final int LOW_POLE_ENCODER_TICKS = 345;
-        private static final int MIDDLE_POLE_ENCODER_TICKS = 580;
-        private static final int HIGH_POLE_ENCODER_TICKS = 835;
+        private static final int LOW_POLE_ENCODER_TICKS = 370;
+        private static final int MIDDLE_POLE_ENCODER_TICKS = 610;
+        private static final int HIGH_POLE_ENCODER_TICKS = 840;
         private static final int JUNCTION_ENCODER_TICKS = 0;
         public static int COLLECTING_ENCODER_TICKS = 0;
         private static final int LIFT_POSITION_TOLERANCE = 8;
