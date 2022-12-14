@@ -61,7 +61,7 @@ public class BrainSTEMRobot {
         this.isAuto = isAuto;
         // instantiate components turret, lift, arm, grabber
         turret = new Turret(hwMap, telemetry, stateMap, isAuto);
-        lift = new Lift(hwMap, telemetry, stateMap);
+        lift = new Lift(hwMap, telemetry, stateMap, isAuto);
         arm = new Extension(hwMap, telemetry, stateMap, isAuto);
         drive = new SampleMecanumDrive(hwMap);
         grabber = new Grabber(hwMap, telemetry, stateMap, isAuto);

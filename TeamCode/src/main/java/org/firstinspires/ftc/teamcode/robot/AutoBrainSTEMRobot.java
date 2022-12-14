@@ -44,7 +44,7 @@ public class AutoBrainSTEMRobot {
         lift    = new AutoLift(hwMap, telemetry, stateMap, isAuto);
         arm     = new AutoExtension(hwMap, telemetry, stateMap, isAuto);
         drive   = new SampleMecanumDrive(hwMap);
-        grabber   = new AutoGrabber(hwMap, telemetry, stateMap);
+        grabber   = new AutoGrabber(hwMap, telemetry, stateMap, isAuto);
         lights = new LEDLights(hwMap, telemetry, isAuto);
 
 

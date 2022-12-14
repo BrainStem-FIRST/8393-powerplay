@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
 import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -13,7 +14,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import java.util.Map;
 
 
-public class Grabber {
+public class Grabber implements Subsystem {
     private Telemetry telemetry;
 
     public ServoImplEx grabber;
@@ -43,6 +44,20 @@ public class Grabber {
         grabber.setPwmRange(new PwmControl.PwmRange(REGULAR_OPEN, CLOSED_VALUE));
         stateMap.put(constants.GRABBER_MODE, constants.DEPOSITING);
 
+    }
+    @Override
+    public void reset() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public String test() {
+        return null;
     }
 
     public void setState(Lift lift) {

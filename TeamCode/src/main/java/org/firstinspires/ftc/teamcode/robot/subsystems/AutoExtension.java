@@ -1,18 +1,19 @@
 package org.firstinspires.ftc.teamcode.robot.subsystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
+import org.firstinspires.ftc.teamcode.util.CachingServo;
+
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.hardware.ServoImplEx;
 import com.qualcomm.robotcore.util.Range;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.robot.Constants;
-import org.firstinspires.ftc.teamcode.util.CachingServo;
-
 import java.util.Map;
 
 
-public class AutoExtension {
+public class AutoExtension implements Subsystem {
     private Telemetry telemetry;
 
     // Three servos (plus the turret) work together to place cone to desired location
@@ -25,17 +26,16 @@ public class AutoExtension {
 
     // Servo Positions
 
-    public final double EXTENSION_POSITION_HOME = 1800;    // Fully retracted
+    public final double EXTENSION_POSITION_HOME = 1850;    // Fully retracted
     public double EXTENSION_POSITION_MAX  = 2372;    // Fully extended
 
-    public double EXTENSION_EDITABLE_POSITION = 0.75;
+    public double EXTENSION_EDITABLE_POSITION = 0.4;
     // extension statemap values
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
     public final String DEFAULT_VALUE = "RETRACTED";
     public final String FULL_EXTEND = "EXTENDED";
     public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTEND_DEPOSIT";
     public final String AUTO_EXTENSION_COLLECT = "AUTO_EXTEND_COLLECT";
-    public final String AUTO_EXTENSION_DEPOSIT_TILTED = "AUTO_EXTENSION_DEPOSIT_TILTED";
     public final String FULL_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String TRANSITION_STATE = "TRANSITION";
     Constants constants = new Constants();
@@ -54,6 +54,24 @@ public class AutoExtension {
         extension.setPwmRange(new PwmControl.PwmRange(EXTENSION_POSITION_HOME, EXTENSION_POSITION_MAX));
 
         // Scale the operating range of Servos and set initial position
+        extendHome();
+
+
+    }
+
+    @Override
+    public void reset() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public String test() {
+        return null;
     }
 
     /************************* EXTENSION ARM UTILITIES **************************/
@@ -68,15 +86,12 @@ public class AutoExtension {
         double targetPosition = Range.clip(currentPosition + speed*0.10, 0, 1);
         extension.setPosition(targetPosition/EXTENSION_POSITION_MAX);
         //Send telemetry message for debugging purposes
-//        telemetry.addData("Speed of move:","%.2f", speed);
-//        telemetry.addData("Extension Position:","%.2f", targetPosition);
-//        telemetry.update();
     }
 
 
     // Pulls the extension arm to its starting position (it is NOT in clear)
     public void extendHome() {
-        extension.setPosition(0.3);
+        extension.setPosition(0.01);
     }
 
     // Extends the arm to its maximum reach
@@ -89,14 +104,17 @@ public class AutoExtension {
     }
 
     public void extendInAuto(double pos){
-
         extension.setPosition(pos);
     }
 
     public void setState(String desiredState, AutoLift lift){
-        telemetry.addData("ext pos", extension.getPosition());
-        telemetry.update();
-        selectTransition(desiredState);
+        if(isLiftTooLow(lift)){
+            selectTransition((String) DEFAULT_VALUE);
+        }
+        else{
+            selectTransition(desiredState);
+        }
+
     }
 
     private void selectTransition(String desiredLevel){
@@ -110,16 +128,11 @@ public class AutoExtension {
                 break;
             }
             case AUTO_EXTENSION_DEPOSIT: {
-                extendInAuto(0.62);
+                extendInAuto(0.6);
                 break;
             }
             case AUTO_EXTENSION_COLLECT: {
-                extendInAuto(0.66);
-                break;
-            }
-            case AUTO_EXTENSION_DEPOSIT_TILTED: {
-                extendInAuto(0.65);
-                break;
+                extendInAuto(0.04);
             }
             case FULL_EXTEND_AUTO: {
                 extendInAuto(0.7);

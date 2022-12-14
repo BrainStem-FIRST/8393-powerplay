@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 
@@ -19,7 +20,7 @@ import java.util.Map;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class Lift {
+public class Lift implements Subsystem{
 
     public static final class LiftConstants {
 
@@ -167,7 +168,7 @@ public class Lift {
     private Map stateMap;
     private int subheight;
 
-    public Lift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap) {
+    public Lift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
 
         //telemetry
         this.telemetry = telemetry;
@@ -212,6 +213,21 @@ public class Lift {
         liftMotor2.setDirection(LiftConstants.LIFT_MOTOR_2_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
         liftMotor3.setDirection(LiftConstants.LIFT_MOTOR_3_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
         liftMotor4.setDirection(LiftConstants.LIFT_MOTOR_4_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
+    }
+
+    @Override
+    public void reset() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public String test() {
+        return null;
     }
 
     //////////////////

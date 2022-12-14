@@ -1,17 +1,20 @@
 package org.firstinspires.ftc.teamcode.robot.subsystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.robotcore.hardware.PwmControl;
-import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+
 import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
+
+import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import java.util.Map;
 
 
-public class AutoGrabber {
+public class AutoGrabber implements Subsystem {
     private Telemetry telemetry;
 
     public ServoImplEx grabber;
@@ -23,17 +26,17 @@ public class AutoGrabber {
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
-
-
-    public final double DONT_USE_THIS = 900;
-    public final double REGULAR_OPEN = 1425;
+    public final double REGULAR_OPEN = 900;
     public final double CLOSED_VALUE = 1850;
 
     private Map stateMap;
 
-    public AutoGrabber(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
+    private boolean isAuto;
+
+    public AutoGrabber(HardwareMap hwMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
+        this.isAuto = isAuto;
 
 
         grabber = new CachingServo(hwMap.get(ServoImplEx.class, "grabber"));
@@ -42,46 +45,48 @@ public class AutoGrabber {
         stateMap.put(constants.GRABBER_MODE, constants.DEPOSITING);
 
     }
+    @Override
+    public void reset() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public String test() {
+        return null;
+    }
 
     public void setState(AutoLift lift) {
-        if(((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_IN_PROGRESS)){
-            if (shouldGrab(lift)) {
-                grabber.setPosition(1);
+        telemetry.addData("grabber", stateMap.get(SYSTEM_NAME));
+        if (stateMap.get(SYSTEM_NAME) == CLOSED_STATE) {
+            close();
+        } else if (stateMap.get(SYSTEM_NAME) == OPEN_STATE) {
+            open();
+        } else if (stateMap.get(SYSTEM_NAME) == FULLY_OPEN) {
+            if (lift.getAvgLiftPosition() > 350) {
+                maxOpen();
+                telemetry.addData("grabber", "MAX OPEN");
             } else {
-                grabber.setPosition(0);
+                open();
+                telemetry.addData("grabber", "OPEN");
             }
-
-            if (stateMap.get(constants.GRABBER_START_TIME) == null) {
-                stateMap.put(constants.GRABBER_START_TIME, System.currentTimeMillis());
-            } else {
-                long grabberStartTime = (long) stateMap.get(constants.GRABBER_START_TIME);
-                long grabberEndTime = grabberStartTime + constants.GRABBER_CYCLE_TIME;
-                if(System.currentTimeMillis() > grabberEndTime) {
-                    stateMap.put(constants.GRABBER_START_TIME, null);
-                    stateMap.put(constants.CYCLE_GRABBER, constants.STATE_COMPLETE);
-                }
-            }
-
-        } else if (((String)stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_NOT_STARTED) && shouldGrab(lift)) {
-            grabber.setPosition(0);
         }
-
-//        telemetry.addData("grabberPosition", grabber.getPosition());
+        telemetry.addData("grabber position", grabber.getPosition());
     }
 
     public void open() {
-        grabber.setPosition(0);
+        grabber.setPosition(0.525);
     }
 
-    public void maxOpen(){grabber.setPosition(0);}
-
-    public void close(){
-        grabber.setPosition(1);
-//        telemetry.addData("grabber closing", grabber.getPosition());
+    public void maxOpen() {
+        grabber.setPosition(0.0);
     }
 
-    public boolean shouldGrab(AutoLift lift) {
-        return (lift.getPosition() < lift.LIFT_POSITION_GROUND) &&
-                ((String)stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS);
+    public void close() {
+        grabber.setPosition(1.0);
     }
 }

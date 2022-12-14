@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot.subsystems;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -12,7 +13,7 @@ import com.qualcomm.robotcore.util.Range;
 import java.util.Map;
 
 
-public class Extension {
+public class Extension implements Subsystem {
     private Telemetry telemetry;
 
     // Three servos (plus the turret) work together to place cone to desired location
@@ -56,6 +57,21 @@ public class Extension {
         extendHome();
 
 
+    }
+
+    @Override
+    public void reset() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public String test() {
+        return null;
     }
 
     /************************* EXTENSION ARM UTILITIES **************************/

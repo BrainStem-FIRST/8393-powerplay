@@ -113,7 +113,6 @@ public class RobotTeleOp extends LinearOpMode {
         HashMap<String, String> stateMap = new HashMap<String, String>() {{
         }};
         BrainSTEMRobot robot = new BrainSTEMRobot(hardwareMap, telemetry, stateMap, false);
-        Lift lift = new Lift(hardwareMap, telemetry, stateMap);
 
         SampleMecanumDrive driveCancelable = new SampleMecanumDrive(hardwareMap);
         driveCancelable.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);

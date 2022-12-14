@@ -5,6 +5,7 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.util.CachingMotor;
 import org.firstinspires.ftc.teamcode.util.PIDController;
 
@@ -19,7 +20,7 @@ import java.util.Map;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class AutoLift {
+public class AutoLift implements Subsystem{
 
     public static final class LiftConstants {
 
@@ -30,9 +31,9 @@ public class AutoLift {
         private static final int MAX_LIFT_TICKS_PER_SECOND = 1280;
         //encoder positions
         private static final int BOTTOM_ENCODER_TICKS = 0;
-        private static final int LOW_POLE_ENCODER_TICKS = 345;
-        private static final int MIDDLE_POLE_ENCODER_TICKS = 580;
-        private static final int HIGH_POLE_ENCODER_TICKS = 835;
+        private static final int LOW_POLE_ENCODER_TICKS = 370;
+        private static final int MIDDLE_POLE_ENCODER_TICKS = 610;
+        private static final int HIGH_POLE_ENCODER_TICKS = 840;
         private static final int JUNCTION_ENCODER_TICKS = 0;
         public static int COLLECTING_ENCODER_TICKS = 0;
         private static final int LIFT_POSITION_TOLERANCE = 8;
@@ -214,6 +215,21 @@ public class AutoLift {
         liftMotor4.setDirection(LiftConstants.LIFT_MOTOR_4_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
     }
 
+    @Override
+    public void reset() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public String test() {
+        return null;
+    }
+
     //////////////////
     //LIFT FUNCTIONS//
     //////////////////
@@ -320,6 +336,13 @@ public class AutoLift {
             if (heightInTicks > 400) {
                 setAllMotorPowers(0.45);
             } else {
+                if(heightInTicks < 100){
+                    if(position < 10){
+                        setAllMotorSpeedsPercentage(-liftPIDController.updateWithError(error));
+                    } else {
+                        setAllMotorPowers(0.2);
+                    }
+                }
                 setAllMotorPowers(0.2);
             }
         } else if (position > heightInTicks) {
@@ -331,10 +354,10 @@ public class AutoLift {
                 runAllMotorsToPosition(heightInTicks, 1);
             }
         } else {
-            if(position < heightInTicks - 150) {
+            if (position < heightInTicks - 150) {
                 setAllMotorPowers(1);
             } else {
-                setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error)+0.4);
+                setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.4);
             }
         }
     }

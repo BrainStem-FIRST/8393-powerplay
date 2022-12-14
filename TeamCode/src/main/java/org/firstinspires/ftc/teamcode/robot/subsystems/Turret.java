@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.robot.subsystems;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
 import org.firstinspires.ftc.teamcode.robot.subsystems.Lift;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
@@ -11,7 +12,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 
 import java.util.Map;
 
-public class Turret {
+public class Turret implements Subsystem {
     public final String     SYSTEM_NAME = "TURRET";
     public final String     LEFT_POSITION = "LEFT_STATE";
     public final String     RIGHT_POSITION = "RIGHT_STATE";
@@ -43,6 +44,20 @@ public class Turret {
         leftTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE,  RIGHT_POSITION_LEFT_SERVO_VALUE));
         rightTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_RIGHT_SERVO_VALUE,  RIGHT_POSITION_RIGHT_SERVO_VALUE));
 
+    }
+    @Override
+    public void reset() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public String test() {
+        return null;
     }
 
     public void setState(Lift lift){

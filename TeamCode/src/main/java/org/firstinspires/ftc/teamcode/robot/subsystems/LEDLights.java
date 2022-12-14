@@ -4,8 +4,9 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.LED;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.robot.Subsystem;
 
-public class LEDLights {
+public class LEDLights implements Subsystem {
     private Telemetry telemetry;
 
     private DigitalChannel leftRedLED;
@@ -29,6 +30,20 @@ public class LEDLights {
         leftGreenLED.setMode(DigitalChannel.Mode.OUTPUT);
         rightRedLED.setMode(DigitalChannel.Mode.OUTPUT);
         rightGreenLED.setMode(DigitalChannel.Mode.OUTPUT);
+    }
+    @Override
+    public void reset() {
+
+    }
+
+    @Override
+    public void update() {
+
+    }
+
+    @Override
+    public String test() {
+        return null;
     }
 
     public void setBothLEDGreen(){
