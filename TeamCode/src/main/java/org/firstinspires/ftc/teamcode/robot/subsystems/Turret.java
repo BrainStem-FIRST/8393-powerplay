@@ -58,7 +58,11 @@ public class Turret {
         if(isAuto){
             return false;
         } else {
-            return lift.getPosition() < LIFT_MIN_HEIGHT_TO_MOVE_TURRET;
+            if(stateMap.get(lift.LIFT_SYSTEM_NAME).equals(lift.LIFT_POLE_LOW)){
+                return lift.getPosition() < 200;
+            } else {
+                return lift.getPosition() < LIFT_MIN_HEIGHT_TO_MOVE_TURRET;
+            }
         }
     }
 
