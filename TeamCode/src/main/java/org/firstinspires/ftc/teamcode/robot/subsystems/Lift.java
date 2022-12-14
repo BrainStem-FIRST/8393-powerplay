@@ -320,6 +320,13 @@ public class Lift {
             if (heightInTicks > 400) {
                 setAllMotorPowers(0.45);
             } else {
+                if(heightInTicks < 100){
+                    if(position < 10){
+                        setAllMotorSpeedsPercentage(-liftPIDController.updateWithError(error));
+                    } else {
+                        setAllMotorPowers(0.2);
+                    }
+                }
                 setAllMotorPowers(0.2);
             }
         } else if (position > heightInTicks) {
