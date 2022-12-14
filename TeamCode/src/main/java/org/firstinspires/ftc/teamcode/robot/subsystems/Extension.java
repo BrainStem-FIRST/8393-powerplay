@@ -28,7 +28,7 @@ public class Extension {
     public final double EXTENSION_POSITION_HOME = 1850;    // Fully retracted
     public double EXTENSION_POSITION_MAX  = 2372;    // Fully extended
 
-    public double EXTENSION_EDITABLE_POSITION = 0.75;
+    public double EXTENSION_EDITABLE_POSITION = 0.4;
     // extension statemap values
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
     public final String DEFAULT_VALUE = "RETRACTED";

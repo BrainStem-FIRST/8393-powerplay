@@ -27,14 +27,14 @@ public class Lift {
         private static final double LIFT_MOTOR_GEAR_RATIO = 2.89;
         private static final int ULTRAPLANETARY_MAX_RPM = (int) (6000 / LIFT_MOTOR_GEAR_RATIO);
         private static final int TICKS_PER_REVOLUTION = 28;
-        private static final int MAX_LIFT_TICKS_PER_SECOND = 975;
+        private static final int MAX_LIFT_TICKS_PER_SECOND = 1280;
         //encoder positions
         private static final int BOTTOM_ENCODER_TICKS = 0;
-        private static final int LOW_POLE_ENCODER_TICKS = 300;
-        private static final int MIDDLE_POLE_ENCODER_TICKS = 530;
-        private static final int HIGH_POLE_ENCODER_TICKS = 720;
-        private static final int JUNCTION_ENCODER_TICKS = 25;
-        public static int COLLECTING_ENCODER_TICKS = 25;
+        private static final int LOW_POLE_ENCODER_TICKS = 345;
+        private static final int MIDDLE_POLE_ENCODER_TICKS = 580;
+        private static final int HIGH_POLE_ENCODER_TICKS = 835;
+        private static final int JUNCTION_ENCODER_TICKS = 0;
+        public static int COLLECTING_ENCODER_TICKS = 0;
         private static final int LIFT_POSITION_TOLERANCE = 8;
         private static final int CONE_CYCLE_POSITION_TOLERANCE = 3;
 
@@ -81,8 +81,8 @@ public class Lift {
         private static final boolean LIFT_MOTOR_4_REVERSED = false;
 
         //lift PID constants
-        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 0.005;
-        private static final double INTEGRAL_COLLECTING_TO_HIGH = 0;
+        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 0.02;
+        private static final double INTEGRAL_COLLECTING_TO_HIGH = 2;
         private static final double DERIVATIVE_COLLECTING_TO_HIGH = 0.001; //.001
 
         private static final double PROPORTIONAL_COLLECTING_TO_LOW = 0;
@@ -235,42 +235,6 @@ public class Lift {
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-//    private void updateConeCycleState() {
-//        if (getPosition() > 400) {
-//            if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
-//                telemetry.addData("Cycle lift down in progress", true);
-//                if (haveLiftMotorsReachedTheirDesiredPositions(4) || isCycleExpired(LiftConstants.CYCLE_LIFT_DOWN_TIME_TOP_MS)) {
-//                    stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
-//                }
-//            }
-//            if (stateMap.get(constants.CYCLE_LIFT_DOWN).equals(constants.STATE_COMPLETE)) {
-//                if ((isCycleInProgress(constants.CYCLE_LIFT_UP)) || isCycleExpired(LiftConstants.CYCLE_LIFT_UP_TIME_TOP_MS)) {
-//                    telemetry.addData("Cycle lift down in progress", true);
-//                    stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
-//                }
-//            }
-//        }
-//    }
-//
-//    private void updateConeCycleStateBottom() {
-//        if (getAvgLiftPosition() < 200) {
-//            if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
-//                if (isCycleExpired(LiftConstants.CYCLE_LIFT_DOWN_TIME_BOTTOM_MS)) {
-//                    telemetry.addData("cycle lift down", "complete");
-//                    stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
-//                    setAllMotorPowers(1);
-//                    stateMap.put(LIFT_SYSTEM_NAME, LIFT_POLE_GROUND);
-//                }
-//                LIFT_POSITION_GROUND = 60;
-//            } else if (stateMap.get(constants.CYCLE_LIFT_DOWN).equals(constants.STATE_COMPLETE)) {
-//                if (isCycleExpired(LiftConstants.CYCLE_LIFT_UP_TIME_BOTTOM_MS)) {
-//                    stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
-//                    telemetry.addData("CYCLE COMPLETE", "true");
-//                }
-//            }
-//        }
-//    }
-
     public void setSubheight(double driverInput) {
         subheight = (int) (250 * driverInput);
     }
@@ -293,18 +257,6 @@ public class Lift {
                 transitionToLiftPosition(LIFT_POSITION_GROUND);
                 break;
             }
-//            case LIFT_POLE_DEPOSIT: {
-//                transitionToLiftPosition(LIFT_POSITION_GROUND - subheight);
-//                break;
-//            }
-//            case LIFT_FINEADJ_UP: {
-//                transitionToLiftPosition(getAvgLiftPosition() + subheight);
-//                break;
-//            }
-//            case LIFT_FINEADJ_DOWN: {
-//                transitionToLiftPosition(getAvgLiftPosition() - subheight);
-//                break;
-//            }
             case STACK_5: {
                 transitionToLiftPosition(LiftHeight.STACK_5.getTicks());
             }
@@ -379,23 +331,12 @@ public class Lift {
                 runAllMotorsToPosition(heightInTicks, 1);
             }
         } else {
-            /*if (position < heightInTicks - 15) {
-                telemetry.addData("Setting Raw Power; ", "YESSS");
-                telemetry.addData("Using Run To Position; ", "NOOOO");
-                telemetry.update();
+            if (position < heightInTicks - 150) {
                 setAllMotorPowers(1);
             } else {
-                telemetry.addData("Using Run To Position; ", "YESSS");
-                telemetry.addData("Setting Raw Power; ", "NOOOOO");
-                telemetry.update();
-                runAllMotorsToPosition(heightInTicks, 1);
-            }*/
-            //setPIDControllerTransition(LiftHeight.LOW.getTicks(), LiftHeight.HIGH.getTicks());
-
-            setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.45);
-            //setAllMotorPowers(1);
+                setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.4);
+            }
         }
-
     }
 
     /////////////////////

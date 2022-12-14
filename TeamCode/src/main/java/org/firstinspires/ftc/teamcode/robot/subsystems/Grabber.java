@@ -52,7 +52,7 @@ public class Grabber {
         } else if (stateMap.get(SYSTEM_NAME) == OPEN_STATE) {
             open();
         } else if (stateMap.get(SYSTEM_NAME) == FULLY_OPEN) {
-            if (lift.getAvgLiftPosition() > 240) {
+            if (lift.getAvgLiftPosition() > 350) {
                 maxOpen();
                 telemetry.addData("grabber", "MAX OPEN");
             } else {

@@ -27,23 +27,24 @@ public class AutoLift {
         private static final double LIFT_MOTOR_GEAR_RATIO = 2.89;
         private static final int ULTRAPLANETARY_MAX_RPM = (int) (6000 / LIFT_MOTOR_GEAR_RATIO);
         private static final int TICKS_PER_REVOLUTION = 28;
-        private static final int MAX_LIFT_TICKS_PER_SECOND = 975;
+        private static final int MAX_LIFT_TICKS_PER_SECOND = 1280;
         //encoder positions
         private static final int BOTTOM_ENCODER_TICKS = 0;
-        private static final int LOW_POLE_ENCODER_TICKS = 300;
-        private static final int MIDDLE_POLE_ENCODER_TICKS = 530;
-        private static final int HIGH_POLE_ENCODER_TICKS = 720;
-        private static final int JUNCTION_ENCODER_TICKS = 25;
-        public static int COLLECTING_ENCODER_TICKS = 25;
+        private static final int LOW_POLE_ENCODER_TICKS = 345;
+        private static final int MIDDLE_POLE_ENCODER_TICKS = 580;
+        private static final int HIGH_POLE_ENCODER_TICKS = 835;
+        private static final int JUNCTION_ENCODER_TICKS = 0;
+        public static int COLLECTING_ENCODER_TICKS = 0;
         private static final int LIFT_POSITION_TOLERANCE = 8;
         private static final int CONE_CYCLE_POSITION_TOLERANCE = 3;
 
+
         //auto stack heights
-        private static final int STACK_5_ENCODER_TICKS = 175;
-        private static final int STACK_4_ENCODER_TICKS = 100;
-        private static final int STACK_3_ENCODER_TICKS = 55;
-        private static final int STACK_2_ENCODER_TICKS = 30; //FIXME
-        private static final int STACK_1_ENCODER_TICKS = 0;
+        private static final int STACK_5_ENCODER_TICKS = 115;
+        private static final int STACK_4_ENCODER_TICKS = 70;
+        private static final int STACK_3_ENCODER_TICKS = 60;
+        private static final int STACK_2_ENCODER_TICKS = 40; //FIXME
+        private static final int STACK_1_ENCODER_TICKS = COLLECTING_ENCODER_TICKS;
 
         //cone cycle adjustments
         private static final int LIFT_ADJUSTMENT_LOW = -30;
@@ -80,8 +81,8 @@ public class AutoLift {
         private static final boolean LIFT_MOTOR_4_REVERSED = false;
 
         //lift PID constants
-        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 0.005;
-        private static final double INTEGRAL_COLLECTING_TO_HIGH = 0;
+        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 0.02;
+        private static final double INTEGRAL_COLLECTING_TO_HIGH = 2;
         private static final double DERIVATIVE_COLLECTING_TO_HIGH = 0.001; //.001
 
         private static final double PROPORTIONAL_COLLECTING_TO_LOW = 0;
@@ -129,7 +130,6 @@ public class AutoLift {
     public final String LIFT_PICKUP = "PICKUP";
     public final String LIFT_POLE_GROUND = "GROUND";
     public final String LIFT_POLE_DEPOSIT = "DEPOSIT";
-
     public final String LIFT_POLE_LOW = "POLE_LOW";
     public final String LIFT_POLE_MEDIUM = "POlE_MEDIUM";
     public final String LIFT_POLE_HIGH = "POLE_HIGH";
@@ -138,7 +138,6 @@ public class AutoLift {
     public final String STACK_3 = "STACK_3";
     public final String STACK_2 = "STACK_2";
     public final String STACK_1 = "STACK_1";
-
     public final String REMOVE_STACK = "REMOVE_STACK";
     public final String LIFT_TARGET_HEIGHT = "LIFT TARGET HEIGHT";
     public final String APPROACH_HEIGHT = "APPROACH_HEIGHT";
@@ -160,24 +159,19 @@ public class AutoLift {
     //declaring list of lift motors
     private ArrayList<DcMotorEx> liftMotors;
 
-    //autonomous variable
-    private boolean isAuto;
-
     public int LIFT_POSITION_GROUND = LiftConstants.BOTTOM_ENCODER_TICKS;
 
     //PID controller
     PIDController liftPIDController;
 
     private Map stateMap;
+    private int subheight;
 
     public AutoLift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
 
         //telemetry
         this.telemetry = telemetry;
-
         this.stateMap = stateMap;
-
-        this.isAuto = isAuto;
 
         //initialize lift motors
         liftMotor1 = new CachingMotor(hardwareMap.get(DcMotorEx.class, LiftConstants.LIFT_MOTOR_1_ID));
@@ -241,70 +235,26 @@ public class AutoLift {
         liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     }
 
-    private void updateConeCycleState() {
-        if (getPosition() > 400) {
-            if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
-                telemetry.addData("Cycle lift down in progress", true);
-                if (haveLiftMotorsReachedTheirDesiredPositions(4) || isCycleExpired(LiftConstants.CYCLE_LIFT_DOWN_TIME_TOP_MS)) {
-                    stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
-                }
-            }
-            if (stateMap.get(constants.CYCLE_LIFT_DOWN).equals(constants.STATE_COMPLETE)) {
-                if ((isCycleInProgress(constants.CYCLE_LIFT_UP)) || isCycleExpired(LiftConstants.CYCLE_LIFT_UP_TIME_TOP_MS)) {
-                    telemetry.addData("Cycle lift down in progress", true);
-                    stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
-                }
-            }
-        }
+    public void setSubheight(double driverInput) {
+        subheight = (int) (250 * driverInput);
     }
 
-    private void updateConeCycleStateBottom() {
-        if (getAvgLiftPosition() < 200) {
-            if (isCycleInProgress(constants.CYCLE_LIFT_DOWN) && isSubheightPlacement()) {
-                if (isCycleExpired(LiftConstants.CYCLE_LIFT_DOWN_TIME_BOTTOM_MS)) {
-                    telemetry.addData("cycle lift down", "complete");
-                    stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_COMPLETE);
-                    setAllMotorPowers(1);
-                    stateMap.put(LIFT_SYSTEM_NAME, LIFT_POLE_GROUND);
-                }
-                LIFT_POSITION_GROUND = 60;
-            } else if (stateMap.get(constants.CYCLE_LIFT_DOWN).equals(constants.STATE_COMPLETE)) {
-                if (isCycleExpired(LiftConstants.CYCLE_LIFT_UP_TIME_BOTTOM_MS)) {
-                    stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_COMPLETE);
-                    telemetry.addData("CYCLE COMPLETE", "true");
-                }
-            }
-        }
-    }
-
-    private void selectTransition(String desiredLevel, String subheight, String currentState) {
+    private void selectTransition(String desiredLevel) {
         switch (desiredLevel) {
             case LIFT_POLE_LOW: {
-                transitionToLiftPosition(LiftHeight.LOW.getTicks() + deliveryHeight(subheight));
+                transitionToLiftPosition(LiftHeight.LOW.getTicks() - subheight);
                 break;
             }
             case LIFT_POLE_MEDIUM: {
-                transitionToLiftPosition(LiftHeight.MIDDLE.getTicks() + deliveryHeight(subheight));
+                transitionToLiftPosition(LiftHeight.MIDDLE.getTicks() - subheight);
                 break;
             }
             case LIFT_POLE_HIGH: {
-                transitionToLiftPosition(LiftHeight.HIGH.getTicks() + deliveryHeight(subheight));
+                transitionToLiftPosition(LiftHeight.HIGH.getTicks() - subheight);
                 break;
             }
             case LIFT_POLE_GROUND: {
-                transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
-                break;
-            }
-            case LIFT_POLE_DEPOSIT: {
-                transitionToLiftPosition(LIFT_POSITION_GROUND + deliveryHeight(subheight));
-                break;
-            }
-            case LIFT_FINEADJ_UP: {
-                transitionToLiftPosition(getAvgLiftPosition() + deliveryHeight(subheight));
-                break;
-            }
-            case LIFT_FINEADJ_DOWN: {
-                transitionToLiftPosition(getAvgLiftPosition() - deliveryHeight(subheight));
+                transitionToLiftPosition(LIFT_POSITION_GROUND);
                 break;
             }
             case STACK_5: {
@@ -316,11 +266,9 @@ public class AutoLift {
             case STACK_3: {
                 transitionToLiftPosition(LiftHeight.STACK_3.getTicks());
             }
-            case STACK_2: {
-                transitionToLiftPosition(LiftHeight.STACK_2.getTicks());
+            default: {
+                setAllMotorPowers(heightFactor(getPosition()));
             }
-
-
 
         }
 
@@ -340,7 +288,6 @@ public class AutoLift {
 
     private double heightFactor(int heightInTicks) {
         double factor = Math.abs(0.0003 * heightInTicks) + 0.15;
-        telemetry.addData("heightFactor", factor);
         return factor;
     }
 
@@ -354,30 +301,12 @@ public class AutoLift {
     }
 
     public void raiseHeightTo(int heightInTicks) {
-        telemetry.addData("raiseHeightCalled", true);
-        telemetry.addData("heightInTicks", heightInTicks);
-
         int position = getAvgLiftPosition();
-
-        telemetry.addData("position", position);
 
         // calculate the error
         int error = heightInTicks - position;
 
-        telemetry.addData("ERROR", error);
-        telemetry.addData("Current Positions: ", getLiftPositions());
-        telemetry.addData("Lift Power (M1): ", liftMotor1.getPower());
-        telemetry.addData("Lift Power (M2): ", liftMotor2.getPower());
-        telemetry.addData("Lift Power (M3): ", liftMotor3.getPower());
-        telemetry.addData("Lift Power (M4): ", liftMotor4.getPower());
-
-        telemetry.addData("Target Positions: ", getLiftTargetPositions());
-        //telemetry.update();
-
-
         if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
-            telemetry.addData("Setting Raw Power; ", "NOOOO");
-            telemetry.addData("Using Run To Position; ", "YESSSS");
             //telemetry.update();
             if (getAvgLiftPosition() < 400) {
                 setAllMotorPowers(-0.1);
@@ -385,59 +314,29 @@ public class AutoLift {
                 runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_HIGH, 1);
             }
         } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
-            telemetry.addData("Setting Raw Power; ", "NOOOO");
-            telemetry.addData("Using Run To Position; ", "YESSSS");
-            //telemetry.update();
             setAllMotorPowers(1);
             //runAllMotorsToPosition(heightInTicks, 1);
         } else if (position >= heightInTicks - 10 && position <= heightInTicks + 10) {
             if (heightInTicks > 400) {
-                telemetry.addData("Setting Raw Power; ", "YESS");
-                telemetry.addData("Using Run To Position; ", "NOO");
-                //telemetry.update();
                 setAllMotorPowers(0.45);
             } else {
-                telemetry.addData("Setting Raw Power; ", "YESS");
-                telemetry.addData("Using Run To Position; ", "NOOO");
-                //telemetry.update();
                 setAllMotorPowers(0.2);
             }
         } else if (position > heightInTicks) {
             if (position > heightInTicks + 200) {
-                telemetry.addData("Setting Raw Power; ", "YES");
-                telemetry.addData("Using Run To Position; ", "NO");
-                //telemetry.update();
                 setAllMotorPowers(-0.1);
             } else if (position < 35 && heightInTicks < 35) {
-                telemetry.addData("Setting Raw Power; ", "YES");
-                telemetry.addData("Using Run To Position; ", "NO");
-                //telemetry.update();
                 setAllMotorPowers(0);
             } else {
-                telemetry.addData("Setting Raw Power; ", "NOOOO");
-                telemetry.addData("Using Run To Position; ", "YESSSS");
-                //telemetry.update();
                 runAllMotorsToPosition(heightInTicks, 1);
             }
         } else {
-            /*if (position < heightInTicks - 15) {
-                telemetry.addData("Setting Raw Power; ", "YESSS");
-                telemetry.addData("Using Run To Position; ", "NOOOO");
-                telemetry.update();
+            if(position < heightInTicks - 150) {
                 setAllMotorPowers(1);
             } else {
-                telemetry.addData("Using Run To Position; ", "YESSS");
-                telemetry.addData("Setting Raw Power; ", "NOOOOO");
-                telemetry.update();
-                runAllMotorsToPosition(heightInTicks, 1);
-            }*/
-            //setPIDControllerTransition(LiftHeight.LOW.getTicks(), LiftHeight.HIGH.getTicks());
-
-            setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.45);
-            //setAllMotorPowers(1);
+                setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error)+0.4);
+            }
         }
-
-        telemetry.addData("Lift Motor Powers: ", getLiftMotorPowers());
     }
 
     /////////////////////
@@ -544,18 +443,8 @@ public class AutoLift {
 
         stateMap.put(LIFT_CURRENT_STATE, currentState);
 
-        //updateConeCycleState();
-        //updateConeCycleStateBottom();
-        if (shouldLiftMove(level, currentState)) {
-            if (stateMap.get(constants.LIFT_COMPLETE_TIME) == "0") {
-                stateMap.put(constants.LIFT_START_TIME, String.valueOf(System.currentTimeMillis()));
-            }
-            selectTransition(level, subheight, currentState);
-        } else {
-            stateMap.put(constants.LIFT_COMPLETE_TIME, "0");
-            stateMap.put(constants.LIFT_INTEGRAL_SUM, "0.0");
-            setAllMotorPowers(heightFactor(getPosition()));
-        }
+        selectTransition(level);
+
     }
 
 
@@ -596,14 +485,9 @@ public class AutoLift {
     //////////////
 
     private boolean isCycleExpired(int cycleTime) {
-        telemetry.addData("Cone Cycle Start Time: ", Long.valueOf(String.valueOf(stateMap.get(constants.CONE_CYCLE_START_TIME))));
-        telemetry.addData("Current Time: ", System.currentTimeMillis());
-        telemetry.addData("Start Time + cycle time", Long.valueOf(String.valueOf(stateMap.get(constants.CONE_CYCLE_START_TIME))) + cycleTime);
         if ((System.currentTimeMillis() > Long.valueOf(String.valueOf(stateMap.get(constants.CONE_CYCLE_START_TIME))) + cycleTime)) {
-            telemetry.addData("Cycle expired", "true");
             return true;
         } else {
-            telemetry.addData("Cycle expired", "false");
             return false;
         }
     }
@@ -627,11 +511,11 @@ public class AutoLift {
         return true;
     }
 
-    private boolean shouldLiftMove(String level, String currentState) {
-        return ((String) stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
-                ((String) stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
-                !level.equalsIgnoreCase(currentState);
-    }
+//    private boolean shouldLiftMove(String level, String currentState) {
+//        return ((String) stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
+//                ((String) stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) ||
+//                !level.equalsIgnoreCase(currentState);
+//    }
 
     public boolean inHeightTolerance(double heightPosition, double targetHeight) {
         return (heightPosition > targetHeight - HEIGHT_TOLERANCE) && (heightPosition < targetHeight + HEIGHT_TOLERANCE);

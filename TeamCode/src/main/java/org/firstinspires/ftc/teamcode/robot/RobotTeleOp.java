@@ -6,6 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PwmControl;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
@@ -79,6 +80,10 @@ public class RobotTeleOp extends LinearOpMode {
 
     //open grabber boolean
     private boolean openGrabberConeCycle = false;
+
+    //lift bring in delay
+    private boolean bringLiftDownBoolean = false;
+    private ElapsedTime liftDelay = new ElapsedTime();
 
     Constants constants = new Constants();
 
@@ -167,7 +172,11 @@ public class RobotTeleOp extends LinearOpMode {
                     } else if (gamepad1.right_trigger >= 0.9) {
                         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                         robot.lift.LIFT_POSITION_GROUND = 0;
-                        toggleMap.put(GAMEPAD_1_A_STATE, false);
+                        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                        robot.arm.extendHome();
+                        liftDelay.reset();
+                        robot.grabber.maxOpen();
+                        bringLiftDownBoolean = true;
                     } else {
                         robot.lift.setSubheight(0);
                     }
@@ -175,12 +184,22 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                     robot.lift.LIFT_POSITION_GROUND = 50;
                 }
+                if(bringLiftDownBoolean){
+                    if(liftDelay.seconds() > 0.1){
+                        toggleMap.put(GAMEPAD_1_A_STATE, false);
+                        bringLiftDownBoolean = false;
+                    }
+                }
 
                 if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                     slowMode = true;
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
                     stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
-                    stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
+                    if(bringLiftDownBoolean) {
+                        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                    } else {
+                        stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
+                    }
                     robot.lift.LIFT_POSITION_GROUND = 0;
                 } else {
                     slowMode = false;
@@ -188,6 +207,9 @@ public class RobotTeleOp extends LinearOpMode {
                     robot.turret.centerTurret();
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
+                }
+                if(gamepad1.a && !stateMap.get(robot.lift.LIFT_SYSTEM_NAME).equals(robot.lift.LIFT_POLE_GROUND)){
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 }
 
                 if (gamepad2.dpad_left) {
@@ -259,6 +281,8 @@ public class RobotTeleOp extends LinearOpMode {
                             )
                     );
                 }
+                telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
+                telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
 
                 driveCancelable.update();
 
@@ -300,4 +324,5 @@ public class RobotTeleOp extends LinearOpMode {
 
         return toggleMap.get(buttonStateName);
     }
+
 }
