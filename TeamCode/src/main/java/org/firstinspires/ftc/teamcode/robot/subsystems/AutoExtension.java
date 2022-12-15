@@ -36,7 +36,7 @@ public class AutoExtension implements Subsystem {
     public final String FULL_EXTEND = "EXTENDED";
     public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTEND_DEPOSIT";
     public final String AUTO_EXTENSION_COLLECT = "AUTO_EXTEND_COLLECT";
-    public final String FULL_EXTEND_AUTO = "FULL_EXTEND_AUTO";
+    public final String DEFAULT_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String TRANSITION_STATE = "TRANSITION";
     Constants constants = new Constants();
 
@@ -128,14 +128,15 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case AUTO_EXTENSION_DEPOSIT: {
-                extendInAuto(0.6);
+                extendInAuto(0.65);
                 break;
             }
             case AUTO_EXTENSION_COLLECT: {
-                extendInAuto(0.04);
-            }
-            case FULL_EXTEND_AUTO: {
                 extendInAuto(0.7);
+                break;
+            }
+            case DEFAULT_EXTEND_AUTO: {
+                extendInAuto(0.3);
                 break;
             }
         }

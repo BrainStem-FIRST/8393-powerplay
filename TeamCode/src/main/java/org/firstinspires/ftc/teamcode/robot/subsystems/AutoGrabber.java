@@ -61,21 +61,13 @@ public class AutoGrabber implements Subsystem {
     }
 
     public void setState(AutoLift lift) {
-        telemetry.addData("grabber", stateMap.get(SYSTEM_NAME));
         if (stateMap.get(SYSTEM_NAME) == CLOSED_STATE) {
             close();
         } else if (stateMap.get(SYSTEM_NAME) == OPEN_STATE) {
             open();
         } else if (stateMap.get(SYSTEM_NAME) == FULLY_OPEN) {
-            if (lift.getAvgLiftPosition() > 350) {
-                maxOpen();
-                telemetry.addData("grabber", "MAX OPEN");
-            } else {
-                open();
-                telemetry.addData("grabber", "OPEN");
-            }
+            maxOpen();
         }
-        telemetry.addData("grabber position", grabber.getPosition());
     }
 
     public void open() {
