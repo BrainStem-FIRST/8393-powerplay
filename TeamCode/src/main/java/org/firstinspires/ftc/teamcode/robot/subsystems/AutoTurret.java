@@ -18,13 +18,13 @@ public class AutoTurret {
     public final String     LEFT_DELIVERY_AUTO = "LEFT_DELIVERY_AUTO";
     public final String     LEFT_PICKUP_AUTO = "LEFT_PICKUP_AUTO";
     public final String     RIGHT_DELIVERY_AUTO = "RIGHT_DELIVERY_AUTO";
-    public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 549;
-    public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 549;
-    public final double     CENTER_POSITION_LEFT_SERVO_VALUE = 1373;
-    public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 1373;
-    public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2155;
-    public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2155;
-    public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 250;
+    public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 532;
+    public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 532;
+    public final double     CENTER_POSITION_LEFT_SERVO_VALUE = 1375;
+    public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 1375;
+    public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2166;
+    public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2166;
+    public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 50;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET_IN_AUTO = 70;
     public final double TURRET_CENTER_POSITION = 0.5;
 
@@ -65,7 +65,7 @@ public class AutoTurret {
                 transitionToPosition(0, 0);
                 break;
             } case CENTER_POSITION:{
-                transitionToPosition(0.55, 0.55);
+                transitionToPosition(0.52, 0.52);
                 break;
             } case RIGHT_POSITION:{
                 transitionToPosition(1, 1);
@@ -79,7 +79,7 @@ public class AutoTurret {
                 break;
             }
             case LEFT_PICKUP_AUTO: {
-                transitionToPosition(0.05, 0.05);
+                transitionToPosition(0, 0);
                 break;
             } case RIGHT_DELIVERY_AUTO: {
                 transitionToPosition(0.7, 0.7);

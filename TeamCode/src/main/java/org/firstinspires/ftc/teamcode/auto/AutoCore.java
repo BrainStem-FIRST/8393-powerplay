@@ -242,15 +242,27 @@ public class AutoCore extends LinearOpMode {
 //                .splineToConstantHeading(depositPreloadSpline2, Math.toRadians(-90), SampleMecanumDrive.getVelocityConstraint(24, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
 //                        SampleMecanumDrive.getAccelerationConstraint(25))
 
-                .waitSeconds(2.0)
+                .waitSeconds(3)
 
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);})
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_DEPOSIT); })
-                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> { robot.lift.setSubheight(0.25); })
+                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> { robot.lift.setSubheight(0.7); })
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> { stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN); })
                 .UNSTABLE_addTemporalMarkerOffset(1.0, () -> { robot.lift.setSubheight(0.0); })
 
-                .waitSeconds(2.0)
+
+                .waitSeconds(3)
+
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretPickupPosition);})
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_EXTEND_AUTO); })
+                .UNSTABLE_addTemporalMarkerOffset(0.75, () -> { robot.lift.setSubheight(0.9); })
+                .UNSTABLE_addTemporalMarkerOffset(1.4, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_COLLECT); })
+                .UNSTABLE_addTemporalMarkerOffset(2, () -> { stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE); })
+                .UNSTABLE_addTemporalMarkerOffset(2.5, () -> { robot.lift.setSubheight(0); })
+
+
+
+                .waitSeconds(5)
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);})
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> { stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE); })
                 .UNSTABLE_addTemporalMarkerOffset(1.25, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND); })
