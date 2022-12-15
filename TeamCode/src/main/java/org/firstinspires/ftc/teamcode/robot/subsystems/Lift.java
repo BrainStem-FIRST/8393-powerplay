@@ -31,7 +31,7 @@ public class Lift implements Subsystem{
         private static final int MAX_LIFT_TICKS_PER_SECOND = 1280;
         //encoder positions
         private static final int BOTTOM_ENCODER_TICKS = 0;
-        private static final int LOW_POLE_ENCODER_TICKS = 370;
+        private static final int LOW_POLE_ENCODER_TICKS = 410;
         private static final int MIDDLE_POLE_ENCODER_TICKS = 610;
         private static final int HIGH_POLE_ENCODER_TICKS = 840;
         private static final int JUNCTION_ENCODER_TICKS = 0;
@@ -342,8 +342,9 @@ public class Lift implements Subsystem{
                     } else {
                         setAllMotorPowers(0.2);
                     }
+                } else {
+                    setAllMotorPowers(0.2);
                 }
-                setAllMotorPowers(0.2);
             }
         } else if (position > heightInTicks) {
             if (position > heightInTicks + 200) {
