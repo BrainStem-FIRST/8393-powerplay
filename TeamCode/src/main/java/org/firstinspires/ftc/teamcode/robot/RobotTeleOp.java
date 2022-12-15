@@ -85,6 +85,9 @@ public class RobotTeleOp extends LinearOpMode {
     private boolean bringLiftDownBoolean = false;
     private ElapsedTime liftDelay = new ElapsedTime();
 
+    private boolean liftDelayCollectingBoolean = false;
+    private ElapsedTime liftDelayCollecting = new ElapsedTime();
+
     Constants constants = new Constants();
 
     Map<String, Boolean> toggleMap = new HashMap<String, Boolean>() {{
@@ -181,12 +184,20 @@ public class RobotTeleOp extends LinearOpMode {
                     }
                 } else if (gamepad1.right_trigger > 0.5 && robot.lift.getAvgLiftPosition() < 100) {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
-                    robot.lift.LIFT_POSITION_GROUND = 50;
+                    liftDelay.reset();
+                    liftDelayCollectingBoolean = true;
                 }
                 if(bringLiftDownBoolean){
                     if(liftDelay.seconds() > 0.1){
                         toggleMap.put(GAMEPAD_1_A_STATE, false);
                         bringLiftDownBoolean = false;
+                    }
+                }
+
+                if(liftDelayCollectingBoolean) {
+                    if(liftDelayCollecting.seconds() > 0.15) {
+                        liftDelayCollectingBoolean = false;
+                        robot.lift.LIFT_POSITION_GROUND = 50;
                     }
                 }
 
@@ -262,6 +273,7 @@ public class RobotTeleOp extends LinearOpMode {
                     robot.arm.extendToTarget();
                 }
 
+                //double weightedDriveSpeedMultiplier  = robot.lift.getAvgLiftPosition() < 200 ? 0.7 : 0.5;
 
                 if (slowMode) {
                     driveCancelable.setWeightedDrivePower(
@@ -276,7 +288,7 @@ public class RobotTeleOp extends LinearOpMode {
                             new Pose2d(
                                     -gamepad1.left_stick_y,
                                     -gamepad1.left_stick_x,
-                                    -gamepad1.right_stick_x * 0.7
+                                    -gamepad1.right_stick_x * 0.5
                             )
                     );
                 }
