@@ -37,6 +37,7 @@ public class AutoExtension implements Subsystem {
     public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTEND_DEPOSIT";
     public final String AUTO_EXTENSION_COLLECT = "AUTO_EXTEND_COLLECT";
     public final String DEFAULT_EXTEND_AUTO = "FULL_EXTEND_AUTO";
+    public final String DEFAULT_SIDE_EXTENDED_AUTO = "DEFAULT_SIDE_EXTENDED_AUTO";
     public final String TRANSITION_STATE = "TRANSITION";
     Constants constants = new Constants();
 
@@ -128,7 +129,7 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case AUTO_EXTENSION_DEPOSIT: {
-                extendInAuto(0.65);
+                extendInAuto(0.625);
                 break;
             }
             case AUTO_EXTENSION_COLLECT: {
@@ -137,6 +138,11 @@ public class AutoExtension implements Subsystem {
             }
             case DEFAULT_EXTEND_AUTO: {
                 extendInAuto(0.3);
+                break;
+            }
+            case DEFAULT_SIDE_EXTENDED_AUTO: {
+                extendInAuto(0.55);
+                telemetry.addData("Side extended", "true");
                 break;
             }
         }
