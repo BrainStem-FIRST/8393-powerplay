@@ -298,10 +298,10 @@ public class AutoCore extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     robot.lift.setSubheight(0.7);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
                     robot.lift.setSubheight(0.0);
                 })
 
@@ -338,10 +338,10 @@ public class AutoCore extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     robot.lift.setSubheight(0.7);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
                     robot.lift.setSubheight(0.0);
                 })
 
@@ -378,10 +378,10 @@ public class AutoCore extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     robot.lift.setSubheight(0.7);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
                     robot.lift.setSubheight(0.0);
                 })
 
@@ -418,10 +418,10 @@ public class AutoCore extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     robot.lift.setSubheight(0.7);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
                     robot.lift.setSubheight(0.0);
                 })
 
@@ -458,10 +458,10 @@ public class AutoCore extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     robot.lift.setSubheight(0.7);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
                     robot.lift.setSubheight(0.0);
                 })
 
@@ -498,10 +498,10 @@ public class AutoCore extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.5, () -> {
                     robot.lift.setSubheight(0.7);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
                     robot.lift.setSubheight(0.0);
                 })
 
