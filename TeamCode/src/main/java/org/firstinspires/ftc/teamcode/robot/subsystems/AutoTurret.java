@@ -71,14 +71,14 @@ public class AutoTurret {
                 transitionToPosition(1, 1);
                 break;
             }
-            case RIGHT_PICKUP_AUTO: {
+            case LEFT_PICKUP_AUTO: {
                 transitionToPosition(1.0, 1.0);
                 break;
             } case LEFT_DELIVERY_AUTO: {
-                transitionToPosition(0.225, 0.225);
+                transitionToPosition(0.33, 0.33);
                 break;
             }
-            case LEFT_PICKUP_AUTO: {
+            case RIGHT_PICKUP_AUTO: {
                 transitionToPosition(0, 0);
                 break;
             } case RIGHT_DELIVERY_AUTO: {

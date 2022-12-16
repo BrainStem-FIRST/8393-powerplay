@@ -296,6 +296,7 @@ public class RobotTeleOp extends LinearOpMode {
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
 
                 driveCancelable.update();
+                telemetry.addData("Bottom Lift Target Height: ", robot.lift.LIFT_POSITION_GROUND);
 
                 robot.updateSystems();
 
