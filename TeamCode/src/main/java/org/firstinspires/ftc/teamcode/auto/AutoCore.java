@@ -611,7 +611,7 @@ public class AutoCore extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (totalTime.seconds() < 28) {
+            if (totalTime.seconds() < 27) {
                 drive.update();
                 robot.updateSystems();
                 telemetry.update();
