@@ -274,7 +274,7 @@ public class AutoCore extends LinearOpMode {
 
 //            FAKE
 
-               .waitSeconds(1.5)
+               .waitSeconds(0.5)
                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
              })
@@ -632,10 +632,10 @@ public class AutoCore extends LinearOpMode {
                 stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
                 robot.updateSystems();
 
-//                Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
-//                        .lineToLinearHeading(endParking)
-//                        .build();
-//                drive.followTrajectory(parking);
+                Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
+                       .lineToLinearHeading(endParking)
+                        .build();
+               drive.followTrajectory(parking);
 
 
             }
