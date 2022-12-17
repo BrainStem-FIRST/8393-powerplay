@@ -340,10 +340,10 @@ public class Lift implements Subsystem{
                     if(position < 10){
                         setAllMotorSpeedsPercentage(-1.2* liftPIDController.updateWithError(error));
                     } else {
-                        if(heightInTicks != 0) {
+                        if(heightInTicks != LIFT_POSITION_GROUND) {
                             setAllMotorPowers(0.2);
                         } else {
-                            setAllMotorPowers(-0.01);
+                            setAllMotorPowers(-0.0001);
 
                         }
                     }
