@@ -344,6 +344,7 @@ public class Lift implements Subsystem{
                             setAllMotorPowers(0.2);
                         } else {
                             setAllMotorPowers(-0.01);
+
                         }
                     }
                 } else {
