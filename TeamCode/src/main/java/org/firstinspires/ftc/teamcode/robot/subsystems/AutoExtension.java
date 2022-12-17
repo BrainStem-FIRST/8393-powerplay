@@ -124,7 +124,7 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case AUTO_EXTENSION_DEPOSIT: {
-                extendInAuto(0.625);
+                extendInAuto(0.7);
                 break;
             }
             case AUTO_EXTENSION_COLLECT_RIGHT: {
