@@ -53,9 +53,9 @@ public class AutoCore extends LinearOpMode {
 
     private int initialTurn = -90;
 
-    private Pose2d parking3 = new Pose2d(12, 12.5, Math.toRadians(-90));
-    private Pose2d parking2 = new Pose2d(36, 12.5, Math.toRadians(-90));
-    private Pose2d parking1 = new Pose2d(60, 12.5, Math.toRadians(-90));
+    private Pose2d parking3 = new Pose2d(-12, -12.5, Math.toRadians(-90));
+    private Pose2d parking2 = new Pose2d(-36, -12.5, Math.toRadians(-90));
+    private Pose2d parking1 = new Pose2d(-60, -12.5, Math.toRadians(-90));
 
     private int initialTangent = -80;
     private int depositPreloadSplineTangent = 90;
@@ -112,6 +112,7 @@ public class AutoCore extends LinearOpMode {
                 depositPreloadSplineTangent = 90;
                 depositorPreloadSplineIntermediatePointTangent = 90;
                 depositPreloadSpline2Tangent = -25;
+                endParking = new Pose2d(parking2.getX(), parking2.getY(), parking2.getHeading());
                 break;
             case RIGHT:
                 initialTangent = 80;
@@ -140,9 +141,10 @@ public class AutoCore extends LinearOpMode {
                 parking1 = new Pose2d(-12, 12.5, Math.toRadians(90));
                 parking2 = new Pose2d(-36, 12.5, Math.toRadians(90));
                 parking3 = new Pose2d(-60, 12.5, Math.toRadians(90));
+                endParking = new Pose2d(-36, 12.5, Math.toRadians(90));
                 break;
         }
-        endParking = new Pose2d(parking2.getX(), parking2.getY(), parking2.getHeading());
+
 
     }
 
@@ -619,7 +621,7 @@ public class AutoCore extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (totalTime.seconds() < 27) {
+            if (totalTime.seconds() < 26) {
                 drive.update();
                 robot.updateSystems();
                 telemetry.update();
