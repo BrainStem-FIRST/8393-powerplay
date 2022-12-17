@@ -338,13 +338,12 @@ public class Lift implements Subsystem{
             } else {
                 if(heightInTicks < 100){
                     if(position < 10){
-                        setAllMotorSpeedsPercentage(-1.2* liftPIDController.updateWithError(error));
+                        setAllMotorSpeedsPercentage(-liftPIDController.updateWithError(error));
                     } else {
-                        if(heightInTicks != LIFT_POSITION_GROUND) {
+                        if(heightInTicks != 0) {
                             setAllMotorPowers(0.2);
                         } else {
-                            setAllMotorPowers(-0.0001);
-
+                            setAllMotorPowers(-0.01);
                         }
                     }
                 } else {
@@ -352,7 +351,9 @@ public class Lift implements Subsystem{
                 }
             }
         } else if (position > heightInTicks) {
-            if (position > heightInTicks + 200) {
+            if (heightInTicks == 0) {
+                setAllMotorPowers(-0.1);
+            } else if (position > heightInTicks + 200) {
                 setAllMotorPowers(-0.1);
             } else if (position < 35 && heightInTicks < 35) {
                 setAllMotorPowers(0);

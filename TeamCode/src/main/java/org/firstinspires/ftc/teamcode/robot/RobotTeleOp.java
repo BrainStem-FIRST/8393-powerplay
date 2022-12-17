@@ -59,7 +59,7 @@ public class RobotTeleOp extends LinearOpMode {
     private ToggleButton gamepad2xbutton = new ToggleButton();
     private StickyButton coneCyleStickyG = new StickyButton();
     private boolean coneCycleToggleGBoolean = false;
-    private boolean CycleStickyBoolean = false;
+    private boolean coneCycleStickyBoolean = false;
 
 
     private StickyButton extensionFineAdjustUp = new StickyButton();
@@ -149,15 +149,7 @@ public class RobotTeleOp extends LinearOpMode {
         while (!isStopRequested()) {
             robot.lights.setBothLEDRed();
 
-            if (gamepad2.right_trigger > 0.4) {
-                robot.lift.LIFT_POSITION_GROUND = robot.lift.LIFT_POSITION_GROUND + 25;
-            }
-            if (gamepad2.left_trigger > 0.4) {
-                robot.lift.LIFT_POSITION_GROUND = 0;
-            }
-            if (gamepad2.x) {
-                Lift.LiftConstants.COLLECTING_ENCODER_TICKS = 25;
-            }
+
 
             if ((gamepad2.right_stick_button && gamepad2.left_stick_button) || (gamepad1.right_stick_button && gamepad1.left_stick_button)) {
                 robot.lift.setAllMotorPowers(-0.25);
@@ -292,6 +284,17 @@ public class RobotTeleOp extends LinearOpMode {
                             )
                     );
                 }
+
+                if (gamepad2.right_trigger > 0.4) {
+                    Lift.LiftConstants.COLLECTING_ENCODER_TICKS += 15;
+                }
+                if (gamepad2.left_trigger > 0.4) {
+                    Lift.LiftConstants.COLLECTING_ENCODER_TICKS -= 15;
+                }
+                if (gamepad2.x) {
+                    Lift.LiftConstants.COLLECTING_ENCODER_TICKS = 25;
+                }
+
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
 
