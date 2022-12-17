@@ -195,7 +195,7 @@ public class RobotTeleOp extends LinearOpMode {
                 }
 
                 if(liftDelayCollectingBoolean) {
-                    if(liftDelayCollecting.seconds() > 0.15) {
+                    if(liftDelayCollecting.seconds() > 0.2) {
                         liftDelayCollectingBoolean = false;
                         robot.lift.LIFT_POSITION_GROUND = 50;
                     }
@@ -296,7 +296,6 @@ public class RobotTeleOp extends LinearOpMode {
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
 
                 driveCancelable.update();
-                telemetry.addData("Bottom Lift Target Height: ", robot.lift.LIFT_POSITION_GROUND);
 
                 robot.updateSystems();
 

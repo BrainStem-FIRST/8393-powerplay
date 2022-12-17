@@ -1,11 +1,6 @@
 package org.firstinspires.ftc.teamcode.robot.subsystems;
 
-import android.os.Build;
-
-import androidx.annotation.RequiresApi;
-
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.HardwareDevice;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -20,14 +15,12 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class Lift implements Subsystem {
+public class Lift implements Subsystem{
 
     public static final class LiftConstants {
 
@@ -167,9 +160,6 @@ public class Lift implements Subsystem {
     //declaring list of lift motors
     private ArrayList<DcMotorEx> liftMotors;
 
-    //declaring set of lift motors
-    private Set<DcMotorEx> liftMotorsSet;
-
     public int LIFT_POSITION_GROUND = LiftConstants.BOTTOM_ENCODER_TICKS;
 
     //PID controller
@@ -178,7 +168,6 @@ public class Lift implements Subsystem {
     private Map stateMap;
     private int subheight;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public Lift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
 
         //telemetry
@@ -199,7 +188,6 @@ public class Lift implements Subsystem {
 
         //creating list of lift motors for iteration
         liftMotors = new ArrayList<>();
-        liftMotorsSet = new HashSet<>();
 
         //lift PID controller
         this.liftPIDController = new PIDController(LiftConstants.PROPORTIONAL_COLLECTING_TO_HIGH, 0, 0);
@@ -214,19 +202,11 @@ public class Lift implements Subsystem {
         liftMotors.add(liftMotor3);
         liftMotors.add(liftMotor4);
 
-        //add lift motors to set
-        liftMotorsSet.add(liftMotor1);
-        liftMotorsSet.add(liftMotor2);
-        liftMotorsSet.add(liftMotor3);
-        liftMotorsSet.add(liftMotor4);
-
         //setting lift behaviors
         for (DcMotor liftMotor : liftMotors) {
             liftMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
             liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         }
-
-        //liftMotorsSet.forEach((n) -> n.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER));
 
         //setting directions
         liftMotor1.setDirection(LiftConstants.LIFT_MOTOR_1_REVERSED ? DcMotorSimple.Direction.REVERSE : DcMotorSimple.Direction.FORWARD);
@@ -356,29 +336,27 @@ public class Lift implements Subsystem {
             if (heightInTicks > 400) {
                 setAllMotorPowers(0.45);
             } else {
-                if (heightInTicks < 100) {
-                    if (position < 10) {
+                if(heightInTicks < 100){
+                    if(position < 10){
                         setAllMotorSpeedsPercentage(-liftPIDController.updateWithError(error));
                     } else {
-                        setAllMotorPowers(0.2);
+                        if(heightInTicks != 0) {
+                            setAllMotorPowers(0.2);
+                        } else {
+                            setAllMotorPowers(-0.01);
+                        }
                     }
                 } else {
                     setAllMotorPowers(0.2);
                 }
             }
         } else if (position > heightInTicks) {
-            if((heightInTicks < 35) || (heightInTicks == LiftHeight.MIDDLE.getTicks()) || (heightInTicks == LiftHeight.LOW.getTicks())){
-                if (position > heightInTicks + 200) {
-                    setAllMotorPowers(-0.1);
-                } else if (position < heightInTicks + 200 && position > heightInTicks + 100) {
-                    setAllMotorPowers(0);
-                } else if (position > heightInTicks + 25 && position < heightInTicks + 100){
-                    setAllMotorPowers(0.15);
-                } else {
-                    setAllMotorPowers(0.7 * -liftPIDController.updateWithError(-error));
-                }
+            if (position > heightInTicks + 200) {
+                setAllMotorPowers(-0.1);
+            } else if (position < 35 && heightInTicks < 35) {
+                setAllMotorPowers(0);
             } else {
-                setAllMotorSpeedsPercentage( 0.7 * -liftPIDController.updateWithError(-error));
+                runAllMotorsToPosition(heightInTicks, 1);
             }
         } else {
             if (position < heightInTicks - 150) {
