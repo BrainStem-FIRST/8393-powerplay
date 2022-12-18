@@ -194,7 +194,7 @@ public class RobotTeleOp extends LinearOpMode {
                         bringLiftDownBoolean = false;
                     }
                 }
-//old delay = 0.25
+
                 if(liftDelayCollectingBoolean) {
                     if(liftDelayCollecting.seconds() > 0.075) {
                         liftDelayCollectingBoolean = false;
