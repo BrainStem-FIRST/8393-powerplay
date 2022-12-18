@@ -111,7 +111,7 @@ public class AutoCore extends LinearOpMode {
                 initialTangent = -80;
                 depositPreloadSplineTangent = 90;
                 depositorPreloadSplineIntermediatePointTangent = 90;
-                depositPreloadSpline2Tangent = -25;
+                depositPreloadSpline2Tangent = 25;
                 endParking = new Pose2d(parking2.getX(), parking2.getY(), parking2.getHeading());
                 break;
             case RIGHT:
@@ -621,13 +621,13 @@ public class AutoCore extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (totalTime.seconds() < 26) {
+            if (totalTime.seconds() < 27.5) {
                 drive.update();
                 robot.updateSystems();
                 telemetry.update();
             } else {
 
-                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
                 stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                 stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
