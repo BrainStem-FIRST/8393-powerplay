@@ -136,7 +136,7 @@ public class RobotTeleOp extends LinearOpMode {
             telemetry.update();
 
             robot.lights.setBothLEDAmber();
-            robot.grabber.open();
+            //stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             robot.updateSystems();
 
@@ -174,7 +174,7 @@ public class RobotTeleOp extends LinearOpMode {
                     } else {
                         robot.lift.setSubheight(0);
                     }
-                } else if (gamepad1.right_trigger > 0.5 && robot.lift.getAvgLiftPosition() < 100) {
+                } else if (gamepad1.right_trigger > 0.5 && robot.lift.getAvgLiftPosition() < 300) {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                     liftDelay.reset();
                     liftDelayCollectingBoolean = true;
@@ -189,7 +189,9 @@ public class RobotTeleOp extends LinearOpMode {
                 if(liftDelayCollectingBoolean) {
                     if(liftDelayCollecting.seconds() > 0.2) {
                         liftDelayCollectingBoolean = false;
-                        robot.lift.LIFT_POSITION_GROUND = 50;
+                        if(robot.lift.LIFT_POSITION_GROUND == 0) {
+                            robot.lift.LIFT_POSITION_GROUND = 50;
+                        }
                     }
                 }
 
@@ -286,13 +288,13 @@ public class RobotTeleOp extends LinearOpMode {
                 }
 
                 if (gamepad2.right_trigger > 0.4) {
-                    Lift.LiftConstants.COLLECTING_ENCODER_TICKS += 15;
+                    robot.lift.LIFT_POSITION_GROUND += 9;
                 }
                 if (gamepad2.left_trigger > 0.4) {
-                    Lift.LiftConstants.COLLECTING_ENCODER_TICKS -= 15;
+                    robot.lift.LIFT_POSITION_GROUND -= 9;
                 }
                 if (gamepad2.x) {
-                    Lift.LiftConstants.COLLECTING_ENCODER_TICKS = 25;
+                    robot.lift.LIFT_POSITION_GROUND = 0;
                 }
 
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
