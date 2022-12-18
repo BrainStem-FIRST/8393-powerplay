@@ -9,10 +9,7 @@ import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.robot.subsystems.Lift;
-import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.util.StickyButton;
 import org.firstinspires.ftc.teamcode.util.ToggleButton;
 
@@ -46,6 +43,10 @@ public class RobotTeleOp extends LinearOpMode {
 
     private final String GAMEPAD_1_RIGHT_TRIGGER_STATE = "GAMEPAD_1_RIGHT_TRIGGER_STATE";
     private final String GAMEPAD_1_RIGHT_TRIGGER_PRESSED = "GAMEPAD_1_RIGHT_TRIGGER_PRESSED";
+
+    private final String GAMEPAD_2_RIGHT_TRIGGER_STATE = "GAMEPAD_2_RIGHT_TRIGGER_STATE";
+    private final String GAMEPAD_2_RIGHT_TRIGGER_PRESSED = "GAMEPAD_2_RIGHT_TRIGGER_PRESSED";
+
     private final String GAMEPAD_2_X_BUTTON_PRESSED = "GAMEPAD_1_RIGHT_TRIGGER_PRESSED";
 
     private boolean leftTriggerPressed = false;
@@ -66,6 +67,8 @@ public class RobotTeleOp extends LinearOpMode {
     private StickyButton extensionFineAdjustDown = new StickyButton();
     private StickyButton liftFineAdjustUp = new StickyButton();
     private StickyButton liftFineAdjustDown = new StickyButton();
+    private StickyButton bottomHeightStickyButtonRightTrigger = new StickyButton();
+    private StickyButton bottomHeightStickyButtonLeftTrigger = new StickyButton();
 
     private Pose2d zeroPose = new Pose2d(0, 0, Math.toRadians(0));
 
@@ -87,6 +90,8 @@ public class RobotTeleOp extends LinearOpMode {
 
     private boolean liftDelayCollectingBoolean = false;
     private ElapsedTime liftDelayCollecting = new ElapsedTime();
+
+    private int bottomAdjustmentHeight = 0;
 
     Constants constants = new Constants();
 
@@ -149,6 +154,9 @@ public class RobotTeleOp extends LinearOpMode {
         while (!isStopRequested()) {
             robot.lights.setBothLEDRed();
 
+            bottomHeightStickyButtonRightTrigger.update(gamepad2.right_trigger > 0.5);
+            bottomHeightStickyButtonLeftTrigger.update(gamepad2.left_trigger > 0.5);
+
 
 
             if ((gamepad2.right_stick_button && gamepad2.left_stick_button) || (gamepad1.right_stick_button && gamepad1.left_stick_button)) {
@@ -178,6 +186,7 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                     liftDelay.reset();
                     liftDelayCollectingBoolean = true;
+                    liftDelayCollecting.reset();
                 }
                 if(bringLiftDownBoolean){
                     if(liftDelay.seconds() > 0.1){
@@ -185,12 +194,15 @@ public class RobotTeleOp extends LinearOpMode {
                         bringLiftDownBoolean = false;
                     }
                 }
-
+//old delay = 0.25
                 if(liftDelayCollectingBoolean) {
-                    if(liftDelayCollecting.seconds() > 0.2) {
+                    if(liftDelayCollecting.seconds() > 0.075) {
                         liftDelayCollectingBoolean = false;
                         if(robot.lift.LIFT_POSITION_GROUND == 0) {
                             robot.lift.LIFT_POSITION_GROUND = 50;
+                        } else if (bottomAdjustmentHeight != 0) {
+                            robot.lift.LIFT_POSITION_GROUND = 300;
+                            updateBottomHeightAdjustment(false);
                         }
                     }
                 }
@@ -287,18 +299,23 @@ public class RobotTeleOp extends LinearOpMode {
                     );
                 }
 
-                if (gamepad2.right_trigger > 0.4) {
-                    robot.lift.LIFT_POSITION_GROUND += 9;
+                if (bottomHeightStickyButtonRightTrigger.getState()) {
+                    updateBottomHeightAdjustment(true);
+                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
                 }
-                if (gamepad2.left_trigger > 0.4) {
-                    robot.lift.LIFT_POSITION_GROUND -= 9;
+                if (bottomHeightStickyButtonLeftTrigger.getState()) {
+                    updateBottomHeightAdjustment(false);
+                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
                 }
                 if (gamepad2.x) {
-                    robot.lift.LIFT_POSITION_GROUND = 0;
+                    bottomAdjustmentHeight = 0;
+                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
                 }
+
 
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
+                telemetry.addData("Bottom adjustment height: ", robot.lift.LIFT_POSITION_GROUND);
 
                 driveCancelable.update();
 
@@ -309,7 +326,47 @@ public class RobotTeleOp extends LinearOpMode {
             }
         }
     }
+    private void updateBottomHeightAdjustment(boolean goingUp){
+        if(goingUp) {
+            if(bottomAdjustmentHeight == 0) {
+                bottomAdjustmentHeight = 40;
+                return;
+            } else if (bottomAdjustmentHeight == 40) {
+                bottomAdjustmentHeight = 82;
+                return;
+            } else if (bottomAdjustmentHeight == 82) {
+                bottomAdjustmentHeight = 110;
+                return;
+            } else if (bottomAdjustmentHeight == 110) {
+                bottomAdjustmentHeight = 140;
+                return;
+            } else if (bottomAdjustmentHeight == 140) {
+                bottomAdjustmentHeight = 300;
+                return;
+            }
+        } else {
+            if(bottomAdjustmentHeight == 0) {
+                bottomAdjustmentHeight = 0;
+                return;
+            } else if (bottomAdjustmentHeight == 40) {
+                bottomAdjustmentHeight = 0;
+                return;
+            } else if (bottomAdjustmentHeight == 82) {
+                bottomAdjustmentHeight = 40;
+                return;
+            } else if (bottomAdjustmentHeight == 110) {
+                bottomAdjustmentHeight = 82;
+                return;
+            } else if (bottomAdjustmentHeight == 140) {
+                bottomAdjustmentHeight = 110;
+                return;
+            } else if (bottomAdjustmentHeight == 300) {
+                bottomAdjustmentHeight = 140;
+                return;
+            }
+        }
 
+    }
 
     private void setButtons() {
         toggleButton(GAMEPAD_2_X_BUTTON_TOGGLE, GAMEPAD_2_X_BUTTON_PRESSED, gamepad2.x);
