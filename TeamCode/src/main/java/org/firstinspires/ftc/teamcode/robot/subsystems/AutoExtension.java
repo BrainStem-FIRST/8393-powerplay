@@ -40,6 +40,7 @@ public class AutoExtension implements Subsystem {
     public final String AUTO_EXTENSION_COLLECT_LEFT = "AUTO_EXTEND_COLLECT_LEFT";
     public final String DEFAULT_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String DEFAULT_SIDE_EXTENDED_AUTO = "DEFAULT_SIDE_EXTENDED_AUTO";
+    public final String SIDE_DEPOSIT = "SIDE_DEPOSIT";
     public final String TRANSITION_STATE = "TRANSITION";
     Constants constants = new Constants();
 

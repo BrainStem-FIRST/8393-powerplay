@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AutoCore extends LinearOpMode {
+public class AutoCoreLowPole extends LinearOpMode {
     private final AutoOrientation side;
     private Map stateMap;
 
@@ -104,7 +104,7 @@ public class AutoCore extends LinearOpMode {
         RIGHT, LEFT
     }
 
-    public AutoCore(AutoOrientation side) {
+    public AutoCoreLowPole(AutoOrientation side) {
         this.side = side;
         switch (side) {
             case LEFT:
@@ -527,89 +527,6 @@ public class AutoCore extends LinearOpMode {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
                 })
 
-
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretPickupPosition); })
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_COLLECT); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.0, () -> { robot.grabber.close(); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.65, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-//                .waitSeconds(2.5)
-//
-//
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);})
-//                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_DEPOSIT_TILTED); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> { stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { resetLift(); })
-//                .waitSeconds(1.25)
-//
-//
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretPickupPosition); })
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_4); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_COLLECT); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.0, () -> { robot.grabber.close(); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.65, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-//                .waitSeconds(2.5)
-//
-//
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);})
-//                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_DEPOSIT_TILTED); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> { stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { resetLift(); })
-//                .waitSeconds(1.25)
-//
-//
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretPickupPosition); })
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_3); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_COLLECT); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { robot.grabber.close(); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.75, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-//                .waitSeconds(2.5)
-//
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);})
-//                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_DEPOSIT_TILTED); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> { stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { resetLift(); })
-//                .waitSeconds(1.25)
-//
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretPickupPosition); })
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_2); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_COLLECT); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> robot.lift.setAllMotorPowers(-0.45))
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> robot.lift.setAllMotorPowers(0))
-//                .UNSTABLE_addTemporalMarkerOffset(1.4, () -> { robot.grabber.close(); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.75, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-//                .waitSeconds(2.75)
-//
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);})
-//                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_DEPOSIT_TILTED); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> { stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { resetLift(); })
-//                .waitSeconds(1.25)
-//
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretPickupPosition); })
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_1); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.5, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_COLLECT); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.4, () -> robot.lift.setAllMotorPowers(-0.55))
-//                .UNSTABLE_addTemporalMarkerOffset(1.65, () -> robot.lift.setAllMotorPowers(0))
-//                .UNSTABLE_addTemporalMarkerOffset(1.8, () -> { robot.grabber.close(); })
-//                .UNSTABLE_addTemporalMarkerOffset(2, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-//                .waitSeconds(3.0)
-//
-//                .UNSTABLE_addTemporalMarkerOffset(0, () -> { stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);})
-//                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> { stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.AUTO_EXTENSION_DEPOSIT_TILTED); })
-//                .UNSTABLE_addTemporalMarkerOffset(0.6, () -> { stateMap.put(constants.CONE_CYCLE, constants.STATE_IN_PROGRESS); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW); })
-//                .UNSTABLE_addTemporalMarkerOffset(1.2, () -> { resetLift(); })
-//                .waitSeconds(1.25)
 
 
                 .build();

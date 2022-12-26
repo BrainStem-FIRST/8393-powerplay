@@ -48,10 +48,10 @@ public class AutoLift implements Subsystem {
 
 
         //auto stack heights
-        private static final int STACK_5_ENCODER_TICKS = 115;
-        private static final int STACK_4_ENCODER_TICKS = 70;
-        private static final int STACK_3_ENCODER_TICKS = 60;
-        private static final int STACK_2_ENCODER_TICKS = 40; //FIXME
+        private static final int STACK_5_ENCODER_TICKS = 140;
+        private static final int STACK_4_ENCODER_TICKS = 105;
+        private static final int STACK_3_ENCODER_TICKS = 70;
+        private static final int STACK_2_ENCODER_TICKS = 60; //FIXME
         private static final int STACK_1_ENCODER_TICKS = COLLECTING_ENCODER_TICKS;
 
         //cone cycle adjustments
@@ -278,6 +278,8 @@ public class AutoLift implements Subsystem {
     private void selectTransition(String desiredLevel) {
         switch (desiredLevel) {
             case LIFT_POLE_LOW: {
+                telemetry.addData("Lift Pole Low Being Called", LiftHeight.LOW.getTicks());
+                telemetry.addData("SUBHEIGHT", subheight);
                 transitionToLiftPosition(LiftHeight.LOW.getTicks() - subheight);
                 break;
             }
@@ -294,16 +296,21 @@ public class AutoLift implements Subsystem {
                 break;
             }
             case STACK_5: {
+                telemetry.addData("Lift Pole Stack 5 Being Called", LiftHeight.STACK_5.getTicks());
                 transitionToLiftPosition(LiftHeight.STACK_5.getTicks());
+                break;
             }
             case STACK_4: {
                 transitionToLiftPosition(LiftHeight.STACK_4.getTicks());
+                break;
             }
             case STACK_3: {
                 transitionToLiftPosition(LiftHeight.STACK_3.getTicks());
+                break;
             }
             default: {
                 setAllMotorPowers(heightFactor(getPosition()));
+                break;
             }
 
         }
@@ -342,17 +349,7 @@ public class AutoLift implements Subsystem {
         // calculate the error
         int error = heightInTicks - position;
 
-        if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
-            //telemetry.update();
-            if (getAvgLiftPosition() < 400) {
-                setAllMotorPowers(-0.1);
-            } else {
-                runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_HIGH, 1);
-            }
-        } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
-            setAllMotorPowers(1);
-            //runAllMotorsToPosition(heightInTicks, 1);
-        } else if (position >= heightInTicks - 10 && position <= heightInTicks + 10) {
+        if (position >= heightInTicks - 5 && position <= heightInTicks + 5) {
             if (heightInTicks > 400) {
                 setAllMotorPowers(0.45);
             } else {
@@ -378,7 +375,7 @@ public class AutoLift implements Subsystem {
                     setAllMotorPowers(0.7 * -liftPIDController.updateWithError(-error));
                 }
             } else {
-                setAllMotorSpeedsPercentage( 0.7 * -liftPIDController.updateWithError(-error));
+                setAllMotorPowers( 0.2 * -liftPIDController.updateWithError(-error));
             }
         } else {
             if (position < heightInTicks - 150) {
@@ -469,9 +466,15 @@ public class AutoLift implements Subsystem {
     }
 
     public void setAllMotorSpeedsPercentage(double percentSpeed) {
-        for (DcMotorEx liftMotor : liftMotors) {
-            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-            liftMotor.setVelocity(percentSpeed * LiftConstants.MAX_LIFT_TICKS_PER_SECOND);
+        if(percentSpeed < 0) {
+            setAllMotorPowers(percentSpeed);
+        } else {
+            for (DcMotorEx liftMotor : liftMotors) {
+                liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
+                telemetry.addData("Percent Speed", percentSpeed);
+                telemetry.addData("Percent Speed", percentSpeed);
+                liftMotor.setVelocity(percentSpeed * LiftConstants.MAX_LIFT_TICKS_PER_SECOND);
+            }
         }
     }
 
