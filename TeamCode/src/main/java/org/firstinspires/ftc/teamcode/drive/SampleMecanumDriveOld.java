@@ -40,8 +40,6 @@ import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigu
 
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequenceBuilder;
-import org.firstinspires.ftc.teamcode.util.AxisDirection;
-import org.firstinspires.ftc.teamcode.util.BNO055IMUUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
 
 import java.util.ArrayList;
@@ -52,9 +50,9 @@ import java.util.List;
  * Simple mecanum drive hardware implementation for REV hardware.
  */
 @Config
-public class SampleMecanumDrive extends MecanumDrive {
-    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(6.5, 0, 0);
-    public static PIDCoefficients HEADING_PID = new PIDCoefficients(4, 0, 0.1);
+public class SampleMecanumDriveOld extends MecanumDrive {
+    public static PIDCoefficients TRANSLATIONAL_PID = new PIDCoefficients(7, 0, 0);
+    public static PIDCoefficients HEADING_PID = new PIDCoefficients(5, 0, 0.1);
 
     public static double LATERAL_MULTIPLIER = 1.57;
 
@@ -75,11 +73,11 @@ public class SampleMecanumDrive extends MecanumDrive {
     private BNO055IMU imu;
     private VoltageSensor batteryVoltageSensor;
 
-    public SampleMecanumDrive(HardwareMap hardwareMap) {
+    public SampleMecanumDriveOld(HardwareMap hardwareMap) {
         super(kV, kA, kStatic, TRACK_WIDTH, TRACK_WIDTH, LATERAL_MULTIPLIER);
 
         follower = new HolonomicPIDVAFollower(TRANSLATIONAL_PID, TRANSLATIONAL_PID, HEADING_PID,
-                new Pose2d(0.25, 0.25, Math.toRadians(1.0)), 2);
+                new Pose2d(0.25, 0.25, Math.toRadians(0.5)), 2);
 
         LynxModuleUtil.ensureMinimumFirmwareVersion(hardwareMap);
 
@@ -115,8 +113,7 @@ public class SampleMecanumDrive extends MecanumDrive {
         // and the placement of the dot/orientation from https://docs.revrobotics.com/rev-control-system/control-system-overview/dimensions#imu-location
         //
         // For example, if +Y in this diagram faces downwards, you would use AxisDirection.NEG_Y.
-
-        BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_X);
+        // BNO055IMUUtil.remapZAxis(imu, AxisDirection.NEG_Y);
 
         leftFront = hardwareMap.get(DcMotorEx.class, "FL");
         leftRear = hardwareMap.get(DcMotorEx.class, "BLandOdo");
@@ -147,7 +144,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
-        setLocalizer(new TwoWheelTrackingLocalizer(hardwareMap, this));
+        setLocalizer(new StandardTrackingWheelLocalizer(hardwareMap));
 
         trajectorySequenceRunner = new TrajectorySequenceRunnerCancelable(follower, HEADING_PID);
     }
@@ -302,7 +299,7 @@ public class SampleMecanumDrive extends MecanumDrive {
 
     @Override
     public double getRawExternalHeading() {
-        return (double) imu.getAngularOrientation().firstAngle;
+        return 0;
     }
 
     @Override
