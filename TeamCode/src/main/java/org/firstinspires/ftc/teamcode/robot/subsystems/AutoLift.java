@@ -308,6 +308,14 @@ public class AutoLift implements Subsystem {
                 transitionToLiftPosition(LiftHeight.STACK_3.getTicks());
                 break;
             }
+            case STACK_2: {
+                transitionToLiftPosition(LiftHeight.STACK_2.getTicks());
+                break;
+            }
+            case STACK_1: {
+                transitionToLiftPosition(LiftHeight.STACK_1.getTicks());
+                break;
+            }
             default: {
                 setAllMotorPowers(heightFactor(getPosition()));
                 break;

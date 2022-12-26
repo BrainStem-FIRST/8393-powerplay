@@ -35,8 +35,8 @@ public class AutoCoreHighPole extends LinearOpMode {
     // Locations - For Red /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
     private Vector2d initialApproach = new Vector2d(-36, -24);
-    private Pose2d highPoleDepositingPosition = new Pose2d(-23.4, -12, Math.toRadians(0));
-    private Vector2d collectConesPosition = new Vector2d(-66, -12);
+    private Pose2d highPoleDepositingPosition = new Pose2d(-24, -12, Math.toRadians(0));
+    private Vector2d collectConesPosition = new Vector2d(-65.5, -12);
     private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(0));
@@ -251,9 +251,8 @@ public class AutoCoreHighPole extends LinearOpMode {
         TrajectorySequence deliverPreload = drive.trajectorySequenceBuilder(startPosition)
                 .setReversed(true)
                 .setTangent(initialTangent)
-                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
-                    robot.lift.setSubheight(0.9);
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_4);
                 })
                 .splineToConstantHeading(initialApproach, Math.toRadians(initialApproachTangent),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
@@ -299,13 +298,13 @@ public class AutoCoreHighPole extends LinearOpMode {
                         SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(55))
 
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
-                .waitSeconds(1)
+                .waitSeconds(0.1)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -347,13 +346,13 @@ public class AutoCoreHighPole extends LinearOpMode {
                         SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(55))
 
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
-                .waitSeconds(1)
+                .waitSeconds(0.1)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -396,13 +395,13 @@ public class AutoCoreHighPole extends LinearOpMode {
                         SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(55))
 
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
-                .waitSeconds(1)
+                .waitSeconds(0.1)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -443,18 +442,143 @@ public class AutoCoreHighPole extends LinearOpMode {
                         SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(55))
 
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
-                .waitSeconds(1)
+                .waitSeconds(0.1)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(55))
+                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+                    robot.lift.setSubheight(0);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+                    robot.lift.setSubheight(0.7);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+                    robot.lift.setSubheight(0);
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_1);
+                })
+
+
+                .waitSeconds(1)
+
+                //CYCLE FIVE
+
+                .setReversed(false)
+                .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
+                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(55))
+
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
+                })
+                .waitSeconds(0.1)
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
+                        Math.toRadians(highPoleDepositingPositionTangent),
+                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(55))
+
+                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+                    robot.lift.setSubheight(0);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+                    robot.lift.setSubheight(0.7);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+                    robot.lift.setSubheight(0);
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_1);
+                })
+
+
+                .waitSeconds(1)
+
+                //CYCLE THREE
+
+                .setReversed(false)
+                .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
+                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(55))
+
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
+                })
+                .waitSeconds(0.1)
+                .setReversed(true)
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
+                        Math.toRadians(highPoleDepositingPositionTangent),
+                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(55))
+                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+                    robot.lift.setSubheight(0);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+                    robot.lift.setSubheight(0.7);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+                    robot.lift.setSubheight(0);
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_2);
+                })
+
+                .waitSeconds(1)
+
 
                 .build();
         // second cycle
@@ -465,7 +589,7 @@ public class AutoCoreHighPole extends LinearOpMode {
 
         while (opModeIsActive()) {
 
-            if (totalTime.seconds() < 27.5) {
+            if (totalTime.seconds() < 28.2) {
                 drive.update();
                 robot.updateSystems();
                 telemetry.update();
