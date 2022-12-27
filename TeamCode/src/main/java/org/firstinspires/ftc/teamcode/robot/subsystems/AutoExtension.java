@@ -129,11 +129,11 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case AUTO_EXTENSION_COLLECT_RIGHT: {
-                extendInAuto(0.75);
+                extendInAuto(0.8);
                 break;
             }
             case AUTO_EXTENSION_COLLECT_LEFT: {
-                extendInAuto(0.75);
+                extendInAuto(0.8);
                 break;
             }
             case DEFAULT_EXTEND_AUTO: {

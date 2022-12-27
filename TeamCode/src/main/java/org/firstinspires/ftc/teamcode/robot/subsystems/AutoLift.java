@@ -48,7 +48,7 @@ public class AutoLift implements Subsystem {
 
 
         //auto stack heights
-        private static final int STACK_5_ENCODER_TICKS = 140;
+        private static final int STACK_5_ENCODER_TICKS = 130;
         private static final int STACK_4_ENCODER_TICKS = 105;
         private static final int STACK_3_ENCODER_TICKS = 60;
         private static final int STACK_2_ENCODER_TICKS = 40; //FIXME
