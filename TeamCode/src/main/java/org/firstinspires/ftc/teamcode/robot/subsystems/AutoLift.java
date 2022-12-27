@@ -50,8 +50,8 @@ public class AutoLift implements Subsystem {
         //auto stack heights
         private static final int STACK_5_ENCODER_TICKS = 140;
         private static final int STACK_4_ENCODER_TICKS = 105;
-        private static final int STACK_3_ENCODER_TICKS = 70;
-        private static final int STACK_2_ENCODER_TICKS = 60; //FIXME
+        private static final int STACK_3_ENCODER_TICKS = 60;
+        private static final int STACK_2_ENCODER_TICKS = 40; //FIXME
         private static final int STACK_1_ENCODER_TICKS = COLLECTING_ENCODER_TICKS;
 
         //cone cycle adjustments
@@ -372,19 +372,7 @@ public class AutoLift implements Subsystem {
                 }
             }
         } else if (position > heightInTicks) {
-            if((heightInTicks < 35) || (heightInTicks == LiftHeight.MIDDLE.getTicks()) || (heightInTicks == LiftHeight.LOW.getTicks())){
-                if (position > heightInTicks + 200) {
-                    setAllMotorPowers(-0.1);
-                } else if (position < heightInTicks + 200 && position > heightInTicks + 100) {
-                    setAllMotorPowers(0);
-                } else if (position > heightInTicks + 25 && position < heightInTicks + 100){
-                    setAllMotorPowers(0.15);
-                } else {
-                    setAllMotorPowers(0.7 * -liftPIDController.updateWithError(-error));
-                }
-            } else {
                 setAllMotorPowers( 0.2 * -liftPIDController.updateWithError(-error));
-            }
         } else {
             if (position < heightInTicks - 150) {
                 setAllMotorPowers(1);
