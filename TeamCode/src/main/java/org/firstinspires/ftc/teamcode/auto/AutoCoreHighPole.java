@@ -27,7 +27,8 @@ public class AutoCoreHighPole extends LinearOpMode {
     private final AutoOrientation side;
     private Map stateMap;
 
-    private Pose2d endParking;
+    private Vector2d endParking;
+
 
 
     // Locations - For Red /////////////////////////////////////////////////////////////////////
@@ -51,9 +52,9 @@ public class AutoCoreHighPole extends LinearOpMode {
 
     private int initialTurn = -90;
 
-    private Pose2d parking3 = new Pose2d(-12, -12.5, Math.toRadians(-90));
-    private Pose2d parking2 = new Pose2d(-36, -12.5, Math.toRadians(-90));
-    private Pose2d parking1 = new Pose2d(-60, -12.5, Math.toRadians(-90));
+    private Vector2d parking3 = new Vector2d(-12, -12.5);
+    private Vector2d parking2 = new Vector2d(-36, -12.5);
+    private Vector2d parking1 = new Vector2d(-60, -12.5);
 
     private int initialTangent = -80;
     private int initialApproachTangent = 90;
@@ -113,7 +114,7 @@ public class AutoCoreHighPole extends LinearOpMode {
                 initialApproachTangent = 90;
                 highPoleDepositingPositionTangent = 0;
                 depositPreloadSpline2Tangent = 25;
-                endParking = new Pose2d(parking2.getX(), parking2.getY(), parking2.getHeading());
+                endParking = new Vector2d(parking2.getX(), parking2.getY());
                 break;
             case RIGHT:
                 initialApproach = new Vector2d(initialApproach.getX(), -initialApproach.getY());
@@ -138,10 +139,10 @@ public class AutoCoreHighPole extends LinearOpMode {
                 depositOnHighPole2 = new Pose2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY(), Math.toRadians(180));
 
 
-                parking1 = new Pose2d(-12, 12.5, Math.toRadians(90));
-                parking2 = new Pose2d(-36, 12.5, Math.toRadians(90));
-                parking3 = new Pose2d(-60, 12.5, Math.toRadians(90));
-                endParking = new Pose2d(-36, 12.5, Math.toRadians(90));
+                parking1 = new Vector2d(-12, 12.5);
+                parking2 = new Vector2d(-36, 12.5);
+                parking3 = new Vector2d(-60, 12.5);
+                endParking = new Vector2d(-36, 12.5);
                 break;
         }
 
@@ -167,7 +168,7 @@ public class AutoCoreHighPole extends LinearOpMode {
                 extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_LEFT;
                 turretPickupPosition = robot.turret.LEFT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.RIGHT_POSITION;
-                 lowTurretDeliveryPosition = robot.turret.LEFT_POSITION;
+                lowTurretDeliveryPosition = robot.turret.LEFT_POSITION;
 
                 break;
             case RIGHT:
@@ -207,6 +208,7 @@ public class AutoCoreHighPole extends LinearOpMode {
         while (!this.opModeIsActive() && !this.isStopRequested()) {
             autoTrajectorySequence = initializeTrajectories(robot, drive);
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+
             if (currentDetections.size() != 0) {
                 boolean tagFound = false;
 
@@ -219,7 +221,7 @@ public class AutoCoreHighPole extends LinearOpMode {
                         tagFound = true;
                         telemetry.addData("Open CV :", "Mid");
                         telemetry.update();
-                        endParking = new Pose2d(parking2.getX(), parking2.getY(), parking2.getHeading());
+                        endParking = new Vector2d(parking2.getX(), parking2.getY());
                         break;
 
                     } else if (tag.id == RIGHT) {
@@ -229,7 +231,7 @@ public class AutoCoreHighPole extends LinearOpMode {
                         tagFound = true;
                         telemetry.addData("Open CV :", "Right");
                         telemetry.update();
-                        endParking = new Pose2d(parking3.getX(), parking3.getY(), parking3.getHeading());
+                        endParking = new Vector2d(parking3.getX(), parking3.getY());
                         break;
 
                     } else {
@@ -239,11 +241,13 @@ public class AutoCoreHighPole extends LinearOpMode {
                         parking = 1;
                         telemetry.addData("Open CV :", "Left");
                         telemetry.update();
-                        endParking = new Pose2d(parking1.getX(), parking1.getY(), parking1.getHeading());
+                        endParking = new Vector2d(parking1.getX(), parking1.getY());
                         break;
 
                     }
                 }
+
+
             }
         }
         this.waitForStart();
@@ -281,11 +285,10 @@ public class AutoCoreHighPole extends LinearOpMode {
                 stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
                 stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
                 robot.updateSystems();
-                Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToLinearHeading(endParking)
+              Trajectory parkingTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
+                        .lineToConstantHeading(endParking)
                         .build();
-
-                drive.followTrajectory(parking);
+                drive.followTrajectory(parkingTrajectory);
 
 
             }
@@ -525,16 +528,16 @@ public class AutoCoreHighPole extends LinearOpMode {
                 })
                 .waitSeconds(0.1)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(lowPoleDepositingPosition.getX(), lowPoleDepositingPosition.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(40))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    stateMap.put(robot.turret.SYSTEM_NAME, lowTurretDeliveryPosition);
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
@@ -554,6 +557,7 @@ public class AutoCoreHighPole extends LinearOpMode {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_1);
                 })
+
 
                 .waitSeconds(1)
 
