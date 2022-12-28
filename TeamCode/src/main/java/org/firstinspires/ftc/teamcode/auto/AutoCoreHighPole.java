@@ -456,8 +456,8 @@ public class AutoCoreHighPole extends LinearOpMode {
 
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(55))
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(60))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -476,8 +476,8 @@ public class AutoCoreHighPole extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(40))
+                        SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(45))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
@@ -510,8 +510,8 @@ public class AutoCoreHighPole extends LinearOpMode {
 
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(55))
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(60))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -530,8 +530,8 @@ public class AutoCoreHighPole extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(40))
+                        SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(45))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
@@ -564,8 +564,8 @@ public class AutoCoreHighPole extends LinearOpMode {
                 //CYCLE FIVE
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(55))
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(60))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -584,8 +584,8 @@ public class AutoCoreHighPole extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(lowPoleDepositingPosition.getX(), lowPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(40, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(40))
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(60))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                     robot.lift.setSubheight(0);
