@@ -4,7 +4,6 @@ package org.firstinspires.ftc.teamcode.auto;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -23,7 +22,6 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Vector;
 
 public class AutoCoreHighPole extends LinearOpMode {
     private final AutoOrientation side;
@@ -78,6 +76,8 @@ public class AutoCoreHighPole extends LinearOpMode {
 
     private ArrayList liftCollectionHeights;
     Constants constants = new Constants();
+
+    TrajectorySequence autoTrajectorySequence;
 
 
     // Open CV //////////////////////////////////////////////////////////////////////////
@@ -205,6 +205,7 @@ public class AutoCoreHighPole extends LinearOpMode {
         telemetry.setMsTransmissionInterval(50);
         robot.grabber.close();
         while (!this.opModeIsActive() && !this.isStopRequested()) {
+            autoTrajectorySequence = initializeTrajectories(robot, drive);
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
             if (currentDetections.size() != 0) {
                 boolean tagFound = false;
@@ -257,6 +258,43 @@ public class AutoCoreHighPole extends LinearOpMode {
         robot.updateSystems();
 
         totalTime.reset();
+
+
+        // second cycle
+
+        drive.followTrajectorySequenceAsync(autoTrajectorySequence);
+
+        // at 29 seconds the lift runs down in auto
+
+        while (opModeIsActive()) {
+
+            if (totalTime.seconds() < 28.2) {
+                drive.update();
+                robot.updateSystems();
+                telemetry.update();
+                telemetry.addData("Lift state", stateMap.get(robot.lift.LIFT_SYSTEM_NAME));
+            } else {
+
+                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
+                stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
+                robot.updateSystems();
+                Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
+                        .lineToLinearHeading(endParking)
+                        .build();
+
+                drive.followTrajectory(parking);
+
+
+            }
+        }
+
+
+    }
+
+    private TrajectorySequence initializeTrajectories(AutoBrainSTEMRobot robot, SampleMecanumDrive drive) {
 
         TrajectorySequence deliverPreload = drive.trajectorySequenceBuilder(startPosition)
                 .setReversed(true)
@@ -564,48 +602,10 @@ public class AutoCoreHighPole extends LinearOpMode {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
-
-
-
-
                 .waitSeconds(1)
-
-
-
-
                 .build();
-        // second cycle
 
-        drive.followTrajectorySequenceAsync(deliverPreload);
-
-        // at 29 seconds the lift runs down in auto
-
-        while (opModeIsActive()) {
-
-            if (totalTime.seconds() < 28.2) {
-                drive.update();
-                robot.updateSystems();
-                telemetry.update();
-                telemetry.addData("Lift state", stateMap.get(robot.lift.LIFT_SYSTEM_NAME));
-            } else {
-
-                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-                stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
-                robot.updateSystems();
-
-                Trajectory parking = drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToLinearHeading(endParking)
-                        .build();
-                drive.followTrajectory(parking);
-
-
-            }
-        }
-
-
+        return deliverPreload;
     }
 
     private void resetLift() {
