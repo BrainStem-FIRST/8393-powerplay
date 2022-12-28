@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AutoCoreHighPole extends LinearOpMode {
+public class OnePlusFiveHighPole extends LinearOpMode {
     private final AutoOrientation side;
     private Map stateMap;
 
@@ -106,7 +106,7 @@ public class AutoCoreHighPole extends LinearOpMode {
         RIGHT, LEFT
     }
 
-    public AutoCoreHighPole(AutoOrientation side) {
+    public OnePlusFiveHighPole(AutoOrientation side) {
         this.side = side;
         switch (side) {
             case LEFT:
@@ -582,16 +582,16 @@ public class AutoCoreHighPole extends LinearOpMode {
                 })
                 .waitSeconds(0.1)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(lowPoleDepositingPosition.getX(), lowPoleDepositingPosition.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(60))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    stateMap.put(robot.turret.SYSTEM_NAME, lowTurretDeliveryPosition);
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
