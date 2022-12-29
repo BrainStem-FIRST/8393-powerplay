@@ -1,5 +1,5 @@
 
-package org.firstinspires.ftc.teamcode.auto;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.auto.imagecv.AprilTagDetectionPipeline;
+import org.firstinspires.ftc.teamcode.autonomous.imagecv.AprilTagDetectionPipeline;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.AutoBrainSTEMRobot;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AutoCoreLowPole extends LinearOpMode {
+public class LowPoleOnePlusFive extends LinearOpMode {
     private final AutoOrientation side;
     private Map stateMap;
 
@@ -104,7 +104,7 @@ public class AutoCoreLowPole extends LinearOpMode {
         RIGHT, LEFT
     }
 
-    public AutoCoreLowPole(AutoOrientation side) {
+    public LowPoleOnePlusFive(AutoOrientation side) {
         this.side = side;
         switch (side) {
             case LEFT:

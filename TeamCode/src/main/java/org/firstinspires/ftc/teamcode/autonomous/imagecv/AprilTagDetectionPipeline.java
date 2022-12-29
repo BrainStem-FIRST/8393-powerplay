@@ -4,7 +4,7 @@
     Parking    1   2   3
  */
 
-package org.firstinspires.ftc.teamcode.auto.imagecv;
+package org.firstinspires.ftc.teamcode.autonomous.imagecv;
 
 import org.opencv.calib3d.Calib3d;
 import org.opencv.core.CvType;

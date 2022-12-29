@@ -9,11 +9,11 @@ import static java.lang.Thread.sleep;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.robot.subsystems.Extension;
-import org.firstinspires.ftc.teamcode.robot.subsystems.Grabber;
-import org.firstinspires.ftc.teamcode.robot.subsystems.LEDLights;
-import org.firstinspires.ftc.teamcode.robot.subsystems.Lift;
-import org.firstinspires.ftc.teamcode.robot.subsystems.Turret;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Extension;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Grabber;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.LEDLights;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Lift;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Turret;
 
 import java.util.Map;
 //import java.util.Map;

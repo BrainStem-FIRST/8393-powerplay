@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.subsystems;
+package org.firstinspires.ftc.teamcode.robot.teleopSubsystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.hardware.ServoImplEx;
 import java.util.Map;
 
 
-public class AutoGrabber implements Subsystem {
+public class Grabber implements Subsystem {
     private Telemetry telemetry;
 
     public ServoImplEx grabber;
@@ -33,7 +33,7 @@ public class AutoGrabber implements Subsystem {
 
     private boolean isAuto;
 
-    public AutoGrabber(HardwareMap hwMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
+    public Grabber(HardwareMap hwMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
         this.isAuto = isAuto;
@@ -60,14 +60,22 @@ public class AutoGrabber implements Subsystem {
         return null;
     }
 
-    public void setState(AutoLift lift) {
+    public void setState(Lift lift) {
+        telemetry.addData("grabber", stateMap.get(SYSTEM_NAME));
         if (stateMap.get(SYSTEM_NAME) == CLOSED_STATE) {
             close();
         } else if (stateMap.get(SYSTEM_NAME) == OPEN_STATE) {
             open();
         } else if (stateMap.get(SYSTEM_NAME) == FULLY_OPEN) {
-            maxOpen();
+            if (lift.getAvgLiftPosition() > 350) {
+                maxOpen();
+                telemetry.addData("grabber", "MAX OPEN");
+            } else {
+                open();
+                telemetry.addData("grabber", "OPEN");
+            }
         }
+        telemetry.addData("grabber position", grabber.getPosition());
     }
 
     public void open() {

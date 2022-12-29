@@ -7,11 +7,11 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.robot.subsystems.AutoExtension;
-import org.firstinspires.ftc.teamcode.robot.subsystems.AutoGrabber;
-import org.firstinspires.ftc.teamcode.robot.subsystems.AutoLift;
-import org.firstinspires.ftc.teamcode.robot.subsystems.AutoTurret;
-import org.firstinspires.ftc.teamcode.robot.subsystems.LEDLights;
+import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoExtension;
+import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoGrabber;
+import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoLift;
+import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoTurret;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.LEDLights;
 
 import java.util.Map;
 //import java.util.Map;

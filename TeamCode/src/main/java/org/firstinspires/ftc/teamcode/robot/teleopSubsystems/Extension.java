@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.robot.subsystems;
+package org.firstinspires.ftc.teamcode.robot.teleopSubsystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Lift;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -14,7 +14,7 @@ import com.qualcomm.robotcore.util.Range;
 import java.util.Map;
 
 
-public class AutoExtension implements Subsystem {
+public class Extension implements Subsystem {
     private Telemetry telemetry;
 
     // Three servos (plus the turret) work together to place cone to desired location
@@ -27,20 +27,17 @@ public class AutoExtension implements Subsystem {
 
     // Servo Positions
 
-    public final double EXTENSION_POSITION_HOME = 1900;    // Fully retracted
-    public double EXTENSION_POSITION_MAX = 2372;    // Fully extended
+    public final double EXTENSION_POSITION_HOME = 1850;    // Fully retracted
+    public double EXTENSION_POSITION_MAX  = 2372;    // Fully extended
 
     public double EXTENSION_EDITABLE_POSITION = 0.4;
     // extension statemap values
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
     public final String DEFAULT_VALUE = "RETRACTED";
     public final String FULL_EXTEND = "EXTENDED";
-    public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTEND_DEPOSIT_RIGHT";
-    public final String AUTO_EXTENSION_COLLECT_RIGHT = "AUTO_EXTEND_COLLECT_RIGHT";
-    public final String AUTO_EXTENSION_COLLECT_LEFT = "AUTO_EXTEND_COLLECT_LEFT";
-    public final String DEFAULT_EXTEND_AUTO = "FULL_EXTEND_AUTO";
-    public final String DEFAULT_SIDE_EXTENDED_AUTO = "DEFAULT_SIDE_EXTENDED_AUTO";
-    public final String SIDE_DEPOSIT = "SIDE_DEPOSIT";
+    public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTEND_DEPOSIT";
+    public final String AUTO_EXTENSION_COLLECT = "AUTO_EXTEND_COLLECT";
+    public final String FULL_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String TRANSITION_STATE = "TRANSITION";
     Constants constants = new Constants();
 
@@ -48,7 +45,7 @@ public class AutoExtension implements Subsystem {
 
     private boolean isAuto;
 
-    public AutoExtension(HardwareMap hwMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
+    public Extension(HardwareMap hwMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
         this.isAuto = isAuto;
@@ -82,12 +79,13 @@ public class AutoExtension implements Subsystem {
 
     // This method is intended for Teleop mode getting speed value coming from controller (-1..1)
     // Negative speed values will retract the extension arm.
+
     public void extend(double speed) {
         double currentPosition = extension.getPosition();
 
         //scale speed value so the extension moves in increments of 10% of the range at max speed
-        double targetPosition = Range.clip(currentPosition + speed * 0.10, 0, 1);
-        extension.setPosition(targetPosition / EXTENSION_POSITION_MAX);
+        double targetPosition = Range.clip(currentPosition + speed*0.10, 0, 1);
+        extension.setPosition(targetPosition/EXTENSION_POSITION_MAX);
         //Send telemetry message for debugging purposes
     }
 
@@ -106,16 +104,22 @@ public class AutoExtension implements Subsystem {
         extension.setPosition(EXTENSION_EDITABLE_POSITION);
     }
 
-    public void extendInAuto(double pos) {
+    public void extendInAuto(double pos){
         extension.setPosition(pos);
     }
 
-    public void setState(String desiredState, AutoLift lift) {
-        selectTransition(desiredState);
+    public void setState(String desiredState, Lift lift){
+        if(isLiftTooLow(lift)){
+            selectTransition((String) DEFAULT_VALUE);
+        }
+        else{
+            selectTransition(desiredState);
+        }
+
     }
 
-    private void selectTransition(String desiredLevel) {
-        switch (desiredLevel) {
+    private void selectTransition(String desiredLevel){
+        switch(desiredLevel) {
             case DEFAULT_VALUE: {
                 extendHome();
                 break;
@@ -125,24 +129,14 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case AUTO_EXTENSION_DEPOSIT: {
+                extendInAuto(0.6);
+                break;
+            }
+            case AUTO_EXTENSION_COLLECT: {
+                extendInAuto(0.04);
+            }
+            case FULL_EXTEND_AUTO: {
                 extendInAuto(0.7);
-                break;
-            }
-            case AUTO_EXTENSION_COLLECT_RIGHT: {
-                extendInAuto(0.8);
-                break;
-            }
-            case AUTO_EXTENSION_COLLECT_LEFT: {
-                extendInAuto(0.8);
-                break;
-            }
-            case DEFAULT_EXTEND_AUTO: {
-                extendInAuto(0.3);
-                break;
-            }
-            case DEFAULT_SIDE_EXTENDED_AUTO: {
-                extendInAuto(0.55);
-                telemetry.addData("Side extended", "true");
                 break;
             }
         }
@@ -152,7 +146,7 @@ public class AutoExtension implements Subsystem {
         return extension.getPosition();
     }
 
-    public boolean isLiftTooLow(AutoLift lift) {
+    public boolean isLiftTooLow(Lift lift) {
         return lift.getPosition() < LIFT_MIN_HEIGHT_TO_MOVE_EXTENSION;
     }
 

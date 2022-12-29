@@ -75,6 +75,8 @@ public class RobotTeleOp extends LinearOpMode {
 
     private final double SLOWMODE = 0.45;
 
+    boolean disableDrivetrain = false;
+
 
     private boolean isDriverDriving = true;
     private boolean slowMode = false;
@@ -115,6 +117,10 @@ public class RobotTeleOp extends LinearOpMode {
         put(GAMEPAD_2_X_BUTTON_PRESSED, false);
 
     }};
+
+    public RobotTeleOp(boolean disableDrivetrain) {
+        this.disableDrivetrain = disableDrivetrain;
+    }
 
     public void runOpMode() {
 
@@ -280,24 +286,26 @@ public class RobotTeleOp extends LinearOpMode {
                 }
 
                 //double weightedDriveSpeedMultiplier  = robot.lift.getAvgLiftPosition() < 200 ? 0.7 : 0.5;
-
-                if (slowMode) {
-                    driveCancelable.setWeightedDrivePower(
-                            new Pose2d(
-                                    (-gamepad1.left_stick_y) * 0.5,
-                                    (-gamepad1.left_stick_x) * 0.5,
-                                    (-gamepad1.right_stick_x) * 0.4
-                            )
-                    );
-                } else {
-                    driveCancelable.setWeightedDrivePower(
-                            new Pose2d(
-                                    -gamepad1.left_stick_y,
-                                    -gamepad1.left_stick_x,
-                                    -gamepad1.right_stick_x * 0.5
-                            )
-                    );
+                if(!disableDrivetrain) {
+                    if (slowMode) {
+                        driveCancelable.setWeightedDrivePower(
+                                new Pose2d(
+                                        (-gamepad1.left_stick_y) * 0.5,
+                                        (-gamepad1.left_stick_x) * 0.5,
+                                        (-gamepad1.right_stick_x) * 0.4
+                                )
+                        );
+                    } else {
+                        driveCancelable.setWeightedDrivePower(
+                                new Pose2d(
+                                        -gamepad1.left_stick_y,
+                                        -gamepad1.left_stick_x,
+                                        -gamepad1.right_stick_x * 0.5
+                                )
+                        );
+                    }
                 }
+
 
                 if (bottomHeightStickyButtonRightTrigger.getState()) {
                     updateBottomHeightAdjustment(true);

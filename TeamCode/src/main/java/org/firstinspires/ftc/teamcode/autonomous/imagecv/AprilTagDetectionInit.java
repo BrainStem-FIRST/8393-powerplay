@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.auto.imagecv;
+package org.firstinspires.ftc.teamcode.autonomous.imagecv;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;

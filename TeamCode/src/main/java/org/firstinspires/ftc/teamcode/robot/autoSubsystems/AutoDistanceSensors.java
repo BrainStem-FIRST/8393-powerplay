@@ -30,12 +30,9 @@ CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR
 TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
 THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-package org.firstinspires.ftc.teamcode.robot.subsystems;
+package org.firstinspires.ftc.teamcode.robot.autoSubsystems;
 
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
@@ -43,7 +40,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 
 /**
- * {@link DistanceSensors} illustrates how to use the REV Robotics
+ * {@link AutoDistanceSensors} illustrates how to use the REV Robotics
  * Time-of-Flight Range Sensor.
  * <p>
  * The op mode assumes that the range sensor is configured with a name of "sensor_range".
@@ -53,7 +50,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
  *
  * @see <a href="http://revrobotics.com">REV Robotics Web Page</a>
  */
-public class DistanceSensors {
+public class AutoDistanceSensors {
 
     private DistanceSensor sensorRangeLeft;
     private DistanceSensor sensorRangeRight;
@@ -61,7 +58,7 @@ public class DistanceSensors {
     private Telemetry telemetry;
     private HardwareMap hardwareMap;
 
-    public DistanceSensors(HardwareMap hardwareMap, Telemetry telemetry) {
+    public AutoDistanceSensors(HardwareMap hardwareMap, Telemetry telemetry) {
         this.hardwareMap = hardwareMap;
         this.telemetry = telemetry;
     }
