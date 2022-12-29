@@ -2,7 +2,7 @@ package org.firstinspires.ftc.teamcode.auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
-@Autonomous(name="1 - LEFT SIDE AUTO LOW POLE")
+@Autonomous(name="LEFT_LOW_1+5")
 public class OnePlusFiveLowPoleLeftSide extends AutoCoreLowPole {
     public OnePlusFiveLowPoleLeftSide() {super(AutoOrientation.LEFT);}
     @Override
