@@ -175,7 +175,6 @@ public class AutoLift implements Subsystem {
     private Map stateMap;
     private int subheight;
 
-    @RequiresApi(api = Build.VERSION_CODES.N)
     public AutoLift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
 
         //telemetry
@@ -196,7 +195,7 @@ public class AutoLift implements Subsystem {
 
         //creating list of lift motors for iteration
         liftMotors = new ArrayList<>();
-        liftMotorsSet = new HashSet<>();
+        //liftMotorsSet = new HashSet<>();
 
         //lift PID controller
         this.liftPIDController = new PIDController(LiftConstants.PROPORTIONAL_COLLECTING_TO_HIGH, 0, 0);
@@ -212,10 +211,10 @@ public class AutoLift implements Subsystem {
         liftMotors.add(liftMotor4);
 
         //add lift motors to set
-        liftMotorsSet.add(liftMotor1);
-        liftMotorsSet.add(liftMotor2);
-        liftMotorsSet.add(liftMotor3);
-        liftMotorsSet.add(liftMotor4);
+//        liftMotorsSet.add(liftMotor1);
+//        liftMotorsSet.add(liftMotor2);
+//        liftMotorsSet.add(liftMotor3);
+//        liftMotorsSet.add(liftMotor4);
 
         //setting lift behaviors
         for (DcMotor liftMotor : liftMotors) {

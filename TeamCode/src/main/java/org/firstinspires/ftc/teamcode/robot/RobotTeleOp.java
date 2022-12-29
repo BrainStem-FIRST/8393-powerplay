@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.ToggleButton;
 import java.util.HashMap;
 import java.util.Map;
 
-@TeleOp(name = " TELE OP", group = "Robot")
+@TeleOp(name = "TELEOPERATED", group = "Robot")
 public class RobotTeleOp extends LinearOpMode {
 
     private final String GAMEPAD_1_A_STATE = "GAMEPAD_1_A_STATE";
