@@ -117,6 +117,10 @@ public class RobotTeleOp extends LinearOpMode {
         put(GAMEPAD_2_X_BUTTON_PRESSED, false);
 
     }};
+    //DO NOT DELETE THIS OR COMMENT IT OUT! IT LOOKS UNUSED BUT IF DELETED, TELEOP WON'T RUN!
+    public RobotTeleOp() {
+
+    }
 
     public RobotTeleOp(boolean disableDrivetrain) {
         this.disableDrivetrain = disableDrivetrain;
@@ -131,7 +135,7 @@ public class RobotTeleOp extends LinearOpMode {
         SampleMecanumDrive driveCancelable = new SampleMecanumDrive(hardwareMap);
         driveCancelable.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        //stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+
         stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
         stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
@@ -320,7 +324,7 @@ public class RobotTeleOp extends LinearOpMode {
                     robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
                 }
 
-
+                telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
                 telemetry.addData("Bottom adjustment height: ", robot.lift.LIFT_POSITION_GROUND);

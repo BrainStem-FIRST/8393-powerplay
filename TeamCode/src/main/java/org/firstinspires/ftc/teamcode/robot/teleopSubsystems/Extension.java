@@ -27,8 +27,8 @@ public class Extension implements Subsystem {
 
     // Servo Positions
 
-    public final double EXTENSION_POSITION_HOME = 2000;    // Fully retracted
-    public double EXTENSION_POSITION_MAX  = 2372;    // Fully extended
+    public final double EXTENSION_POSITION_HOME = 1880;
+    public double EXTENSION_POSITION_MAX  = 2372;
 
     public double EXTENSION_EDITABLE_POSITION = 0.4;
     // extension statemap values
