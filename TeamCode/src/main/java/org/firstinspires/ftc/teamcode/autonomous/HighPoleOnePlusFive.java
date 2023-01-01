@@ -22,6 +22,7 @@ import org.openftc.easyopencv.OpenCvCameraRotation;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Vector;
 
 public class HighPoleOnePlusFive extends LinearOpMode {
     private final AutoOrientation side;
@@ -145,8 +146,6 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 endParking = new Vector2d(-36, 12.5);
                 break;
         }
-
-
     }
 
 

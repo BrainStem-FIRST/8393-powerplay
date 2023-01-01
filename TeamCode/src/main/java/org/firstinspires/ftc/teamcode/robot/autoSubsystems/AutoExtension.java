@@ -27,8 +27,8 @@ public class AutoExtension implements Subsystem {
 
     // Servo Positions
 
-    public final double EXTENSION_POSITION_HOME = 1900;    // Fully retracted
-    public double EXTENSION_POSITION_MAX = 2372;    // Fully extended
+    public final double EXTENSION_POSITION_HOME = 1900;
+    public double EXTENSION_POSITION_MAX = 2372;
 
     public double EXTENSION_EDITABLE_POSITION = 0.4;
     // extension statemap values

@@ -18,7 +18,7 @@ import java.util.Map;
 import com.acmerobotics.dashboard.config.Config;
 
 @Config
-public class Lift implements Subsystem{
+public class Lift implements Subsystem {
 
     public static final class LiftConstants {
 
@@ -331,14 +331,16 @@ public class Lift implements Subsystem{
             setAllMotorPowers(1);
             //runAllMotorsToPosition(heightInTicks, 1);
         } else if (position >= heightInTicks - 10 && position <= heightInTicks + 10) {
-            if (heightInTicks > 400) {
+            if (heightInTicks == 0) {
+                setAllMotorPowers(-0.1);
+            } else if (heightInTicks > 400) {
                 setAllMotorPowers(0.45);
             } else {
-                if(heightInTicks < 100){
-                    if(position < 10){
+                if (heightInTicks < 100) {
+                    if (position < 10) {
                         setAllMotorSpeedsPercentage(-liftPIDController.updateWithError(error));
                     } else {
-                        if(heightInTicks != 0) {
+                        if (heightInTicks != 0) {
                             setAllMotorPowers(0.2);
                         } else {
                             setAllMotorPowers(-0.01);

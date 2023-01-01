@@ -26,8 +26,8 @@ public class Grabber implements Subsystem {
     public final String CLOSED_STATE = "CLOSED";
     Constants constants = new Constants();
 
-    public final double REGULAR_OPEN = 900;
-    public final double CLOSED_VALUE = 1850;
+    public final double REGULAR_OPEN = 900; //520 for passive
+    public final double CLOSED_VALUE = 1850; //2100 for passive
 
     private Map stateMap;
 
@@ -45,6 +45,7 @@ public class Grabber implements Subsystem {
         stateMap.put(constants.GRABBER_MODE, constants.DEPOSITING);
 
     }
+
     @Override
     public void reset() {
 
