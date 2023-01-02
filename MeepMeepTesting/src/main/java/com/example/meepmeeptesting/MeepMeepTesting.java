@@ -117,7 +117,7 @@ public class MeepMeepTesting {
             endParking = new Vector2d(-36, 12.5);
         }
 
-        MeepMeep meepMeep = new MeepMeep(800);
+        MeepMeep meepMeep = new MeepMeep(1500, 24);
 
         Pose2d finalHighPoleDepositingPosition = highPoleDepositingPosition2;
         int finalHighPoleDepositingPositionTangent = highPoleDepositingPositionTangent;
@@ -420,7 +420,7 @@ public class MeepMeepTesting {
 
                                 .waitSeconds(1).build());
 
-        meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_OFFICIAL)
+        meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_KAI_DARK)
                 .setDarkMode(true)
                 .setBackgroundAlpha(0.95f)
                 .addEntity(myBot)
