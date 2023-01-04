@@ -22,13 +22,15 @@ public class MeepMeepTesting {
 
 
         // Locations - For Red /////////////////////////////////////////////////////////////////////
-        Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
-        Vector2d initialApproach = new Vector2d(-36, -24);
+        Pose2d startPosition = new Pose2d(-34, -64, Math.toRadians(90));
+        Vector2d depositPreloadonLow = new Vector2d(-34, -48);
+        Vector2d collectionApporach = new Vector2d(-36, -20);
         Pose2d highPoleDepositingPosition = new Pose2d(-23.25, -11.75, Math.toRadians(0));
         Pose2d highPoleDepositingPosition2 = new Pose2d(-24.3, -11.5, Math.toRadians(0));
         Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
+        Pose2d secondHighPoleDepositingPosition = new Pose2d(0, -11.5, Math.toRadians(0));
         Pose2d highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() - 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
-        Vector2d collectConesPosition = new Vector2d(-56, -11.75);
+        Pose2d collectConesPosition = new Pose2d(-56, -11.75, Math.toRadians(0));
         Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
         Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
         Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(0));
@@ -47,6 +49,7 @@ public class MeepMeepTesting {
         Vector2d parking1 = new Vector2d(-60, -12.5);
 
         int initialTangent = -80;
+        int collectConeTangent = 90;
         int initialApproachTangent = 90;
         int highPoleDepositingPositionTangent = 90;
         int depositPreloadSpline2Tangent = 125;
@@ -86,18 +89,21 @@ public class MeepMeepTesting {
 
         if (side == "Left") {
             initialTangent = -80;
+            collectConeTangent = 90;
             initialApproachTangent = 90;
             highPoleDepositingPositionTangent = 0;
             depositPreloadSpline2Tangent = 25;
             endParking = new Vector2d(parking2.getX(), parking2.getY());
         } else if (side == "Right") {
-            initialApproach = new Vector2d(initialApproach.getX(), -initialApproach.getY());
+            depositPreloadonLow = new Vector2d(depositPreloadonLow.getX(), -depositPreloadonLow.getY());
             initialTangent = 80;
+            collectConeTangent = -90;
             initialApproachTangent = -90;
             highPoleDepositingPositionTangent = 0;
             depositPreloadSpline2Tangent = -115;
-            startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(90));
+            startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(-90));
             initialTurn = 90;
+            collectionApporach = new Vector2d(collectionApporach.getX(), -collectionApporach.getY());
             highPoleDepositingPosition = new Pose2d(highPoleDepositingPosition.getX(), -highPoleDepositingPosition.getY(), Math.toRadians(180));
             highPoleDepositingPosition2 = new Pose2d(highPoleDepositingPosition2.getX(), -highPoleDepositingPosition2.getY(), Math.toRadians(180));
             lowPoleDepositingPosition = new Pose2d(lowPoleDepositingPosition.getX(), -lowPoleDepositingPosition.getY(), Math.toRadians(180));
@@ -107,39 +113,108 @@ public class MeepMeepTesting {
             depositPreLoadForwardHeading = Math.toRadians(-100);
             approachVector = new Vector2d(approachVector.getX(), -approachVector.getY());
             approachHeading = Math.toRadians(-90);
-            collectConesPosition = new Vector2d(collectConesPosition.getX(), -collectConesPosition.getY());
+            collectConesPosition = new Pose2d(collectConesPosition.getX(), -collectConesPosition.getY(), Math.toRadians(180));
             depositOnHighPole1approach = new Pose2d(depositOnHighPole1approach.getX(), -depositOnHighPole1approach.getY(), Math.toRadians(180));
             depositOnHighPole1 = new Pose2d(depositOnHighPole1.getX(), -depositOnHighPole1.getY(), Math.toRadians(180));
             depositOnHighPole2 = new Pose2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY(), Math.toRadians(180));
+            secondHighPoleDepositingPosition = new Pose2d(secondHighPoleDepositingPosition.getX(), -secondHighPoleDepositingPosition.getY(), Math.toRadians(180));
             parking1 = new Vector2d(-12, 12.5);
             parking2 = new Vector2d(-36, 12.5);
             parking3 = new Vector2d(-60, 12.5);
             endParking = new Vector2d(-36, 12.5);
         }
 
-        MeepMeep meepMeep = new MeepMeep(1500, 24);
+        MeepMeep meepMeep = new MeepMeep(900, 24);
 
-        Pose2d finalHighPoleDepositingPosition = highPoleDepositingPosition2;
+        Pose2d finalHighPoleDepositingPosition2 = highPoleDepositingPosition2;
         int finalHighPoleDepositingPositionTangent = highPoleDepositingPositionTangent;
-        Vector2d finalCollectConesPosition = collectConesPosition;
+        Pose2d finalCollectConesPosition = collectConesPosition;
         Pose2d finalHighPoleDepositingPosition1 = highPoleDepositingPosition;
-        Vector2d finalInitialApproach = initialApproach;
+        Vector2d finalInitialApproach = depositPreloadonLow;
         int finalInitialTangent = initialTangent;
+        int finalCollectConesTangent = collectConeTangent;
         Pose2d finalStartPosition = startPosition;
         int finalInitialApproachTangent = initialApproachTangent;
+        Vector2d finalDepositPreloadonLow = depositPreloadonLow;
+        Vector2d finalcollectionApporach = collectionApporach;
+        Pose2d finallowPoleDepositingPosition = lowPoleDepositingPosition;
+        Pose2d finalSecondHighPoleDepositingPosition = secondHighPoleDepositingPosition;
         RoadRunnerBotEntity myBot = new DefaultBotBuilder(meepMeep)
                 // Set bot constraints: maxVel, maxAccel, maxAngVel, maxAngAccel, track width
-                .setConstraints(60, 60, Math.toRadians(180), Math.toRadians(180), 15)
+                .setConstraints(48, 50, 4.5, 4.5, 12)
                 .followTrajectorySequence(drive ->
                         drive.trajectorySequenceBuilder(finalStartPosition)
-                                .setReversed(true)
                                 .setTangent(finalInitialTangent)
+                                .UNSTABLE_addTemporalMarkerOffset(0.83, () -> {
+
+                                })
+
+                                //Preload
+                                .splineToConstantHeading(finalDepositPreloadonLow, Math.toRadians(finalInitialApproachTangent))
+                                .waitSeconds(1)
+                                .splineToConstantHeading(finalcollectionApporach, Math.toRadians(-100))
+                                .splineToSplineHeading(finalCollectConesPosition, Math.toRadians(180))
+                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+
+                                })
+
                                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
 
                                 })
-                                .splineToConstantHeading(finalInitialApproach, Math.toRadians(finalInitialApproachTangent),
-                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
-                                        SampleMecanumDrive.getAccelerationConstraint(45))
+                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+
+                                })
+                                .waitSeconds(0.1)
+
+                                //FIRST CONE LOW POLE
+
+                                .setReversed(true)
+                                .splineToConstantHeading(new Vector2d(finallowPoleDepositingPosition.getX(), finallowPoleDepositingPosition.getY()), Math.toRadians(180))
+                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+
+                                })
+
+
+                                .waitSeconds(1)
+                                .splineToConstantHeading(new Vector2d(finalCollectConesPosition.getX(), finalCollectConesPosition.getY()), Math.toRadians(180))
+                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+
+                                })
+
+                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+
+                                })
+                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+
+                                })
+                                .waitSeconds(0.1)
+
+                                //SECOND CONE MEDIUM POLE
+
                                 .splineToSplineHeading(finalHighPoleDepositingPosition1, Math.toRadians(finalHighPoleDepositingPositionTangent),
                                         SampleMecanumDrive.getVelocityConstraint(50, 4.5, 12),
                                         SampleMecanumDrive.getAccelerationConstraint(50))
@@ -169,11 +244,10 @@ public class MeepMeepTesting {
 
                                 .waitSeconds(1)
 
-                                //CYCLE ONE
-
+                                //CONE COLLECTION
 
                                 .setReversed(false)
-                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+                                .splineToConstantHeading(new Vector2d(finalCollectConesPosition.getX(), finalCollectConesPosition.getY()), Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
                                         SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
                                         SampleMecanumDrive.getAccelerationConstraint(60))
 
@@ -192,7 +266,10 @@ public class MeepMeepTesting {
                                 })
                                 .waitSeconds(0.1)
                                 .setReversed(true)
-                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+
+                                //THIRD CONE HIGH POLE
+
+                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition2.getX(), finalHighPoleDepositingPosition2.getY()),
                                         Math.toRadians(finalHighPoleDepositingPositionTangent),
                                         SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
                                         SampleMecanumDrive.getAccelerationConstraint(45))
@@ -220,11 +297,11 @@ public class MeepMeepTesting {
 
 
                                 .waitSeconds(1)
-
-                                //CYCLE TWO
+//
+//                                //CONE COLLECTION
 
                                 .setReversed(false)
-                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+                                .splineToConstantHeading(new Vector2d(finalCollectConesPosition.getX(), finalCollectConesPosition.getY()), Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
                                         SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
                                         SampleMecanumDrive.getAccelerationConstraint(60))
 
@@ -243,11 +320,14 @@ public class MeepMeepTesting {
                                 })
                                 .waitSeconds(0.1)
                                 .setReversed(true)
-                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+
+                                //FOURTH CONE HIGH POLE
+
+                                .splineToConstantHeading(new Vector2d(finalSecondHighPoleDepositingPosition.getX(), finalSecondHighPoleDepositingPosition.getY()),
                                         Math.toRadians(finalHighPoleDepositingPositionTangent),
-                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
-                                        SampleMecanumDrive.getAccelerationConstraint(45))
-                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+                                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
+                                        SampleMecanumDrive.getAccelerationConstraint(60))
+                                .UNSTABLE_addTemporalMarkerOffset(-0.85, () -> {
 
                                 })
                                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
@@ -272,10 +352,10 @@ public class MeepMeepTesting {
 
                                 .waitSeconds(1)
 
-                                //CYCLE THREE
+                                //CONE COLLECTION
 
                                 .setReversed(false)
-                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+                                .splineToConstantHeading(new Vector2d(finalCollectConesPosition.getX(), finalCollectConesPosition.getY()), Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
                                         SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
                                         SampleMecanumDrive.getAccelerationConstraint(60))
 
@@ -294,57 +374,14 @@ public class MeepMeepTesting {
                                 })
                                 .waitSeconds(0.1)
                                 .setReversed(true)
-                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+
+                                //FIFTH CONE DEPOSITING 
+
+                                .splineToConstantHeading(new Vector2d(finalSecondHighPoleDepositingPosition.getX(), finalSecondHighPoleDepositingPosition.getY()),
                                         Math.toRadians(finalHighPoleDepositingPositionTangent),
-                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
-                                        SampleMecanumDrive.getAccelerationConstraint(45))
-                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
-
-                                })
-
-                                .waitSeconds(1)
-
-                                //CYCLE FOUR
-
-                                .setReversed(false)
-                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
                                         SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
                                         SampleMecanumDrive.getAccelerationConstraint(60))
-
-                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
-                                })
-
-                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-                                })
-                                .waitSeconds(0.1)
-                                .setReversed(true)
-                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
-                                        Math.toRadians(finalHighPoleDepositingPositionTangent),
-                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
-                                        SampleMecanumDrive.getAccelerationConstraint(45))
-                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+                                .UNSTABLE_addTemporalMarkerOffset(-0.85, () -> {
 
                                 })
                                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
@@ -369,53 +406,201 @@ public class MeepMeepTesting {
 
                                 .waitSeconds(1)
 
-                                //CYCLE FIVE
-                                .setReversed(false)
-                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
-                                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
-                                        SampleMecanumDrive.getAccelerationConstraint(60))
 
-                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
-
-                                })
-
-                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-
-                                })
-                                .waitSeconds(0.1)
-                                .setReversed(true)
-                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
-                                        Math.toRadians(finalHighPoleDepositingPositionTangent),
-                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
-                                        SampleMecanumDrive.getAccelerationConstraint(45))
-                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-
-                                })
-                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
-
-                                })
+//
+//                                .setReversed(false)
+//                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(60))
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+//
+//                                })
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+//
+//                                })
+//                                .waitSeconds(0.1)
+//                                .setReversed(true)
+//                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+//                                        Math.toRadians(finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(45))
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+//
+//                                })
+//
+//
+//                                .waitSeconds(1)
+//
+//                                //CYCLE THREE
+//
+//                                .setReversed(false)
+//                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(60))
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+//
+//                                })
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+//
+//                                })
+//                                .waitSeconds(0.1)
+//                                .setReversed(true)
+//                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+//                                        Math.toRadians(finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(45))
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+//
+//                                })
+//
+//                                .waitSeconds(1)
+//
+//                                //CYCLE FOUR
+//
+//                                .setReversed(false)
+//                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(60))
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+//                                })
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+//                                })
+//                                .waitSeconds(0.1)
+//                                .setReversed(true)
+//                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+//                                        Math.toRadians(finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(45))
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+//
+//                                })
+//
+//
+//                                .waitSeconds(1)
+//
+//                                //CYCLE FIVE
+//                                .setReversed(false)
+//                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(60))
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+//
+//                                })
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+//
+//                                })
+//                                .waitSeconds(0.1)
+//                                .setReversed(true)
+//                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+//                                        Math.toRadians(finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(45))
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+//
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+//
+//                                })
 
 
                                 .waitSeconds(1).build());
