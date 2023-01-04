@@ -6,10 +6,8 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
-
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.autonomous.imagecv.AprilTagDetectionPipeline;
-import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.AutoBrainSTEMRobot;
 import org.firstinspires.ftc.teamcode.robot.Constants;
@@ -31,7 +29,7 @@ public class SpreadAutoCore extends LinearOpMode {
 
 
 
-    // Locations - For Red /////////////////////////////////////////////////////////////////////
+    // Locations - Right /////////////////////////////////////////////////////////////////////
     Pose2d startPosition = new Pose2d(-34, -64, Math.toRadians(90));
     Vector2d depositPreloadonLow = new Vector2d(-34, -48);
     Vector2d collectionApporach = new Vector2d(-36, -20);
