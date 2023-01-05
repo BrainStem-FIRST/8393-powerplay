@@ -94,7 +94,7 @@ public class AutoExtension implements Subsystem {
 
     // Pulls the extension arm to its starting position (it is NOT in clear)
     public void extendHome() {
-        extension.setPosition(0.01);
+        extension.setPosition(0.025);
     }
 
     // Extends the arm to its maximum reach
@@ -118,30 +118,36 @@ public class AutoExtension implements Subsystem {
         switch (desiredLevel) {
             case DEFAULT_VALUE: {
                 extendHome();
+                telemetry.addData("Home", "true");
                 break;
             }
             case FULL_EXTEND: {
                 extendToTarget();
+                telemetry.addData("Full extend", "true");
                 break;
             }
             case AUTO_EXTENSION_DEPOSIT: {
                 extendInAuto(0.7);
+                telemetry.addData("0.7", "true");
                 break;
             }
             case AUTO_EXTENSION_COLLECT_RIGHT: {
                 extendInAuto(0.8);
+                telemetry.addData("0.8", "true");
                 break;
             }
             case AUTO_EXTENSION_COLLECT_LEFT: {
                 extendInAuto(0.8);
+                telemetry.addData("0.8", "true");
                 break;
             }
             case DEFAULT_EXTEND_AUTO: {
                 extendInAuto(0.3);
+                telemetry.addData("0.3", "true");
                 break;
             }
             case DEFAULT_SIDE_EXTENDED_AUTO: {
-                extendInAuto(0.55);
+                extendInAuto(0.4);
                 telemetry.addData("Side extended", "true");
                 break;
             }
