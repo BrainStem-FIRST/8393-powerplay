@@ -141,7 +141,7 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case DEFAULT_SIDE_EXTENDED_AUTO: {
-                extendInAuto(0.55);
+                extendInAuto(0.4);
                 telemetry.addData("Side extended", "true");
                 break;
             }
