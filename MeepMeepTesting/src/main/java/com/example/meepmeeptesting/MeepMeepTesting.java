@@ -124,7 +124,7 @@ public class MeepMeepTesting {
             endParking = new Vector2d(-36, 12.5);
         }
 
-        MeepMeep meepMeep = new MeepMeep(900, 24);
+        MeepMeep meepMeep = new MeepMeep(900, 60);
 
         Pose2d finalHighPoleDepositingPosition2 = highPoleDepositingPosition2;
         int finalHighPoleDepositingPositionTangent = highPoleDepositingPositionTangent;
@@ -375,7 +375,7 @@ public class MeepMeepTesting {
                                 .waitSeconds(0.1)
                                 .setReversed(true)
 
-                                //FIFTH CONE DEPOSITING 
+                                //FIFTH CONE DEPOSITING
 
                                 .splineToConstantHeading(new Vector2d(finalSecondHighPoleDepositingPosition.getX(), finalSecondHighPoleDepositingPosition.getY()),
                                         Math.toRadians(finalHighPoleDepositingPositionTangent),
