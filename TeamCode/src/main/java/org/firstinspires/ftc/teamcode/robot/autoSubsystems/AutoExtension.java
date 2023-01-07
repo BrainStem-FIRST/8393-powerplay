@@ -42,6 +42,7 @@ public class AutoExtension implements Subsystem {
     public final String DEFAULT_SIDE_EXTENDED_AUTO = "DEFAULT_SIDE_EXTENDED_AUTO";
     public final String SIDE_DEPOSIT = "SIDE_DEPOSIT";
     public final String TRANSITION_STATE = "TRANSITION";
+    public final String DEFAULT_COLLECTING_VALUE = "DEFAULT_SIDE_COLLECTING_VALUE";
     Constants constants = new Constants();
 
     private Map stateMap;
@@ -116,6 +117,10 @@ public class AutoExtension implements Subsystem {
 
     private void selectTransition(String desiredLevel) {
         switch (desiredLevel) {
+            case DEFAULT_COLLECTING_VALUE: {
+                extendInAuto(0.3);
+                break;
+            }
             case DEFAULT_VALUE: {
                 extendHome();
                 telemetry.addData("Home", "true");
@@ -147,7 +152,7 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case DEFAULT_SIDE_EXTENDED_AUTO: {
-                extendInAuto(0.4);
+                extendInAuto(0.39);
                 telemetry.addData("Side extended", "true");
                 break;
             }
