@@ -33,12 +33,12 @@ public class SpreadAutoCore extends LinearOpMode {
     Pose2d startPosition = new Pose2d(-34, -64, Math.toRadians(90));
     Vector2d depositPreloadonLow = new Vector2d(-34, -48);
     Vector2d collectionApporach = new Vector2d(-36, -20);
-    Pose2d highPoleDepositingPosition = new Pose2d(-23.25, -11.75, Math.toRadians(0));
+    Pose2d highPoleDepositingPosition = new Pose2d(-23.25, -12.5, Math.toRadians(0));
     Pose2d highPoleDepositingPosition2 = new Pose2d(-24.3, -11.5, Math.toRadians(0));
     Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
-    Pose2d secondHighPoleDepositingPosition = new Pose2d(0, -11.5, Math.toRadians(0));
+    Pose2d secondHighPoleDepositingPosition = new Pose2d(0.01, -11.5, Math.toRadians(0));
     Pose2d highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() - 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
-    Pose2d collectConesPosition = new Pose2d(-56, -11.75, Math.toRadians(0));
+    Pose2d collectConesPosition = new Pose2d(-55.25, -11.75, Math.toRadians(0));
     Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
     Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
     Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(0));
@@ -48,7 +48,8 @@ public class SpreadAutoCore extends LinearOpMode {
     Vector2d depositPreLoadForwardVector = new Vector2d(-57, -13.5);
     double depositPreLoadForwardHeading = Math.toRadians(100);
     String turretPickupPosition;
-    String turretDeliveryPosition;
+    String turretDeliveryPosition1;
+    String turretDeliveryPosition2;
 
 
     private int initialTurn = -90;
@@ -171,7 +172,8 @@ public class SpreadAutoCore extends LinearOpMode {
             case LEFT:
                 extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_LEFT;
                 turretPickupPosition = robot.turret.LEFT_PICKUP_AUTO;
-                turretDeliveryPosition = robot.turret.RIGHT_POSITION;
+                turretDeliveryPosition1 = robot.turret.RIGHT_POSITION;
+                turretDeliveryPosition2 = robot.turret.LEFT_POSITION;
                 lowTurretDeliveryPosition = robot.turret.LEFT_POSITION;
 
                 break;
@@ -179,7 +181,8 @@ public class SpreadAutoCore extends LinearOpMode {
                 lowTurretDeliveryPosition = robot.turret.RIGHT_POSITION;
                 extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_RIGHT;
                 turretPickupPosition = robot.turret.RIGHT_PICKUP_AUTO;
-                turretDeliveryPosition = robot.turret.LEFT_POSITION; //this should be left
+                turretDeliveryPosition1 = robot.turret.LEFT_POSITION; //this should be left
+                turretDeliveryPosition2 = robot.turret.RIGHT_POSITION;
                 break;
         }
 
@@ -305,27 +308,55 @@ public class SpreadAutoCore extends LinearOpMode {
 
         TrajectorySequence deliverPreload = drive.trajectorySequenceBuilder(startPosition)
                 .setTangent(initialTangent)
-                .UNSTABLE_addTemporalMarkerOffset(0.83, () -> {
-
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_4);
                 })
 
-                //Preload
+                // PRE LOAD
                 .splineToConstantHeading(depositPreloadonLow, Math.toRadians(initialApproachTangent))
+                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
+                    robot.lift.setSubheight(0);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition1);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+                    robot.lift.setSubheight(0.7);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
+
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                })
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+                    robot.lift.setSubheight(0);
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5);
+                })
                 .waitSeconds(1)
+
+                // COLLECT CONE
                 .splineToConstantHeading(collectionApporach, Math.toRadians(-100))
                 .splineToSplineHeading(collectConesPosition, Math.toRadians(180))
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
-
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
                 .waitSeconds(0.1)
 
@@ -334,42 +365,47 @@ public class SpreadAutoCore extends LinearOpMode {
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(lowPoleDepositingPosition.getX(), lowPoleDepositingPosition.getY()), Math.toRadians(180))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
+                    robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition2);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-
+                    robot.lift.setSubheight(0.7);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
-
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
-
+                    robot.lift.setSubheight(0);
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_4);
                 })
 
 
                 .waitSeconds(1)
+
                 .splineToConstantHeading(new Vector2d(collectConesPosition.getX(), collectConesPosition.getY()), Math.toRadians(180))
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
-
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
                 .waitSeconds(0.1)
 
@@ -379,30 +415,34 @@ public class SpreadAutoCore extends LinearOpMode {
                         SampleMecanumDrive.getVelocityConstraint(50, 4.5, 12),
                         SampleMecanumDrive.getAccelerationConstraint(50))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_MEDIUM);
+                    robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition2);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-
+                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+                    robot.lift.setSubheight(0.7);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
-
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
-
-
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
-
+                    robot.lift.setSubheight(0);
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_3);
                 })
 
+
                 .waitSeconds(1)
+
 
                 //CONE COLLECTION
 
@@ -412,17 +452,17 @@ public class SpreadAutoCore extends LinearOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(60))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
-
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
                 .waitSeconds(0.1)
                 .setReversed(true)
@@ -434,31 +474,36 @@ public class SpreadAutoCore extends LinearOpMode {
                         SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
                         SampleMecanumDrive.getAccelerationConstraint(45))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+                    robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition1);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-
+                    robot.lift.setSubheight(0.7);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
-
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
-
+                    robot.lift.setSubheight(0);
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_2);
                 })
 
 
                 .waitSeconds(1)
-//
-//                                //CONE COLLECTION
+
+
+//                                CONE COLLECTION
 
                 .setReversed(false)
                 .splineToConstantHeading(new Vector2d(collectConesPosition.getX(), collectConesPosition.getY()), Math.toRadians(180 - highPoleDepositingPositionTangent),
@@ -466,17 +511,17 @@ public class SpreadAutoCore extends LinearOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(60))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
-
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
                 .waitSeconds(0.1)
                 .setReversed(true)
@@ -485,29 +530,37 @@ public class SpreadAutoCore extends LinearOpMode {
 
                 .splineToConstantHeading(new Vector2d(secondHighPoleDepositingPosition.getX(), secondHighPoleDepositingPosition.getY()),
                         Math.toRadians(180 - highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
-                        SampleMecanumDrive.getAccelerationConstraint(60))
-                .UNSTABLE_addTemporalMarkerOffset(-0.85, () -> {
-
+                        SampleMecanumDrive.getVelocityConstraint(40, 4.5, 12),
+                        SampleMecanumDrive.getAccelerationConstraint(40))
+                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+                    robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition1);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-
+                    robot.lift.setSubheight(0.7);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
-
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
-
+                    robot.lift.setSubheight(0);
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_1);
                 })
+
+
+                .waitSeconds(1)
+
 
 
                 .waitSeconds(1)
@@ -516,21 +569,21 @@ public class SpreadAutoCore extends LinearOpMode {
 
                 .setReversed(false)
                 .splineToConstantHeading(new Vector2d(collectConesPosition.getX(), collectConesPosition.getY()), Math.toRadians(highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
-                        SampleMecanumDrive.getAccelerationConstraint(60))
+                        SampleMecanumDrive.getVelocityConstraint(40, 4.5, 12),
+                        SampleMecanumDrive.getAccelerationConstraint(40))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
-
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
                 .waitSeconds(0.1)
                 .setReversed(true)
@@ -539,42 +592,41 @@ public class SpreadAutoCore extends LinearOpMode {
 
                 .splineToConstantHeading(new Vector2d(secondHighPoleDepositingPosition.getX(), secondHighPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
-                        SampleMecanumDrive.getAccelerationConstraint(60))
-                .UNSTABLE_addTemporalMarkerOffset(-0.85, () -> {
-
+                        SampleMecanumDrive.getVelocityConstraint(40, 4.5, 12),
+                        SampleMecanumDrive.getAccelerationConstraint(40))
+                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
+                    robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition1);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-
+                    robot.lift.setSubheight(0.7);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
-
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
-
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
-
+                    robot.lift.setSubheight(0);
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POSITION_GROUND);
                 })
 
 
                 .waitSeconds(1)
+
 
                 .build();
 
         return deliverPreload;
     }
 
-    private void resetLift() {
-        stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
-    }
 }
