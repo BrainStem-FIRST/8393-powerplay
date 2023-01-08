@@ -28,7 +28,6 @@ public class SpreadAutoCore extends LinearOpMode {
     private Vector2d endParking;
 
 
-
     // Locations - Right /////////////////////////////////////////////////////////////////////
     Pose2d startPosition = new Pose2d(-34, -64, Math.toRadians(90));
     Vector2d depositPreloadonLow = new Vector2d(-34, -48);
@@ -38,7 +37,7 @@ public class SpreadAutoCore extends LinearOpMode {
     Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
     Pose2d secondHighPoleDepositingPosition = new Pose2d(0.01, -11.5, Math.toRadians(0));
     Pose2d highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() - 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
-    Pose2d collectConesPosition = new Pose2d(-55.25, -11.75, Math.toRadians(0));
+    Pose2d collectConesPosition = new Pose2d(-55.25, -12.5, Math.toRadians(0));
     Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
     Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
     Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(0));
@@ -99,8 +98,6 @@ public class SpreadAutoCore extends LinearOpMode {
     int MIDDLE = 2;
     int RIGHT = 3;
     AprilTagDetection tagOfInterest = null;
-
-
 
 
     private enum ParkingLocation {
@@ -213,7 +210,6 @@ public class SpreadAutoCore extends LinearOpMode {
         telemetry.setMsTransmissionInterval(50);
         robot.grabber.close();
         while (!this.opModeIsActive() && !this.isStopRequested()) {
-            autoTrajectorySequence = initializeTrajectories(robot, drive);
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
             if (currentDetections.size() != 0) {
@@ -271,42 +267,7 @@ public class SpreadAutoCore extends LinearOpMode {
         totalTime.reset();
 
 
-        // second cycle
-
-        drive.followTrajectorySequenceAsync(autoTrajectorySequence);
-
-        // at 29 seconds the lift runs down in auto
-
-        while (opModeIsActive()) {
-
-            if (totalTime.seconds() < 28.6) {
-                drive.update();
-                robot.updateSystems();
-                telemetry.update();
-                telemetry.addData("Lift state", stateMap.get(robot.lift.LIFT_SYSTEM_NAME));
-            } else {
-
-                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-                stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
-                robot.updateSystems();
-                Trajectory parkingTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToConstantHeading(endParking)
-                        .build();
-                drive.followTrajectory(parkingTrajectory);
-
-
-            }
-        }
-
-
-    }
-
-    private TrajectorySequence initializeTrajectories(AutoBrainSTEMRobot robot, SampleMecanumDrive drive) {
-
-        TrajectorySequence deliverPreload = drive.trajectorySequenceBuilder(startPosition)
+        TrajectorySequence deliverPreload = drive.trajectorySequenceBuilder(drive.getPoseEstimate())
                 .setTangent(initialTangent)
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_4);
@@ -537,7 +498,7 @@ public class SpreadAutoCore extends LinearOpMode {
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition1);
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition2);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
@@ -560,7 +521,6 @@ public class SpreadAutoCore extends LinearOpMode {
 
 
                 .waitSeconds(1)
-
 
 
                 .waitSeconds(1)
@@ -619,14 +579,38 @@ public class SpreadAutoCore extends LinearOpMode {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POSITION_GROUND);
                 })
-
-
-                .waitSeconds(1)
-
-
                 .build();
 
-        return deliverPreload;
-    }
+        drive.followTrajectorySequenceAsync(deliverPreload);
 
+
+        while (opModeIsActive()) {
+
+            if (totalTime.seconds() < 28.6) {
+
+                drive.update();
+                robot.updateSystems();
+                telemetry.update();
+                telemetry.addData("Lift state", stateMap.get(robot.lift.LIFT_SYSTEM_NAME));
+            } else {
+
+                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
+                stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
+                robot.updateSystems();
+                Trajectory parkingTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
+                        .lineToConstantHeading(endParking)
+                        .build();
+                drive.followTrajectory(parkingTrajectory);
+
+
+            }
+        }
+
+
+    }
 }
+
+

@@ -71,7 +71,7 @@ public class AutoGrabber implements Subsystem {
     }
 
     public void open() {
-        grabber.setPosition(0.525);
+        grabber.setPosition(0.52);
     }
 
     public void maxOpen() {

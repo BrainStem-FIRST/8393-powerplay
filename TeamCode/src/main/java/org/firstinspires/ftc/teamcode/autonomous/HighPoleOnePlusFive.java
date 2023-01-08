@@ -252,6 +252,9 @@ public class HighPoleOnePlusFive extends LinearOpMode {
         this.waitForStart();
         camera.closeCameraDevice();
         drive.setPoseEstimate(startPosition);
+        telemetry.addLine("init");
+        telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
+        telemetry.update();
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
         stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
@@ -272,6 +275,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
         while (opModeIsActive()) {
 
             if (totalTime.seconds() < 28.6) {
+                telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
                 drive.update();
                 robot.updateSystems();
                 telemetry.update();

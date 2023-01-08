@@ -151,7 +151,7 @@ public class RobotTeleOp extends LinearOpMode {
             telemetry.update();
 
             robot.lights.setBothLEDAmber();
-            //stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+            stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             robot.updateSystems();
 

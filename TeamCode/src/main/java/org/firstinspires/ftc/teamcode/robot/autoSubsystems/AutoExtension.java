@@ -118,7 +118,7 @@ public class AutoExtension implements Subsystem {
     private void selectTransition(String desiredLevel) {
         switch (desiredLevel) {
             case DEFAULT_COLLECTING_VALUE: {
-                extendInAuto(0.3);
+                extendInAuto(0.2);
                 break;
             }
             case DEFAULT_VALUE: {
