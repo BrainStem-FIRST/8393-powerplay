@@ -35,8 +35,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     // Locations - For Red /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
     private Vector2d initialApproach = new Vector2d(-36, -24);
-    private Pose2d highPoleDepositingPosition = new Pose2d(-23.25, -11.75, Math.toRadians(0));
-    private Pose2d highPoleDepositingPosition2 = new Pose2d(-24.3, -11.5, Math.toRadians(0));
+    private Pose2d highPoleDepositingPosition = new Pose2d(-24.0, -11.75, Math.toRadians(0));
+    private Pose2d highPoleDepositingPosition2 = new Pose2d(-24.5, -11.5, Math.toRadians(0));
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
     private Pose2d highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() - 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
     private Vector2d collectConesPosition = new Vector2d(-56, -11.75);
@@ -578,14 +578,14 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(60))
 
-                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.6, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
 
-                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
