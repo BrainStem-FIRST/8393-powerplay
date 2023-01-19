@@ -35,7 +35,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     // Locations - For Red /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
     private Vector2d initialApproach = new Vector2d(-36, -24);
-    private Pose2d highPoleDepositingPosition = new Pose2d(-24.0, -11.75, Math.toRadians(0));
+    private Pose2d highPoleDepositingPosition = new Pose2d(-24.5, -11.5, Math.toRadians(0));
     private Pose2d highPoleDepositingPosition2 = new Pose2d(-24.5, -11.5, Math.toRadians(0));
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
     private Pose2d highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() - 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
@@ -586,7 +586,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
 
-                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
