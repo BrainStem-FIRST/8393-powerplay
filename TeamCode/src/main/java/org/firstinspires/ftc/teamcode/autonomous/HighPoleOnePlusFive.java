@@ -51,6 +51,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private String turretPickupPosition;
     private String turretDeliveryPosition;
 
+    private boolean LEFTSIDE;
     private int initialTurn = -90;
 
     private Vector2d parking3 = new Vector2d(-12, -12.5);
@@ -110,14 +111,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     public HighPoleOnePlusFive(AutoOrientation side) {
         this.side = side;
         switch (side) {
-            case LEFT:
-                initialTangent = -80;
-                initialApproachTangent = 90;
-                highPoleDepositingPositionTangent = 0;
-                depositPreloadSpline2Tangent = 25;
-                endParking = new Vector2d(parking2.getX(), parking2.getY());
-                break;
             case RIGHT:
+                LEFTSIDE = false;
                 initialApproach = new Vector2d(initialApproach.getX(), -initialApproach.getY());
                 initialTangent = 80;
                 initialApproachTangent = -90;
@@ -145,6 +140,13 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 parking3 = new Vector2d(-60, 12.5);
                 endParking = new Vector2d(-36, 12.5);
                 break;
+            case LEFT:
+                LEFTSIDE = true;
+                initialTangent = -80;
+                initialApproachTangent = 90;
+                highPoleDepositingPositionTangent = 0;
+                depositPreloadSpline2Tangent = 25;
+                break;
         }
     }
 
@@ -158,8 +160,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
         // Hardwhare ///////////////////////////////////////////////////////////////////
         SampleMecanumDrive drive = new SampleMecanumDrive(this.hardwareMap);
-        this.stateMap = new HashMap<String, String>() {{
-        }};
+        this.stateMap = new HashMap<String, String>() {
+        };
         AutoBrainSTEMRobot robot = new AutoBrainSTEMRobot(this.hardwareMap, this.telemetry, this.stateMap, true);
 
         switch (side) {
@@ -168,7 +170,6 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 turretPickupPosition = robot.turret.LEFT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.RIGHT_POSITION;
                 lowTurretDeliveryPosition = robot.turret.LEFT_POSITION;
-
                 break;
             case RIGHT:
                 lowTurretDeliveryPosition = robot.turret.RIGHT_POSITION;
@@ -204,102 +205,119 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
         telemetry.setMsTransmissionInterval(50);
         robot.grabber.close();
-        while (!this.opModeIsActive() && !this.isStopRequested()) {
-            autoTrajectorySequence = initializeTrajectories(robot, drive);
-            ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
-            if (currentDetections.size() != 0) {
-                boolean tagFound = false;
 
-                for (AprilTagDetection tag : currentDetections) {
+            while (!this.opModeIsActive() && !this.isStopRequested()) {
+                autoTrajectorySequence = initializeTrajectories(robot, drive);
 
-                    if (tag.id == MIDDLE) {
-                        tagOfInterest = tag;
-                        location = ParkingLocation.MID;
-                        parking = 2;
-                        tagFound = true;
-                        telemetry.addData("Open CV :", "Mid");
+                ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
+
+                if (currentDetections.size() != 0) {
+                    boolean tagFound = false;
+
+                    for (AprilTagDetection tag : currentDetections) {
+
+                        if (tag.id == MIDDLE) {
+                            tagOfInterest = tag;
+                            location = ParkingLocation.MID;
+                            parking = 2;
+                            tagFound = true;
+                            telemetry.addData("Open CV :", "Mid");
+                            telemetry.update();
+                            endParking = new Vector2d(parking2.getX(), parking2.getY());
+                            break;
+
+                        } else if (tag.id == RIGHT) {
+                            tagOfInterest = tag;
+                            location = ParkingLocation.RIGHT;
+                            parking = 3;
+                            tagFound = true;
+                            telemetry.addData("Open CV :", "Right");
+                            telemetry.update();
+                            endParking = new Vector2d(parking3.getX(), parking3.getY());
+                            break;
+
+                        } else {
+                            tagOfInterest = tag;
+                            location = ParkingLocation.LEFT;
+                            tagFound = true;
+                            parking = 1;
+                            telemetry.addData("Open CV :", "Left");
+                            telemetry.update();
+                            endParking = new Vector2d(parking1.getX(), parking1.getY());
+                            break;
+
+                        }
+                    }
+
+
+                }
+            }
+
+
+                this.waitForStart();
+                camera.closeCameraDevice();
+                drive.setPoseEstimate(startPosition);
+                telemetry.addLine("init");
+                telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
+                telemetry.update();
+                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+                stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
+                stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
+                stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
+                stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
+                robot.updateSystems();
+
+                totalTime.reset();
+
+
+                // second cycle
+
+
+                drive.followTrajectorySequenceAsync(autoTrajectorySequence);
+
+
+                // at 29 seconds the lift runs down in auto
+
+                while (opModeIsActive()) {
+
+                    if (totalTime.seconds() < 28.6) {
+                        telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
+                        drive.update();
+                        robot.updateSystems();
                         telemetry.update();
-                        endParking = new Vector2d(parking2.getX(), parking2.getY());
-                        break;
-
-                    } else if (tag.id == RIGHT) {
-                        tagOfInterest = tag;
-                        location = ParkingLocation.RIGHT;
-                        parking = 3;
-                        tagFound = true;
-                        telemetry.addData("Open CV :", "Right");
-                        telemetry.update();
-                        endParking = new Vector2d(parking3.getX(), parking3.getY());
-                        break;
-
+                        telemetry.addData("Lift state", stateMap.get(robot.lift.LIFT_SYSTEM_NAME));
+                        telemetry.addData("Arm state", stateMap.get(robot.arm.SYSTEM_NAME));
+                        if (LEFTSIDE) {
+                            telemetry.addLine("LEFT SIDE AUTO SHOULD BE RUNNING"); //never seen this telemetry work
+                            telemetry.update();
+                        }
                     } else {
-                        tagOfInterest = tag;
-                        location = ParkingLocation.LEFT;
-                        tagFound = true;
-                        parking = 1;
-                        telemetry.addData("Open CV :", "Left");
-                        telemetry.update();
-                        endParking = new Vector2d(parking1.getX(), parking1.getY());
-                        break;
+                        if (LEFTSIDE) {
+                            telemetry.addLine("LEFT SIDE AUTO SHOULD BE PARKING");
+                            telemetry.update();
+                        }
+                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                        stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
+                        stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
+                        robot.updateSystems();
+                        Trajectory parkingTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
+                                .lineToConstantHeading(endParking)
+                                .build();
+                        drive.followTrajectory(parkingTrajectory);
+
 
                     }
                 }
 
-
             }
-        }
-        this.waitForStart();
-        camera.closeCameraDevice();
-        drive.setPoseEstimate(startPosition);
-        telemetry.addLine("init");
-        telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
-        telemetry.update();
-        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
-        stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
-        robot.updateSystems();
-
-        totalTime.reset();
 
 
-        // second cycle
-
-        drive.followTrajectorySequenceAsync(autoTrajectorySequence);
-
-        // at 29 seconds the lift runs down in auto
-
-        while (opModeIsActive()) {
-
-            if (totalTime.seconds() < 28.6) {
-                telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
-                drive.update();
-                robot.updateSystems();
-                telemetry.update();
-                telemetry.addData("Lift state", stateMap.get(robot.lift.LIFT_SYSTEM_NAME));
-                telemetry.addData("Arm state", stateMap.get(robot.arm.SYSTEM_NAME));
-            } else {
-
-                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-                stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
-                robot.updateSystems();
-              Trajectory parkingTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToConstantHeading(endParking)
-                        .build();
-                drive.followTrajectory(parkingTrajectory);
 
 
-            }
-        }
-
-
-    }
 
     private TrajectorySequence initializeTrajectories(AutoBrainSTEMRobot robot, SampleMecanumDrive drive) {
 
