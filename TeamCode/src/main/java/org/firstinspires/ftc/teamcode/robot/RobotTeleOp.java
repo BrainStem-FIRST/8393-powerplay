@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.PwmControl;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.util.Range;
 
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
@@ -77,6 +78,8 @@ public class RobotTeleOp extends LinearOpMode {
 
     private final double SLOWMODE = 0.45;
 
+    private boolean NATHANDRIVE = false;
+
     boolean disableDrivetrain = false;
 
 
@@ -96,6 +99,8 @@ public class RobotTeleOp extends LinearOpMode {
     private ElapsedTime liftDelayCollecting = new ElapsedTime();
 
     private int bottomAdjustmentHeight = 0;
+
+    private Pose2d startingPose = new Pose2d(0.0,0.0, Math.toRadians(-90));
 
     Constants constants = new Constants();
 
@@ -146,8 +151,10 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(constants.EXTENSION_TARGET, String.valueOf(1));
 
 
+
         while (!opModeIsActive()) {
 
+            driveCancelable.setPoseEstimate(startingPose);
 
             telemetry.addData("Robot ::", "Init");
             telemetry.update();
@@ -205,6 +212,10 @@ public class RobotTeleOp extends LinearOpMode {
                         toggleMap.put(GAMEPAD_1_A_STATE, false);
                         bringLiftDownBoolean = false;
                     }
+                }
+
+                if (gamepad1.right_bumper && gamepad1.left_bumper) {
+                    NATHANDRIVE = true;
                 }
 
                 if(liftDelayCollectingBoolean) {
@@ -301,6 +312,24 @@ public class RobotTeleOp extends LinearOpMode {
                                         (-gamepad1.right_stick_x) * 0.4
                                 )
                         );
+                    } else if (NATHANDRIVE) {
+                        if (gamepad1.left_stick_y > 0.2) {
+                            Pose2d startingPose = driveCancelable.getPoseEstimate();
+                            Pose2d nathanCentricPose = new Pose2d(startingPose.getX() + 0.00001, startingPose.getY() + (5*gamepad1.left_stick_y) , startingPose.getHeading());
+                            TrajectorySequence nathanCentricRight = driveCancelable.trajectorySequenceBuilder(driveCancelable.getPoseEstimate())
+                                    .lineToLinearHeading(nathanCentricPose)
+                                    .build();
+                            driveCancelable.followTrajectorySequence(nathanCentricRight);
+                            driveCancelable.setPoseEstimate(nathanCentricPose);
+                        } else if (gamepad1.left_stick_y < 0.2) {
+                            Pose2d startingPose = driveCancelable.getPoseEstimate();
+                            Pose2d nathanCentricPose = new Pose2d(startingPose.getX() + 0.00001, startingPose.getY() - (5*gamepad1.left_stick_y) , startingPose.getHeading());
+                            TrajectorySequence nathanCentricRight = driveCancelable.trajectorySequenceBuilder(driveCancelable.getPoseEstimate())
+                                    .lineToLinearHeading(nathanCentricPose)
+                                    .build();
+                            driveCancelable.followTrajectorySequence(nathanCentricRight);
+                            driveCancelable.setPoseEstimate(nathanCentricPose);
+                        }
                     } else {
                         Pose2d poseEstimate = driveCancelable.getPoseEstimate();
 
@@ -313,7 +342,7 @@ public class RobotTeleOp extends LinearOpMode {
                                 new Pose2d(
                                         input.getX(),
                                         input.getY(),
-                                        -gamepad1.right_stick_x
+                                        Range.clip(-gamepad2.right_stick_x, -0.90, 0.90)
                                 )
                         );
                     }
@@ -335,8 +364,22 @@ public class RobotTeleOp extends LinearOpMode {
                                 .build();
                         driveCancelable.followTrajectorySequence(nathanCentricLeft);
                         driveCancelable.setPoseEstimate(nathanCentricPose);
-                    } else if (gamepad1.right_stick_x > 0.99) {
-
+                    } else if (gamepad1.right_stick_x > 0.95) {
+                        Pose2d startingPose = driveCancelable.getPoseEstimate();
+                        Pose2d nathanCentricPose = new Pose2d(startingPose.getX() + 0.1, startingPose. getY() + 0.1 , Math.toRadians(180));
+                        TrajectorySequence nathanCentricLeft = driveCancelable.trajectorySequenceBuilder(driveCancelable.getPoseEstimate())
+                                .lineToLinearHeading(nathanCentricPose)
+                                .build();
+                        driveCancelable.followTrajectorySequence(nathanCentricLeft);
+                        driveCancelable.setPoseEstimate(nathanCentricPose);
+                    } else if (gamepad1.right_stick_x < -0.95) {
+                        Pose2d startingPose = driveCancelable.getPoseEstimate();
+                        Pose2d nathanCentricPose = new Pose2d(startingPose.getX() + 0.1, startingPose. getY() + 0.1 , Math.toRadians(0));
+                        TrajectorySequence nathanCentricLeft = driveCancelable.trajectorySequenceBuilder(driveCancelable.getPoseEstimate())
+                                .lineToLinearHeading(nathanCentricPose)
+                                .build();
+                        driveCancelable.followTrajectorySequence(nathanCentricLeft);
+                        driveCancelable.setPoseEstimate(nathanCentricPose);
                     }
                 }
 
