@@ -273,6 +273,15 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_HIGH);
                 }
 
+//                if(gamepad2.dpad_down) {
+//                    if(stateMap.get(robot.poleAligner.SYSTEM_NAME).equalsIgnoreCase(robot.poleAligner.DEFAULT_VALUE)) {
+//                        stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.FULL_EXTEND);
+//                    } else {
+//                        stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.DEFAULT_VALUE);
+//                    }
+//                }
+
+
                 //Change extension preset values
 
                 //extensionFineAdjustUp.update(gamepad2.left_bumper);
@@ -328,6 +337,7 @@ public class RobotTeleOp extends LinearOpMode {
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
                 telemetry.addData("Bottom adjustment height: ", robot.lift.LIFT_POSITION_GROUND);
+                telemetry.addData("Aligner State", robot.poleAligner.SYSTEM_NAME);
 
                 driveCancelable.update();
 

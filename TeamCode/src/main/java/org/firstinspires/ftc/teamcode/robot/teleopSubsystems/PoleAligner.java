@@ -26,36 +26,31 @@ public class PoleAligner implements Subsystem {
 
 
     // Servo Positions
+    public final double EXTENSION_POSITION_HOME = 1000;
+    public double EXTENSION_POSITION_MAX  = 2234;
 
-    public final double EXTENSION_POSITION_HOME = 1880;
-    public double EXTENSION_POSITION_MAX  = 2372;
-
-    public double EXTENSION_EDITABLE_POSITION = 0.4;
+    public double POLE_ALIGNER_EDITABLE_POSITION = 0.4;
     // extension statemap values
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
     public final String DEFAULT_VALUE = "RETRACTED";
     public final String FULL_EXTEND = "EXTENDED";
-    public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTEND_DEPOSIT";
     public final String TRANSITION_STATE = "TRANSITION";
-    Constants constants = new Constants();
 
-    private Map stateMap;
+    Map stateMap;
 
-    private boolean isAuto;
+    boolean isAuto;
 
     public PoleAligner(HardwareMap hwMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
         this.telemetry = telemetry;
         this.stateMap = stateMap;
         this.isAuto = isAuto;
 
-        poleAligner = new CachingServo(hwMap.get(ServoImplEx.class, "poleAligner"));
+        //poleAligner = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
 
         poleAligner.setPwmRange(new PwmControl.PwmRange(EXTENSION_POSITION_HOME, EXTENSION_POSITION_MAX));
 
         // Scale the operating range of Servos and set initial position
         extendHome();
-
-
     }
 
     @Override
@@ -91,29 +86,16 @@ public class PoleAligner implements Subsystem {
     // Pulls the extension arm to its starting position (it is NOT in clear)
     public void extendHome() {
         poleAligner.setPosition(0.01);
+        telemetry.addData("Extending Home", "true");
     }
 
     // Extends the arm to its maximum reach
     public void extendMax() {
-        poleAligner.setPosition(EXTENSION_EDITABLE_POSITION);
-    }
-
-    public void extendToTarget() {
-        poleAligner.setPosition(EXTENSION_EDITABLE_POSITION);
-    }
-
-    public void extendInAuto(double pos){
-        poleAligner.setPosition(pos);
+        poleAligner.setPosition(1);
     }
 
     public void setState(String desiredState, Lift lift){
-        if(isLiftTooLow(lift)){
-            selectTransition((String) DEFAULT_VALUE);
-        }
-        else{
-            selectTransition(desiredState);
-        }
-
+        selectTransition(desiredState);
     }
 
     private void selectTransition(String desiredLevel){
@@ -123,22 +105,10 @@ public class PoleAligner implements Subsystem {
                 break;
             }
             case FULL_EXTEND: {
-                extendToTarget();
-                break;
-            }
-            case AUTO_EXTENSION_DEPOSIT: {
-                extendInAuto(0.6);
+                extendMax();
                 break;
             }
         }
-    }
-
-    public double getExtensionPosition() {
-        return poleAligner.getPosition();
-    }
-
-    public boolean isLiftTooLow(Lift lift) {
-        return lift.getPosition() < LIFT_MIN_HEIGHT_TO_MOVE_EXTENSION;
     }
 
 }
