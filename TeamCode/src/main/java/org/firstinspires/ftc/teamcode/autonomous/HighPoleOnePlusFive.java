@@ -142,10 +142,10 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 break;
             case LEFT:
                 LEFTSIDE = true;
-                initialTangent = -80; // issue here
-                initialApproachTangent = 100; // issue here
-                highPoleDepositingPositionTangent = 0; // issue here
-                depositPreloadSpline2Tangent = 25; // issue here
+                initialTangent = -80;
+                initialApproachTangent = 100;
+                highPoleDepositingPositionTangent = 0;
+                depositPreloadSpline2Tangent = 25;
                 break;
         }
     }
@@ -271,18 +271,11 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
                 totalTime.reset();
 
-
-                // second cycle
-
-
                 drive.followTrajectorySequenceAsync(autoTrajectorySequence);
-
-
-                // at 29 seconds the lift runs down in auto
 
                 while (opModeIsActive()) {
 
-                    if (totalTime.seconds() < 28.6) {
+                    if (totalTime.seconds() < 28.8) {
                         telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
                         drive.update();
                         robot.updateSystems();
@@ -368,7 +361,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5);
                 })
 
-                .waitSeconds(1)
+                .waitSeconds(0.4)
 
                 //CYCLE ONE
 
@@ -391,7 +384,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -427,7 +420,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 })
 
 
-                .waitSeconds(1)
+                .waitSeconds(0.4)
 
                 //CYCLE TWO
 
@@ -449,7 +442,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -484,7 +477,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 })
 
 
-                .waitSeconds(1)
+                .waitSeconds(0.4)
 
                 //CYCLE THREE
 
@@ -506,7 +499,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -540,7 +533,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_2);
                 })
 
-                .waitSeconds(1)
+                .waitSeconds(0.4)
 
                 //CYCLE FOUR
 
@@ -562,7 +555,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
-                .waitSeconds(0.1)
+                .waitSeconds(0.2)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -597,7 +590,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 })
 
 
-                .waitSeconds(1)
+                .waitSeconds(0.4)
 
                 //CYCLE FIVE
                 .setReversed(false)
@@ -618,7 +611,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
-                .waitSeconds(0.1)
+                .waitSeconds(0.3)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -652,7 +645,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 })
 
 
-                .waitSeconds(1)
+                .waitSeconds(0.4)
                 .build();
 
         return deliverPreload;
