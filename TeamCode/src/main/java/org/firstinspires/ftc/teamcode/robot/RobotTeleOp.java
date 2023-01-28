@@ -337,7 +337,7 @@ public class RobotTeleOp extends LinearOpMode {
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
                 telemetry.addData("Bottom adjustment height: ", robot.lift.LIFT_POSITION_GROUND);
-                telemetry.addData("Aligner State", robot.poleAligner.SYSTEM_NAME);
+                //telemetry.addData("Aligner State", robot.poleAligner.SYSTEM_NAME);
 
                 driveCancelable.update();
 
