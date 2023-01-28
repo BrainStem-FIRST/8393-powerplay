@@ -313,12 +313,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
 
     private TrajectorySequence initializeTrajectories(AutoBrainSTEMRobot robot, SampleMecanumDrive drive) {
-        telemetry.addData("Test Telem ::", "1");
-        telemetry.addData("Initial Tangent ::", initialTangent);
-        telemetry.addData("Initial Approach ::", initialApproach);
-        telemetry.addData("Test Telem ::", "Control 2");
-        telemetry.addData("End Position ::", endParking);
-        telemetry.update();
+
         TrajectorySequence deliverPreload = drive.trajectorySequenceBuilder(startPosition)
                 .setReversed(true)
                 .setTangent(initialTangent)
