@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.teleopSubsystems;
+package org.firstinspires.ftc.teamcode.robot.autoSubsystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.util.Range;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.robot.Subsystem;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Lift;
 import org.firstinspires.ftc.teamcode.util.CachingServo;
 
 import java.util.Map;
@@ -17,7 +18,7 @@ public class PoleAligner implements Subsystem {
     private Telemetry telemetry;
 
     // Three servos (plus the turret) work together to place cone to desired location
-    public ServoImplEx extension;
+    public ServoImplEx poleAligner;
 
     static final double MM_TO_INCHES = 0.0393700787;
     static final double MINIMUM_CLEARANCE_DISTANCE = 95.875 * MM_TO_INCHES;
@@ -49,9 +50,9 @@ public class PoleAligner implements Subsystem {
         this.stateMap = stateMap;
         this.isAuto = isAuto;
 
-        extension = new CachingServo(hwMap.get(ServoImplEx.class, "extension"));
+        poleAligner = new CachingServo(hwMap.get(ServoImplEx.class, "extension"));
 
-        extension.setPwmRange(new PwmControl.PwmRange(EXTENSION_POSITION_HOME, EXTENSION_POSITION_MAX));
+        poleAligner.setPwmRange(new PwmControl.PwmRange(EXTENSION_POSITION_HOME, EXTENSION_POSITION_MAX));
 
         // Scale the operating range of Servos and set initial position
         extendHome();
@@ -80,31 +81,31 @@ public class PoleAligner implements Subsystem {
     // Negative speed values will retract the extension arm.
 
     public void extend(double speed) {
-        double currentPosition = extension.getPosition();
+        double currentPosition = poleAligner.getPosition();
 
         //scale speed value so the extension moves in increments of 10% of the range at max speed
         double targetPosition = Range.clip(currentPosition + speed*0.10, 0, 1);
-        extension.setPosition(targetPosition/EXTENSION_POSITION_MAX);
+        poleAligner.setPosition(targetPosition/EXTENSION_POSITION_MAX);
         //Send telemetry message for debugging purposes
     }
 
 
     // Pulls the extension arm to its starting position (it is NOT in clear)
     public void extendHome() {
-        extension.setPosition(0.01);
+        poleAligner.setPosition(0.01);
     }
 
     // Extends the arm to its maximum reach
     public void extendMax() {
-        extension.setPosition(EXTENSION_EDITABLE_POSITION);
+        poleAligner.setPosition(EXTENSION_EDITABLE_POSITION);
     }
 
     public void extendToTarget() {
-        extension.setPosition(EXTENSION_EDITABLE_POSITION);
+        poleAligner.setPosition(EXTENSION_EDITABLE_POSITION);
     }
 
     public void extendInAuto(double pos){
-        extension.setPosition(pos);
+        poleAligner.setPosition(pos);
     }
 
     public void setState(String desiredState, Lift lift){
@@ -142,7 +143,7 @@ public class PoleAligner implements Subsystem {
     }
 
     public double getExtensionPosition() {
-        return extension.getPosition();
+        return poleAligner.getPosition();
     }
 
     public boolean isLiftTooLow(Lift lift) {
