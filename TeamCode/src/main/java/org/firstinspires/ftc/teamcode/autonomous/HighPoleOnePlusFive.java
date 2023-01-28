@@ -32,11 +32,11 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
 
 
-    // Locations - For Red /////////////////////////////////////////////////////////////////////
+    // Locations - For Left /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
-    private Vector2d initialApproach = new Vector2d(-36, -24);
-    private Pose2d highPoleDepositingPosition = new Pose2d(-24.5, -11.5, Math.toRadians(0));
-    private Pose2d highPoleDepositingPosition2 = new Pose2d(-24.5, -11.5, Math.toRadians(0));
+    private Pose2d initialApproach = new Pose2d(-36, -24, Math.toRadians(-120));
+    private Pose2d highPoleDepositingPosition = new Pose2d(-24.5, -11.5, Math.toRadians(180));
+    private Pose2d highPoleDepositingPosition2 = new Pose2d(-24.5, -11.5, Math.toRadians(180));
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
     private Pose2d highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() - 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
     private Vector2d collectConesPosition = new Vector2d(-56, -11.75);
@@ -59,7 +59,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private Vector2d parking1 = new Vector2d(-60, -12.5);
 
     private int initialTangent = -80;
-    private int initialApproachTangent = 90;
+    private int initialApproachTangent = 180;
     private int highPoleDepositingPositionTangent = 90;
     private int depositPreloadSpline2Tangent = 125;
     private String extensionCollectGoTo;
@@ -113,7 +113,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
         switch (side) {
             case RIGHT:
                 LEFTSIDE = false;
-                initialApproach = new Vector2d(initialApproach.getX(), -initialApproach.getY());
+                initialApproach = new Pose2d(initialApproach.getX(), -initialApproach.getY(), Math.toRadians(120));
                 initialTangent = 80;
                 initialApproachTangent = -90;
                 highPoleDepositingPositionTangent = 0;
@@ -332,7 +332,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_4);
                 })
-                .splineToConstantHeading(initialApproach, Math.toRadians(initialApproachTangent),
+                .splineToLinearHeading(initialApproach, Math.toRadians(initialApproachTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
                 .splineToSplineHeading(highPoleDepositingPosition, Math.toRadians(highPoleDepositingPositionTangent),
