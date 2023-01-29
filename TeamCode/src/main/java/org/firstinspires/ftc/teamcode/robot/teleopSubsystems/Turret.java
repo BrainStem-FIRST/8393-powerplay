@@ -17,17 +17,14 @@ public class Turret implements Subsystem {
     public final String     RIGHT_POSITION = "RIGHT_STATE";
     public final String     CENTER_POSITION = "CENTER_STATE";
     public final String     RIGHT_POSITION_AUTO = "RIGHT_POSITION_AUTO";
-    public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 532;
-    public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 532;
-    public final double     CENTER_POSITION_LEFT_SERVO_VALUE = 1375;
-    public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 1375;
-    public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2166;
-    public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2166;
+    public final double     LEFT_POSITION_SERVO_VALUE = 532;
+    public final double     CENTER_POSITION_SERVO_VALUE = 1375;
+    public final double     RIGHT_POSITION_SERVO_VALUE = 2166;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 309;
     public final double TURRET_CENTER_POSITION = 0.511;
 
     public Telemetry telemetry;
-    private ServoImplEx leftTurretServo;
+    private ServoImplEx turretServo;
     private ServoImplEx rightTurretServo;
     private Map stateMap;
     private boolean isAuto;
@@ -37,12 +34,9 @@ public class Turret implements Subsystem {
         this.stateMap = stateMap;
         this.isAuto = isAuto;
 
-        leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretLeft"));
-        rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
+        turretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turret"));
 
-        leftTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE,  RIGHT_POSITION_LEFT_SERVO_VALUE));
-        rightTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_RIGHT_SERVO_VALUE,  RIGHT_POSITION_RIGHT_SERVO_VALUE));
-
+        turretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_SERVO_VALUE,  RIGHT_POSITION_SERVO_VALUE));
     }
     @Override
     public void reset() {
@@ -83,28 +77,27 @@ public class Turret implements Subsystem {
     public void selectTransition(String desiredLevel){
         switch(desiredLevel){
             case LEFT_POSITION:{
-                transitionToPosition(0, 0);
+                transitionToPosition(0);
                 break;
             } case CENTER_POSITION:{
-                transitionToPosition(0.511, 0.511);
+                transitionToPosition(0.511);
                 break;
             } case RIGHT_POSITION:{
-                transitionToPosition(1, 1);
+                transitionToPosition(1);
                 break;
             }
             case RIGHT_POSITION_AUTO: {
-                transitionToPosition(0.9, 0.9);
+                transitionToPosition(0.9);
             }
         }
     }
 
-    public void transitionToPosition (double leftPosition, double rightPosition) {
+    public void transitionToPosition (double position) {
         //raising heights to reach different junctions, so four values
-        leftTurretServo.setPosition(leftPosition);
-        rightTurretServo.setPosition(rightPosition);
+        turretServo.setPosition(position);
     }
 
     public void centerTurret(){
-        transitionToPosition(TURRET_CENTER_POSITION, TURRET_CENTER_POSITION);
+        transitionToPosition(TURRET_CENTER_POSITION);
     }
 }
