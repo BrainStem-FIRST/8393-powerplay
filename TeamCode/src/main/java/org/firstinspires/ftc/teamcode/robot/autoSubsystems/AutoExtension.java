@@ -36,10 +36,12 @@ public class AutoExtension implements Subsystem {
     public final String DEFAULT_VALUE = "RETRACTED";
     public final String FULL_EXTEND = "EXTENDED";
     public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTEND_DEPOSIT_RIGHT";
+    public final String AUTO_EXTENSION_DEPOSIT_PRELOAD = "AUTO_EXTENSION_DEPOSIT_PRELOAD";
     public final String AUTO_EXTENSION_COLLECT_RIGHT = "AUTO_EXTEND_COLLECT_RIGHT";
     public final String AUTO_EXTENSION_COLLECT_LEFT = "AUTO_EXTEND_COLLECT_LEFT";
     public final String DEFAULT_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String DEFAULT_SIDE_EXTENDED_AUTO = "DEFAULT_SIDE_EXTENDED_AUTO";
+    public final String DEFAULT_SIDE_EXTENDED_AUTO_PRELOAD = "DEFAULT_SIDE_EXTEND_PRELOAD_AUTO";
     public final String SIDE_DEPOSIT = "SIDE_DEPOSIT";
     public final String TRANSITION_STATE = "TRANSITION";
     public final String DEFAULT_COLLECTING_VALUE = "DEFAULT_SIDE_COLLECTING_VALUE";
@@ -132,8 +134,13 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case AUTO_EXTENSION_DEPOSIT: {
-                extendInAuto(0.7);
-                telemetry.addData("0.7", "true");
+                extendInAuto(0.72);
+                telemetry.addData("0.72", "true");
+                break;
+            }
+            case AUTO_EXTENSION_DEPOSIT_PRELOAD: {
+                extendInAuto(0.77);
+                telemetry.addData("0.72", "true");
                 break;
             }
             case AUTO_EXTENSION_COLLECT_RIGHT: {
@@ -153,7 +160,14 @@ public class AutoExtension implements Subsystem {
             }
             case DEFAULT_SIDE_EXTENDED_AUTO: {
 
-                extendInAuto(0.39);
+                extendInAuto(0.41);
+
+                telemetry.addData("Side extended", "true");
+                break;
+            }
+            case DEFAULT_SIDE_EXTENDED_AUTO_PRELOAD: {
+
+                extendInAuto(0.45);
 
                 telemetry.addData("Side extended", "true");
                 break;
