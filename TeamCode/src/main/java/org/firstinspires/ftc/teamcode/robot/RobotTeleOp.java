@@ -244,12 +244,12 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
                 } else if (gamepad2.dpad_up) {
-                    robot.turret.centerTurret();
-                    robot.arm.extendHome();
-                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-                    TURRET_POS = robot.turret.CENTER_POSITION;
-                    EXTENSION_POS = robot.arm.DEFAULT_VALUE;
-                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+//                    robot.turret.centerTurret();
+//                    robot.arm.extendHome();
+//                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+//                    TURRET_POS = robot.turret.CENTER_POSITION;
+//                    EXTENSION_POS = robot.arm.DEFAULT_VALUE;
+//                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 } else if (gamepad2.dpad_right) {
                     TURRET_POS = robot.turret.RIGHT_POSITION;
                     EXTENSION_POS = robot.arm.FULL_EXTEND;
@@ -272,6 +272,15 @@ public class RobotTeleOp extends LinearOpMode {
                 if (gamepad2.y) {
                     stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_HIGH);
                 }
+
+//                if(gamepad2.dpad_down) {
+//                    stateMap.put(robot.guide.SYSTEM_NAME, robot.guide.DOWN_POSITION);
+//                }
+//
+//                if(gamepad2.dpad_up) {
+//                    stateMap.put(robot.guide.SYSTEM_NAME, robot.guide.UP_POSITION);
+//                }
+
 
                 //Change extension preset values
 
@@ -328,13 +337,14 @@ public class RobotTeleOp extends LinearOpMode {
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
                 telemetry.addData("Bottom adjustment height: ", robot.lift.LIFT_POSITION_GROUND);
+                //telemetry.addData("Aligner State", robot.poleAligner.SYSTEM_NAME);
 
                 driveCancelable.update();
 
                 robot.updateSystems();
 
                 telemetry.update();
-
+                //test commit
             }
         }
     }

@@ -19,18 +19,17 @@ public class AutoTurret {
     public final String     LEFT_PICKUP_AUTO = "LEFT_PICKUP_AUTO";
     public final String     RIGHT_DELIVERY_AUTO = "RIGHT_DELIVERY_AUTO";
     public final double     LEFT_POSITION_LEFT_SERVO_VALUE = 532;
-    public final double     LEFT_POSITION_RIGHT_SERVO_VALUE = 532;
     public final double     CENTER_POSITION_LEFT_SERVO_VALUE = 1375;
-    public final double     CENTER_POSITION_RIGHT_SERVO_VALUE = 1375;
     public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2166;
-    public final double     RIGHT_POSITION_RIGHT_SERVO_VALUE = 2166;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 50;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET_IN_AUTO = 70;
     public final double TURRET_CENTER_POSITION = 0.5;
 
     public Telemetry telemetry;
-    private ServoImplEx leftTurretServo;
-    private ServoImplEx rightTurretServo;
+
+    //not sure which is right and left
+    private ServoImplEx turretServo;
+    private ServoImplEx otherturretServo;
     private Map stateMap;
     private boolean isAuto;
 
@@ -39,11 +38,13 @@ public class AutoTurret {
         this.stateMap = stateMap;
         this.isAuto = isAuto;
 
-        leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretLeft"));
-        rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
+        turretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turret"));
 
-        leftTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE,  RIGHT_POSITION_LEFT_SERVO_VALUE));
-        rightTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_RIGHT_SERVO_VALUE,  RIGHT_POSITION_RIGHT_SERVO_VALUE));
+        //used to be the guide...havent changed config yet so
+        otherturretServo = new CachingServo(hwMap.get(ServoImplEx.class, "guide"));
+
+        turretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE,  RIGHT_POSITION_LEFT_SERVO_VALUE));
+        otherturretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE, RIGHT_POSITION_LEFT_SERVO_VALUE));
 
     }
 
@@ -62,39 +63,39 @@ public class AutoTurret {
     public void selectTransition(String desiredLevel){
         switch(desiredLevel){
             case LEFT_POSITION:{
-                transitionToPosition(0, 0);
+                transitionToPosition(0);
                 break;
             } case CENTER_POSITION:{
-                transitionToPosition(0.52, 0.52);
+                transitionToPosition(0.5);
                 break;
             } case RIGHT_POSITION:{
-                transitionToPosition(1, 1);
+                transitionToPosition(1);
                 break;
             }
             case LEFT_PICKUP_AUTO: {
-                transitionToPosition(1.0, 1.0);
+                transitionToPosition(1.0);
                 break;
             } case LEFT_DELIVERY_AUTO: {
-                transitionToPosition(0.33, 0.33);
+                transitionToPosition(0.33);
                 break;
             }
             case RIGHT_PICKUP_AUTO: {
-                transitionToPosition(0, 0);
+                transitionToPosition(0);
                 break;
             } case RIGHT_DELIVERY_AUTO: {
-                transitionToPosition(0.7, 0.7);
+                transitionToPosition(0.7);
                 break;
             }
         }
     }
 
-    public void transitionToPosition (double leftPosition, double rightPosition) {
+    public void transitionToPosition (double position) {
         //raising heights to reach different junctions, so four values
-        leftTurretServo.setPosition(leftPosition);
-        rightTurretServo.setPosition(rightPosition);
+        turretServo.setPosition(position);
+//        otherturretServo.setPosition(position);
     }
 
     public void centerTurret(){
-        transitionToPosition(TURRET_CENTER_POSITION, TURRET_CENTER_POSITION);
+        transitionToPosition(TURRET_CENTER_POSITION);
     }
 }

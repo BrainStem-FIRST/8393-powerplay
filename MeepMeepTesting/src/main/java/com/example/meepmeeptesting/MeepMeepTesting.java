@@ -85,7 +85,7 @@ public class MeepMeepTesting {
         int MIDDLE = 2;
         int RIGHT = 3;
 
-        String side = "Right";
+        String side = "Left";
 
         if (side == "Left") {
             initialTangent = -80;
