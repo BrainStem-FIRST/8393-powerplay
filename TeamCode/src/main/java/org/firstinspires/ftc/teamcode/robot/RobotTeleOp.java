@@ -273,13 +273,13 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_HIGH);
                 }
 
-                if(gamepad2.dpad_down) {
-                    stateMap.put(robot.guide.SYSTEM_NAME, robot.guide.DOWN_POSITION);
-                }
-
-                if(gamepad2.dpad_up) {
-                    stateMap.put(robot.guide.SYSTEM_NAME, robot.guide.UP_POSITION);
-                }
+//                if(gamepad2.dpad_down) {
+//                    stateMap.put(robot.guide.SYSTEM_NAME, robot.guide.DOWN_POSITION);
+//                }
+//
+//                if(gamepad2.dpad_up) {
+//                    stateMap.put(robot.guide.SYSTEM_NAME, robot.guide.UP_POSITION);
+//                }
 
 
                 //Change extension preset values

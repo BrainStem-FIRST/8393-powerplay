@@ -28,7 +28,6 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private final AutoOrientation side;
     private Map stateMap;
 
-    private Vector2d endParking;
 
 
 
@@ -57,6 +56,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private Vector2d parking3 = new Vector2d(-12, -12.5);
     private Vector2d parking2 = new Vector2d(-36, -12.5);
     private Vector2d parking1 = new Vector2d(-60, -12.5);
+    private Vector2d endParking;
+
 
     private int initialTangent = -80;
     private int initialApproachTangent = 180;
@@ -275,22 +276,15 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
                 while (opModeIsActive()) {
 
-                    if (totalTime.seconds() < 29) {
+                    if (totalTime.seconds() < 28.6) {
                         telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
                         drive.update();
                         robot.updateSystems();
                         telemetry.update();
                         telemetry.addData("Lift state", stateMap.get(robot.lift.LIFT_SYSTEM_NAME));
                         telemetry.addData("Arm state", stateMap.get(robot.arm.SYSTEM_NAME));
-                        if (LEFTSIDE) {
-                            telemetry.addLine("LEFT SIDE AUTO SHOULD BE RUNNING"); //never seen this telemetry work
-                            telemetry.update();
-                        }
+                        telemetry.addData("Turret State", stateMap.get(robot.turret.SYSTEM_NAME));
                     } else {
-                        if (LEFTSIDE) {
-                            telemetry.addLine("LEFT SIDE AUTO SHOULD BE PARKING");
-                            telemetry.update();
-                        }
                         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
                         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
@@ -343,11 +337,11 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.775, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.765, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
 
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.775, () -> {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
@@ -401,10 +395,10 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.775, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.765, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.775, () -> {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                 })
 
@@ -462,7 +456,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.775, () -> {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
@@ -519,7 +513,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.775, () -> {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
@@ -575,7 +569,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.775, () -> {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
@@ -630,7 +624,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 }).UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.775, () -> {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
