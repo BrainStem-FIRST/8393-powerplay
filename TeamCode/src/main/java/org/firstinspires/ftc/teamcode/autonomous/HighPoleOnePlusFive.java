@@ -28,9 +28,6 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private final AutoOrientation side;
     private Map stateMap;
 
-
-
-
     // Locations - For Left /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
     private Pose2d initialApproach = new Pose2d(-37, -24, Math.toRadians(-120));
