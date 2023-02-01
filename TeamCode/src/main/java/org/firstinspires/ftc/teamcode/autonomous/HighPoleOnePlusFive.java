@@ -35,7 +35,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private Pose2d highPoleDepositingPosition2 = new Pose2d(-23.35, -11.5, Math.toRadians(180));
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
     private Pose2d highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() - 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
-    private Vector2d collectConesPosition = new Vector2d(-53.35, -11.75);
+    private Vector2d collectConesPosition = new Vector2d(-54, -11.75);
     private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(0));
@@ -326,7 +326,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_SIDE_EXTENDED_AUTO_PRELOAD);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
                     robot.lift.setSubheight(0.7);
