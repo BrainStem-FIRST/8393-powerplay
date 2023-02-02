@@ -193,7 +193,7 @@ public class RobotTeleOp extends LinearOpMode {
                     } else {
                         robot.lift.setSubheight(0);
                     }
-                } else if (gamepad1.right_trigger > 0.5 && robot.lift.getAvgLiftPosition() < 300) {
+                } else if (gamepad1.right_trigger > 0.5 && robot.lift.getAvgLiftPosition() < 500) {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                     liftDelay.reset();
                     liftDelayCollectingBoolean = true;
@@ -203,7 +203,6 @@ public class RobotTeleOp extends LinearOpMode {
                 if(bringLiftDownBoolean){
                     if(liftDelay.seconds() > 0.1){
                         toggleMap.put(GAMEPAD_1_A_STATE, false);
-                        robot.lift.LIFT_POSITION_GROUND = 0;
                         bringLiftDownBoolean = false;
                     }
                 }
@@ -259,9 +258,7 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
                 } else if (gamepad1.left_trigger > 0.5) {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-                    stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_GROUND);
                     robot.lift.setSubheight(-0.15);
-                    robot.lift.LIFT_POSITION_GROUND = 0;
                 }
 
                 // Driver 2 //

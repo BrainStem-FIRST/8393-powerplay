@@ -330,17 +330,12 @@ public class Lift implements Subsystem {
         } else if (position > (heightInTicks + 150)) {
             setAllMotorPowers(-0.5);
            telemetry.addData("Raise Lift Function", "If Loop 2");
-        } else if (position <= heightInTicks - 15 || position >= heightInTicks + 15) {
-
-//           if (heightInTicks == LIFT_POSITION_GROUND + LiftConstants.LIFT_ADJUSTMENT_HIGH) {
-//               runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_LOW, 1);
-//               telemetry.addData("Raise Lift Function", "If Loop 3A");
-//           }  else {
-//               runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_HIGH, 1);
-//               telemetry.addData("Raise Lift Function", "If Loop 3B");
-//           }
-           runAllMotorsToPosition(heightInTicks, 1);
-
+        } else if (position <= heightInTicks - 3 || position >= heightInTicks + 3) {
+           if (stateMap.get(LIFT_SYSTEM_NAME) == "LIFT_POSITION_GROUND") {
+               runAllMotorsToPosition(heightInTicks, 1);
+           } else {
+               runAllMotorsToPosition(heightInTicks, 0.2);
+           }
            telemetry.addData("Raise Lift Function", "If Loop 3");
         } else if (heightInTicks == 0) {
             setAllMotorPowers(0.0);
