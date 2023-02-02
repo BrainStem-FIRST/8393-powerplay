@@ -23,15 +23,16 @@ public class Lift implements Subsystem {
     public static final class LiftConstants {
 
         //rev motor constants
+        private static final double LIFT_MOTOR_GEAR_FACTOR = 5.23 / 2.89;
         private static final double LIFT_MOTOR_GEAR_RATIO = 2.89;
         private static final int ULTRAPLANETARY_MAX_RPM = (int) (6000 / LIFT_MOTOR_GEAR_RATIO);
         private static final int TICKS_PER_REVOLUTION = 28;
         private static final int MAX_LIFT_TICKS_PER_SECOND = 1280;
         //encoder positions
         private static final int BOTTOM_ENCODER_TICKS = 0;
-        private static final int LOW_POLE_ENCODER_TICKS = 410;
-        private static final int MIDDLE_POLE_ENCODER_TICKS = 610;
-        private static final int HIGH_POLE_ENCODER_TICKS = 840;
+        private static final int LOW_POLE_ENCODER_TICKS = (int) (410 * LIFT_MOTOR_GEAR_FACTOR);
+        private static final int MIDDLE_POLE_ENCODER_TICKS = (int) (610 * LIFT_MOTOR_GEAR_FACTOR);
+        private static final int HIGH_POLE_ENCODER_TICKS = (int) (840 * LIFT_MOTOR_GEAR_FACTOR);
         private static final int JUNCTION_ENCODER_TICKS = 0;
         public static int COLLECTING_ENCODER_TICKS = 0;
         private static final int LIFT_POSITION_TOLERANCE = 8;
@@ -39,15 +40,15 @@ public class Lift implements Subsystem {
 
 
         //auto stack heights
-        private static final int STACK_5_ENCODER_TICKS = 115;
-        private static final int STACK_4_ENCODER_TICKS = 70;
-        private static final int STACK_3_ENCODER_TICKS = 60;
-        private static final int STACK_2_ENCODER_TICKS = 40; //FIXME
+        private static final int STACK_5_ENCODER_TICKS = (int) (115 * LIFT_MOTOR_GEAR_FACTOR);
+        private static final int STACK_4_ENCODER_TICKS = (int) (70 * LIFT_MOTOR_GEAR_FACTOR);
+        private static final int STACK_3_ENCODER_TICKS = (int) (60 * LIFT_MOTOR_GEAR_FACTOR);
+        private static final int STACK_2_ENCODER_TICKS = (int) (40 * LIFT_MOTOR_GEAR_FACTOR); //FIXME
         private static final int STACK_1_ENCODER_TICKS = COLLECTING_ENCODER_TICKS;
 
         //cone cycle adjustments
-        private static final int LIFT_ADJUSTMENT_LOW = -30;
-        private static final int LIFT_ADJUSTMENT_HIGH = -60;
+        private static final int LIFT_ADJUSTMENT_LOW = - (int) (30 * LIFT_MOTOR_GEAR_FACTOR);
+        private static final int LIFT_ADJUSTMENT_HIGH = - (int) (60 * LIFT_MOTOR_GEAR_FACTOR);
 
         //timings
         private static final int CYCLE_LIFT_DOWN_TIME_BOTTOM_MS = 300;
@@ -320,53 +321,65 @@ public class Lift implements Subsystem {
         // calculate the error
         int error = heightInTicks - position;
 
-        if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
-            //telemetry.update();
-            if (getAvgLiftPosition() < 400) {
-                setAllMotorPowers(-0.1);
-            } else {
-                runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_HIGH, 1);
-            }
-        } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
-            setAllMotorPowers(1);
-            //runAllMotorsToPosition(heightInTicks, 1);
-        } else if (position >= heightInTicks - 10 && position <= heightInTicks + 10) {
-            if (heightInTicks == 0) {
-                setAllMotorPowers(-0.1);
-            } else if (heightInTicks > 400) {
-                setAllMotorPowers(0.45);
-            } else {
-                if (heightInTicks < 100) {
-                    if (position < 10) {
-                        setAllMotorSpeedsPercentage(-liftPIDController.updateWithError(error));
-                    } else {
-                        if (heightInTicks != 0) {
-                            setAllMotorPowers(0.2);
-                        } else {
-                            setAllMotorPowers(-0.01);
-                        }
-                    }
-                } else {
-                    setAllMotorPowers(0.2);
-                }
-            }
-        } else if (position > heightInTicks) {
-            if (heightInTicks == 0) {
-                setAllMotorPowers(-0.1);
-            } else if (position > heightInTicks + 200) {
-                setAllMotorPowers(-0.1);
-            } else if (position < 35 && heightInTicks < 35) {
-                setAllMotorPowers(0);
-            } else {
-                runAllMotorsToPosition(heightInTicks, 1);
-            }
+        if (position < (heightInTicks - 75)) {
+            setAllMotorPowers(1.0);
+        } else if (position > (heightInTicks + 125)) {
+            setAllMotorPowers(-0.5);
+        } else if (position <= heightInTicks - 7 && position >= heightInTicks + 7) {
+            runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_HIGH, 1);
+        } else if (heightInTicks == 0) {
+            setAllMotorPowers(0.0);
         } else {
-            if (position < heightInTicks - 150) {
-                setAllMotorPowers(1);
-            } else {
-                setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.4);
-            }
+            setAllMotorPowers(0.15);
         }
+
+//        if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
+//            //telemetry.update();
+//            if (getAvgLiftPosition() < 400) {
+//                setAllMotorPowers(-0.1);
+//            } else {
+//                runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_HIGH, 1);
+//            }
+//        } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
+//            setAllMotorPowers(1);
+//            //runAllMotorsToPosition(heightInTicks, 1);
+//        } else if (position >= heightInTicks - 10 && position <= heightInTicks + 10) {
+//            if (heightInTicks == 0) {
+//                setAllMotorPowers(-0.1);
+//            } else if (heightInTicks > 400) {
+//                setAllMotorPowers(0.45);
+//            } else {
+//                if (heightInTicks < 100) {
+//                    if (position < 10) {
+//                        setAllMotorSpeedsPercentage(-liftPIDController.updateWithError(error));
+//                    } else {
+//                        if (heightInTicks != 0) {
+//                            setAllMotorPowers(0.2);
+//                        } else {
+//                            setAllMotorPowers(-0.01);
+//                        }
+//                    }
+//                } else {
+//                    setAllMotorPowers(0.2);
+//                }
+//            }
+//        } else if (position > heightInTicks) {
+//            if (heightInTicks == 0) {
+//                setAllMotorPowers(-0.1);
+//            } else if (position > heightInTicks + 200) {
+//                setAllMotorPowers(-0.1);
+//            } else if (position < 35 && heightInTicks < 35) {
+//                setAllMotorPowers(0);
+//            } else {
+//                runAllMotorsToPosition(heightInTicks, 1);
+//            }
+//        } else {
+//            if (position < heightInTicks - 150) {
+//                setAllMotorPowers(1);
+//            } else {
+//                setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.4);
+//            }
+//        }
     }
 
     /////////////////////
