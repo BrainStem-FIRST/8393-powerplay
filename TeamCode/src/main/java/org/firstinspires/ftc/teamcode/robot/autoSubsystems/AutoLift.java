@@ -35,21 +35,20 @@ public class AutoLift implements Subsystem {
         private static final int MAX_LIFT_TICKS_PER_SECOND = 1280;
         //encoder positions
         private static final int BOTTOM_ENCODER_TICKS = 0;
-        private static final int LOW_POLE_ENCODER_TICKS = 370;
-        private static final int MIDDLE_POLE_ENCODER_TICKS = 610;
-        private static final int HIGH_POLE_ENCODER_TICKS = 840;
+        private static final int LOW_POLE_ENCODER_TICKS = 695;
+        private static final int MIDDLE_POLE_ENCODER_TICKS = 1015;
+        private static final int HIGH_POLE_ENCODER_TICKS = 1545;
         private static final int JUNCTION_ENCODER_TICKS = 0;
         public static int COLLECTING_ENCODER_TICKS = 0;
-        private static final int LIFT_POSITION_TOLERANCE = 8;
-        private static final int CONE_CYCLE_POSITION_TOLERANCE = 3;
 
 
         //auto stack heights
-        private static final int STACK_5_ENCODER_TICKS = 130;
-        private static final int STACK_4_ENCODER_TICKS = 105;
-        private static final int STACK_3_ENCODER_TICKS = 60;
-        private static final int STACK_2_ENCODER_TICKS = 40; //FIXME
+        private static final int STACK_5_ENCODER_TICKS = 240;
+        private static final int STACK_4_ENCODER_TICKS = 185;
+        private static final int STACK_3_ENCODER_TICKS = 115;
+        private static final int STACK_2_ENCODER_TICKS = 65;
         private static final int STACK_1_ENCODER_TICKS = COLLECTING_ENCODER_TICKS;
+
 
         //cone cycle adjustments
         private static final int LIFT_ADJUSTMENT_LOW = -30;

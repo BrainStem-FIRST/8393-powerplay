@@ -30,25 +30,23 @@ public class Lift implements Subsystem {
         private static final int MAX_LIFT_TICKS_PER_SECOND = 1280;
         //encoder positions
         private static final int BOTTOM_ENCODER_TICKS = 0;
-        private static final int LOW_POLE_ENCODER_TICKS = (int) (410 * LIFT_MOTOR_GEAR_FACTOR);
-        private static final int MIDDLE_POLE_ENCODER_TICKS = (int) (610 * LIFT_MOTOR_GEAR_FACTOR);
-        private static final int HIGH_POLE_ENCODER_TICKS = (int) (840 * LIFT_MOTOR_GEAR_FACTOR);
+        private static final int LOW_POLE_ENCODER_TICKS = 615;
+        private static final int MIDDLE_POLE_ENCODER_TICKS = 1015;
+        private static final int HIGH_POLE_ENCODER_TICKS = 1545;
         private static final int JUNCTION_ENCODER_TICKS = 0;
         public static int COLLECTING_ENCODER_TICKS = 0;
-        private static final int LIFT_POSITION_TOLERANCE = 8;
-        private static final int CONE_CYCLE_POSITION_TOLERANCE = 3;
 
 
         //auto stack heights
-        private static final int STACK_5_ENCODER_TICKS = (int) (115 * LIFT_MOTOR_GEAR_FACTOR);
-        private static final int STACK_4_ENCODER_TICKS = (int) (70 * LIFT_MOTOR_GEAR_FACTOR);
-        private static final int STACK_3_ENCODER_TICKS = (int) (60 * LIFT_MOTOR_GEAR_FACTOR);
-        private static final int STACK_2_ENCODER_TICKS = (int) (40 * LIFT_MOTOR_GEAR_FACTOR); //FIXME
+        private static final int STACK_5_ENCODER_TICKS = 240;
+        private static final int STACK_4_ENCODER_TICKS = 185;
+        private static final int STACK_3_ENCODER_TICKS = 115;
+        private static final int STACK_2_ENCODER_TICKS = 65;
         private static final int STACK_1_ENCODER_TICKS = COLLECTING_ENCODER_TICKS;
 
         //cone cycle adjustments
         private static final int LIFT_ADJUSTMENT_LOW = - (int) (30 * LIFT_MOTOR_GEAR_FACTOR);
-        private static final int LIFT_ADJUSTMENT_HIGH = - (int) (60 * LIFT_MOTOR_GEAR_FACTOR);
+        private static final int LIFT_ADJUSTMENT_HIGH =  (int) (60 * LIFT_MOTOR_GEAR_FACTOR);
 
         //timings
         private static final int CYCLE_LIFT_DOWN_TIME_BOTTOM_MS = 300;
@@ -251,7 +249,10 @@ public class Lift implements Subsystem {
     }
 
     public void setSubheight(double driverInput) {
-        subheight = (int) (250 * driverInput);
+        if (getAvgLiftPosition() > 300) {
+            subheight = (int) (452.42 * driverInput);
+        }
+
     }
 
     private void selectTransition(String desiredLevel) {
@@ -269,7 +270,7 @@ public class Lift implements Subsystem {
                 break;
             }
             case LIFT_POLE_GROUND: {
-                transitionToLiftPosition(LIFT_POSITION_GROUND);
+                transitionToLiftPosition(LIFT_POSITION_GROUND + subheight);
                 break;
             }
             case STACK_5: {
@@ -319,19 +320,37 @@ public class Lift implements Subsystem {
         int position = getAvgLiftPosition();
 
         // calculate the error
-        int error = heightInTicks - position;
+        telemetry.addData("Lift Position ", position);
+        telemetry.addData("Position We Want  ", heightInTicks);
 
-        if (position < (heightInTicks - 75)) {
+        int error = heightInTicks - position;
+       if (position < (heightInTicks - 200)) {
             setAllMotorPowers(1.0);
-        } else if (position > (heightInTicks + 125)) {
+            telemetry.addData("Raise Lift Function", "If Loop 1");
+        } else if (position > (heightInTicks + 150)) {
             setAllMotorPowers(-0.5);
-        } else if (position <= heightInTicks - 7 && position >= heightInTicks + 7) {
-            runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_HIGH, 1);
+           telemetry.addData("Raise Lift Function", "If Loop 2");
+        } else if (position <= heightInTicks - 15 || position >= heightInTicks + 15) {
+
+//           if (heightInTicks == LIFT_POSITION_GROUND + LiftConstants.LIFT_ADJUSTMENT_HIGH) {
+//               runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_LOW, 1);
+//               telemetry.addData("Raise Lift Function", "If Loop 3A");
+//           }  else {
+//               runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_HIGH, 1);
+//               telemetry.addData("Raise Lift Function", "If Loop 3B");
+//           }
+           runAllMotorsToPosition(heightInTicks, 1);
+
+           telemetry.addData("Raise Lift Function", "If Loop 3");
         } else if (heightInTicks == 0) {
             setAllMotorPowers(0.0);
+           telemetry.addData("Raise Lift Function", "If Loop 4");
         } else {
             setAllMotorPowers(0.15);
+           telemetry.addData("Raise Lift Function", "If Loop 5");
         }
+
+
 
 //        if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
 //            //telemetry.update();
@@ -377,9 +396,10 @@ public class Lift implements Subsystem {
 //            if (position < heightInTicks - 150) {
 //                setAllMotorPowers(1);
 //            } else {
-//                setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.4);
+////                setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.4);
 //            }
 //        }
+        telemetry.update();
     }
 
     /////////////////////

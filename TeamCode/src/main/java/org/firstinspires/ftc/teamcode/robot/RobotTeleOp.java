@@ -198,10 +198,12 @@ public class RobotTeleOp extends LinearOpMode {
                     liftDelay.reset();
                     liftDelayCollectingBoolean = true;
                     liftDelayCollecting.reset();
+                    robot.lift.setSubheight(0.15);
                 }
                 if(bringLiftDownBoolean){
                     if(liftDelay.seconds() > 0.1){
                         toggleMap.put(GAMEPAD_1_A_STATE, false);
+                        robot.lift.LIFT_POSITION_GROUND = 0;
                         bringLiftDownBoolean = false;
                     }
                 }
@@ -257,6 +259,8 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
                 } else if (gamepad1.left_trigger > 0.5) {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_GROUND);
+                    robot.lift.setSubheight(-0.15);
                     robot.lift.LIFT_POSITION_GROUND = 0;
                 }
 
@@ -338,14 +342,16 @@ public class RobotTeleOp extends LinearOpMode {
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
                 telemetry.addData("Bottom adjustment height: ", robot.lift.LIFT_POSITION_GROUND);
-                //telemetry.addData("Aligner State", robot.poleAligner.SYSTEM_NAME);
+                telemetry.addData("Gamepad 1 A Button Toggle State ", toggleMap.get(GAMEPAD_1_A_STATE));
+                telemetry.addData("Lift Position Being Set ", stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
+
 
                 driveCancelable.update();
 
                 robot.updateSystems();
 
                 telemetry.update();
-                //test commit
+
             }
         }
     }
