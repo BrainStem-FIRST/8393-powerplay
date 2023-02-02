@@ -259,6 +259,10 @@ public class RobotTeleOp extends LinearOpMode {
                     robot.lift.LIFT_POSITION_GROUND = 0;
                 }
 
+//                if(gamepad1.dpad_up){
+//                    robot.lift.liftGoUp();
+//                }
+
                 // Driver 2 //
 
                 if (gamepad2.a) {
@@ -337,6 +341,7 @@ public class RobotTeleOp extends LinearOpMode {
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
                 telemetry.addData("Bottom adjustment height: ", robot.lift.LIFT_POSITION_GROUND);
+                telemetry.addData("Target Position:", robot.lift.getLiftTargetPositions());
                 //telemetry.addData("Aligner State", robot.poleAligner.SYSTEM_NAME);
 
                 driveCancelable.update();

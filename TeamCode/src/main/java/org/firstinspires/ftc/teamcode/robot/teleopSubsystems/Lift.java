@@ -314,6 +314,10 @@ public class Lift implements Subsystem {
         }
     }
 
+    public void liftGoUp(){
+        setAllMotorPowers(1);
+    }
+
     public void raiseHeightTo(int heightInTicks) {
         int position = getAvgLiftPosition();
 
@@ -330,20 +334,18 @@ public class Lift implements Subsystem {
         } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
             setAllMotorPowers(1);
             //runAllMotorsToPosition(heightInTicks, 1);
-        } else if (position >= heightInTicks - 10 && position <= heightInTicks + 10) {
-            if (heightInTicks == 0) {
-                setAllMotorPowers(-0.1);
-            } else if (heightInTicks > 400) {
+        } else if (position >= heightInTicks - 20 && position <= heightInTicks + 20) {
+            if (heightInTicks > 400) {
                 setAllMotorPowers(0.45);
             } else {
-                if (heightInTicks < 100) {
-                    if (position < 10) {
+                if(heightInTicks < 100){
+                    if(position < 10){
                         setAllMotorSpeedsPercentage(-liftPIDController.updateWithError(error));
                     } else {
-                        if (heightInTicks != 0) {
-                            setAllMotorPowers(0.2);
+                        if(heightInTicks != 0) {
+                            setAllMotorPowers(0.3);
                         } else {
-                            setAllMotorPowers(-0.01);
+                            setAllMotorPowers(0);
                         }
                     }
                 } else {
@@ -368,6 +370,7 @@ public class Lift implements Subsystem {
             }
         }
     }
+
 
     /////////////////////
     //GETTERS & SETTERS//
