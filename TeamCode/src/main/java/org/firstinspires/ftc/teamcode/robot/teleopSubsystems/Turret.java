@@ -80,7 +80,7 @@ public class Turret implements Subsystem {
                 transitionToPosition(0);
                 break;
             } case CENTER_POSITION:{
-                transitionToPosition(0.511);
+                transitionToPosition(TURRET_CENTER_POSITION);
                 break;
             } case RIGHT_POSITION:{
                 transitionToPosition(1);

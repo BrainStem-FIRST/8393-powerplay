@@ -183,6 +183,7 @@ public class RobotTeleOp extends LinearOpMode {
                         robot.lift.setSubheight(gamepad1.right_trigger);
                     } else if (gamepad1.right_trigger >= 0.9) {
                         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
+                        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                         robot.lift.LIFT_POSITION_GROUND = 0;
                         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                         robot.arm.extendHome();
@@ -244,12 +245,12 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
                 } else if (gamepad2.dpad_up) {
-//                    robot.turret.centerTurret();
-//                    robot.arm.extendHome();
-//                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-//                    TURRET_POS = robot.turret.CENTER_POSITION;
-//                    EXTENSION_POS = robot.arm.DEFAULT_VALUE;
-//                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                    robot.turret.centerTurret();
+                    robot.arm.extendHome();
+                    stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    TURRET_POS = robot.turret.CENTER_POSITION;
+                    EXTENSION_POS = robot.arm.DEFAULT_VALUE;
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 } else if (gamepad2.dpad_right) {
                     TURRET_POS = robot.turret.RIGHT_POSITION;
                     EXTENSION_POS = robot.arm.FULL_EXTEND;
