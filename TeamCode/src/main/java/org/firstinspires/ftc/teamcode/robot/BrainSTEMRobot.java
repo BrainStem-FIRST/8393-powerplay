@@ -104,27 +104,19 @@ public class BrainSTEMRobot {
             stateMap.put(constants.CONE_CYCLE_START_TIME, String.valueOf(System.currentTimeMillis()));
             stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_IN_PROGRESS);
             stateMap.put(lift.LIFT_SUBHEIGHT, lift.PLACEMENT_HEIGHT);
-            telemetry.addData("Cone Cycle Loop", "startliftDown");
-            telemetry.update();
         } else if (startGrabberAction()) {
             stateMap.put(constants.CYCLE_GRABBER, constants.STATE_IN_PROGRESS);
-            telemetry.addData("Cone Cycle Loop", "startGrabberAction");
-            telemetry.update();
         } else if (startLiftUp()) {
             stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_IN_PROGRESS);
             if (lift.getAvgLiftPosition() > 400) {
                 grabber.maxOpen();
             }
             stateMap.put(lift.LIFT_SUBHEIGHT, lift.APPROACH_HEIGHT);
-            telemetry.addData("Cone Cycle Loop", "startLiftUp");
-            telemetry.update();
         } else if (isConeCycleComplete()) {
             stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
             stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
             stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
             stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
-            telemetry.addData("Cone Cycle Loop", "isConeCycleComplete");
-            telemetry.update();
         }
 
         setConeCycleSystems();
