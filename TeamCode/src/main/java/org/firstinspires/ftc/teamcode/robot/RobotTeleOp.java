@@ -94,6 +94,8 @@ public class RobotTeleOp extends LinearOpMode {
     private ElapsedTime liftDelayCollecting = new ElapsedTime();
 
     private int bottomAdjustmentHeight = 0;
+    private double driver2_ground_adjusted_subheight = 0;
+    private double driver2_placement_adjusted_subheight = 0;
 
     Constants constants = new Constants();
 
@@ -145,11 +147,6 @@ public class RobotTeleOp extends LinearOpMode {
 
 
         while (!opModeIsActive()) {
-
-
-            telemetry.addData("Robot ::", "Init");
-            telemetry.update();
-
             robot.lights.setBothLEDAmber();
             stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
@@ -171,7 +168,6 @@ public class RobotTeleOp extends LinearOpMode {
 
             if ((gamepad2.right_stick_button && gamepad2.left_stick_button) || (gamepad1.right_stick_button && gamepad1.left_stick_button)) {
                 robot.lift.setAllMotorPowers(-0.25);
-                robot.lift.LIFT_POSITION_GROUND = 0;
                 robot.turret.centerTurret();
                 robot.arm.extendHome();
                 robot.lift.resetEncoders();
@@ -182,13 +178,11 @@ public class RobotTeleOp extends LinearOpMode {
                     if (gamepad1.right_trigger > 0.05 && gamepad1.right_trigger < 0.9) {
                         robot.lift.setSubheight(gamepad1.right_trigger);
                     } else if (gamepad1.right_trigger >= 0.9) {
-                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
-                        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-                        robot.lift.LIFT_POSITION_GROUND = 0;
+                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
                         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                         robot.arm.extendHome();
+                        robot.grabber.open();
                         liftDelay.reset();
-                        robot.grabber.maxOpen();
                         bringLiftDownBoolean = true;
                     } else {
                         robot.lift.setSubheight(0);
@@ -196,39 +190,48 @@ public class RobotTeleOp extends LinearOpMode {
                 } else if (gamepad1.right_trigger > 0.5 && robot.lift.getAvgLiftPosition() < 500) {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                     liftDelay.reset();
-                    liftDelayCollectingBoolean = true;
                     liftDelayCollecting.reset();
-                    robot.lift.setSubheight(0.15);
+                    liftDelayCollectingBoolean = true;
                 }
-                if(bringLiftDownBoolean){
-                    if(liftDelay.seconds() > 0.1){
-                        toggleMap.put(GAMEPAD_1_A_STATE, false);
-                        bringLiftDownBoolean = false;
+
+                if (liftDelayCollectingBoolean && liftDelayCollecting.seconds() > 0.05) {
+                    liftDelayCollectingBoolean = false;
+                    if (driver2_ground_adjusted_subheight < 0.1) {
+                        robot.lift.setSubheight(0.26);
+                    } else {
+                        driver2_ground_adjusted_subheight += 0.5;
                     }
                 }
 
-                if(liftDelayCollectingBoolean) {
-                    if(liftDelayCollecting.seconds() > 0.075) {
-                        liftDelayCollectingBoolean = false;
-                        if(robot.lift.LIFT_POSITION_GROUND == 0) {
-                            robot.lift.LIFT_POSITION_GROUND = 50;
-                        } else if (bottomAdjustmentHeight != 0) {
-                            robot.lift.LIFT_POSITION_GROUND = 300;
-                            updateBottomHeightAdjustment(false);
-                        }
+                if(bringLiftDownBoolean) {
+                    if (liftDelay.seconds() > 0.05 && liftDelay.seconds() <= 0.2) {
+                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+                        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                    }
+
+                    if (liftDelay.seconds() > 0.2) {
+                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                    }
+
+                    if (liftDelay.seconds() > 0.15 && robot.lift.getAvgLiftPosition() > 750) {
+                        toggleMap.put(GAMEPAD_1_A_STATE, false);
+                    }
+
+                    if (liftDelay.seconds() > 0.25) {
+                        toggleMap.put(GAMEPAD_1_A_STATE, false);
+                        bringLiftDownBoolean = false;
                     }
                 }
 
                 if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                     slowMode = true;
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
-                    stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
                     if(bringLiftDownBoolean) {
                         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                     } else {
+                        stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
                         stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
                     }
-                    robot.lift.LIFT_POSITION_GROUND = 0;
                 } else {
                     slowMode = false;
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
@@ -238,6 +241,15 @@ public class RobotTeleOp extends LinearOpMode {
                 }
                 if(gamepad1.a && !stateMap.get(robot.lift.LIFT_SYSTEM_NAME).equals(robot.lift.LIFT_POLE_GROUND)){
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+                }
+
+                if ((gamepad1.a && stateMap.get(robot.lift.LIFT_SYSTEM_NAME).equals(robot.lift.LIFT_POLE_GROUND)) ||
+                        gamepad2.y ||
+                        gamepad2.b ||
+                        gamepad2.a) {
+                    driver2_placement_adjusted_subheight = 0;
+                } else if (gamepad1.a) {
+                    driver2_ground_adjusted_subheight = 0;
                 }
 
                 if (gamepad2.dpad_left) {
@@ -258,10 +270,25 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
                 } else if (gamepad1.left_trigger > 0.5) {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-                    robot.lift.setSubheight(-0.15);
+                    robot.lift.setSubheight(0);
                 }
 
                 // Driver 2 //
+
+
+                if (stateMap.get(robot.lift.LIFT_SYSTEM_NAME) == robot.lift.LIFT_POLE_GROUND) {
+                    if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
+                        driver2_ground_adjusted_subheight += 0.1 * (-gamepad2.right_stick_y * Math.abs(gamepad2.right_stick_y));
+                    }
+                } else {
+                    if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
+                        driver2_placement_adjusted_subheight += 0.1 * (gamepad2.right_stick_y * Math.abs(gamepad2.right_stick_y));
+                    }
+                }
+
+                if (driver2_ground_adjusted_subheight != 0) {
+                    robot.lift.setSubheight(driver2_ground_adjusted_subheight);
+                }
 
                 if (gamepad2.a) {
                     stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_LOW);
@@ -322,18 +349,18 @@ public class RobotTeleOp extends LinearOpMode {
                 }
 
 
-                if (bottomHeightStickyButtonRightTrigger.getState()) {
-                    updateBottomHeightAdjustment(true);
-                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
-                }
-                if (bottomHeightStickyButtonLeftTrigger.getState()) {
-                    updateBottomHeightAdjustment(false);
-                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
-                }
-                if (gamepad2.x) {
-                    bottomAdjustmentHeight = 0;
-                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
-                }
+//                if (bottomHeightStickyButtonRightTrigger.getState()) {
+//                    updateBottomHeightAdjustment(true);
+//                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
+//                }
+//                if (bottomHeightStickyButtonLeftTrigger.getState()) {
+//                    updateBottomHeightAdjustment(false);
+//                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
+//                }
+//                if (gamepad2.x) {
+//                    bottomAdjustmentHeight = 0;
+//                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
+//                }
 
                 telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
