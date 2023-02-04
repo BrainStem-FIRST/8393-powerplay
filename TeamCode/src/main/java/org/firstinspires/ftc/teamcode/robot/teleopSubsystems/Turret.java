@@ -21,10 +21,10 @@ public class Turret implements Subsystem {
     public final double     CENTER_POSITION_SERVO_VALUE = 1375;
     public final double     RIGHT_POSITION_SERVO_VALUE = 2166;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 309;
-    public final double TURRET_CENTER_POSITION = 0.511;
+    public final double TURRET_CENTER_POSITION = 0.500;
 
     public Telemetry telemetry;
-    private ServoImplEx turretServo;
+    private ServoImplEx leftTurretServo;
     private ServoImplEx rightTurretServo;
     private Map stateMap;
     private boolean isAuto;
@@ -34,9 +34,11 @@ public class Turret implements Subsystem {
         this.stateMap = stateMap;
         this.isAuto = isAuto;
 
-        turretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turret"));
+        leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretLeft"));
+        rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
 
-        turretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_SERVO_VALUE,  RIGHT_POSITION_SERVO_VALUE));
+        leftTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_SERVO_VALUE,  RIGHT_POSITION_SERVO_VALUE));
+        rightTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_SERVO_VALUE,  RIGHT_POSITION_SERVO_VALUE));
     }
     @Override
     public void reset() {
@@ -80,7 +82,7 @@ public class Turret implements Subsystem {
                 transitionToPosition(0);
                 break;
             } case CENTER_POSITION:{
-                transitionToPosition(0.511);
+                transitionToPosition(TURRET_CENTER_POSITION);
                 break;
             } case RIGHT_POSITION:{
                 transitionToPosition(1);
@@ -94,7 +96,8 @@ public class Turret implements Subsystem {
 
     public void transitionToPosition (double position) {
         //raising heights to reach different junctions, so four values
-        turretServo.setPosition(position);
+        leftTurretServo.setPosition(position);
+        rightTurretServo.setPosition(position);
     }
 
     public void centerTurret(){

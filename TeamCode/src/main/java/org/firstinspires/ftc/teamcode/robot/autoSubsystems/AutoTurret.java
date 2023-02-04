@@ -28,8 +28,8 @@ public class AutoTurret {
     public Telemetry telemetry;
 
     //not sure which is right and left
-    private ServoImplEx turretServo;
-    private ServoImplEx otherturretServo;
+    private ServoImplEx leftTurretServo;
+    private ServoImplEx rightTurretServo;
     private Map stateMap;
     private boolean isAuto;
 
@@ -38,13 +38,13 @@ public class AutoTurret {
         this.stateMap = stateMap;
         this.isAuto = isAuto;
 
-        turretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turret"));
+        leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretLeft"));
 
         //used to be the guide...havent changed config yet so
-        otherturretServo = new CachingServo(hwMap.get(ServoImplEx.class, "guide"));
+        rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
 
-        turretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE,  RIGHT_POSITION_LEFT_SERVO_VALUE));
-        otherturretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE, RIGHT_POSITION_LEFT_SERVO_VALUE));
+        leftTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE,  RIGHT_POSITION_LEFT_SERVO_VALUE));
+        rightTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE, RIGHT_POSITION_LEFT_SERVO_VALUE));
 
     }
 
@@ -91,7 +91,8 @@ public class AutoTurret {
 
     public void transitionToPosition (double position) {
         //raising heights to reach different junctions, so four values
-        turretServo.setPosition(position);
+        leftTurretServo.setPosition(position);
+        rightTurretServo.setPosition(position);
 //        otherturretServo.setPosition(position);
     }
 

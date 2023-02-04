@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import java.util.HashMap;
 
 
-@Disabled
+
 @TeleOp (name = "Lift Encoder Getter")
 public class LiftTest extends LinearOpMode {
 

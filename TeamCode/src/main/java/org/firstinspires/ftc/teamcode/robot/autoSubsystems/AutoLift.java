@@ -28,32 +28,30 @@ public class AutoLift implements Subsystem {
 
     public static final class LiftConstants {
 
+
         //rev motor constants
+        private static final double LIFT_MOTOR_GEAR_FACTOR = 5.23 / 2.89;
         private static final double LIFT_MOTOR_GEAR_RATIO = 2.89;
         private static final int ULTRAPLANETARY_MAX_RPM = (int) (6000 / LIFT_MOTOR_GEAR_RATIO);
         private static final int TICKS_PER_REVOLUTION = 28;
         private static final int MAX_LIFT_TICKS_PER_SECOND = 1280;
         //encoder positions
         private static final int BOTTOM_ENCODER_TICKS = 0;
-        private static final int LOW_POLE_ENCODER_TICKS = 370;
-        private static final int MIDDLE_POLE_ENCODER_TICKS = 610;
-        private static final int HIGH_POLE_ENCODER_TICKS = 840;
+        private static final int LOW_POLE_ENCODER_TICKS = 705;
+        private static final int MIDDLE_POLE_ENCODER_TICKS = 1175;
+        private static final int HIGH_POLE_ENCODER_TICKS = 1570;
         private static final int JUNCTION_ENCODER_TICKS = 0;
         public static int COLLECTING_ENCODER_TICKS = 0;
-        private static final int LIFT_POSITION_TOLERANCE = 8;
-        private static final int CONE_CYCLE_POSITION_TOLERANCE = 3;
 
 
         //auto stack heights
-        private static final int STACK_5_ENCODER_TICKS = 130;
-        private static final int STACK_4_ENCODER_TICKS = 105;
-        private static final int STACK_3_ENCODER_TICKS = 60;
-        private static final int STACK_2_ENCODER_TICKS = 40; //FIXME
+        private static final int STACK_5_ENCODER_TICKS = 240;
+        private static final int STACK_4_ENCODER_TICKS = 185;
+        private static final int STACK_3_ENCODER_TICKS = 115;
+        private static final int STACK_2_ENCODER_TICKS = 65;
         private static final int STACK_1_ENCODER_TICKS = COLLECTING_ENCODER_TICKS;
 
         //cone cycle adjustments
-        private static final int LIFT_ADJUSTMENT_LOW = -30;
-        private static final int LIFT_ADJUSTMENT_HIGH = -60;
 
         //timings
         private static final int CYCLE_LIFT_DOWN_TIME_BOTTOM_MS = 300;
@@ -94,6 +92,8 @@ public class AutoLift implements Subsystem {
         private static final double INTEGRAL_COLLECTING_TO_LOW = 0;
         private static final double DERIVATIVE_COLLECTING_TO_LOW = 0;
 
+        private static final int LIFT_ADJUSTMENT_LOW = - (int) (30 * LIFT_MOTOR_GEAR_FACTOR);
+        private static final int LIFT_ADJUSTMENT_HIGH =  (int) (60 * LIFT_MOTOR_GEAR_FACTOR);
     }
 
     public enum LiftHeight {
@@ -350,31 +350,25 @@ public class AutoLift implements Subsystem {
     public void raiseHeightTo(int heightInTicks) {
         int position = getAvgLiftPosition();
 
-        // calculate the error
         int error = heightInTicks - position;
-
-        if (position >= heightInTicks - 5 && position <= heightInTicks + 5) {
-            if (heightInTicks > 400) {
-                setAllMotorPowers(0.45);
+        if (position < (heightInTicks - 200)) {
+            setAllMotorPowers(1.0);
+        } else if (position > (heightInTicks + 150)) {
+            setAllMotorPowers(-0.5);
+        } else if (position <= heightInTicks - 7 || position >= heightInTicks + 7) {
+            if (stateMap.get(LIFT_SYSTEM_NAME) == LIFT_POLE_GROUND &&
+                    heightInTicks > 0 &&
+                    position < 30) {
+                runAllMotorsToPosition(heightInTicks, 1);
+            } else if (heightInTicks > 300){
+                runAllMotorsToPosition(heightInTicks, 0.5);
             } else {
-                if (heightInTicks < 100) {
-                    if (position < 10) {
-                        setAllMotorSpeedsPercentage(-liftPIDController.updateWithError(error));
-                    } else {
-                        setAllMotorPowers(0.2);
-                    }
-                } else {
-                    setAllMotorPowers(0.2);
-                }
+                runAllMotorsToPosition(heightInTicks, 0.3);
             }
-        } else if (position > heightInTicks) {
-                setAllMotorPowers( 0.2 * -liftPIDController.updateWithError(-error));
+        } else if (heightInTicks == 0) {
+            setAllMotorPowers(0.0);
         } else {
-            if (position < heightInTicks - 150) {
-                setAllMotorPowers(1);
-            } else {
-                setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.4);
-            }
+            setAllMotorPowers(0.15);
         }
     }
 

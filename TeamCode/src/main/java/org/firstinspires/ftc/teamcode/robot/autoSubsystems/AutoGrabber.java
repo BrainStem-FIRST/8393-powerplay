@@ -68,6 +68,7 @@ public class AutoGrabber implements Subsystem {
         } else if (stateMap.get(SYSTEM_NAME) == FULLY_OPEN) {
             maxOpen();
         }
+
     }
 
     public void open() {
