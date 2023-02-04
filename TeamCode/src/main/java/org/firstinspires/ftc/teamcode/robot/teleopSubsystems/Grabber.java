@@ -76,7 +76,7 @@ public class Grabber implements Subsystem {
     }
 
     public void open() {
-        grabber.setPosition(0.6);
+        grabber.setPosition(0.52);
     }
 
     public void maxOpen() {

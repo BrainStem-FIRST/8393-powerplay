@@ -324,31 +324,29 @@ public class Lift implements Subsystem {
         telemetry.addData("subheight ", subheight);
 
         int error = heightInTicks - position;
-       if (position < (heightInTicks - 200)) {
+        if (position < (heightInTicks - 200)) {
             setAllMotorPowers(1.0);
             telemetry.addData("Raise Lift Function", "If Loop 1");
         } else if (position > (heightInTicks + 150)) {
             setAllMotorPowers(-0.5);
-           telemetry.addData("Raise Lift Function", "If Loop 2");
+            telemetry.addData("Raise Lift Function", "If Loop 2");
         } else if (position <= heightInTicks - 7 || position >= heightInTicks + 7) {
-           if (stateMap.get(LIFT_SYSTEM_NAME) == LIFT_POLE_GROUND &&
-                   heightInTicks > 0 &&
-                   position < 30) {
-               runAllMotorsToPosition(heightInTicks, 1);
-           } else if (heightInTicks > 300){
-               //runAllMotorsToPosition(heightInTicks, 0.5);
-               setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.15);
-           } else {
-               //runAllMotorsToPosition(heightInTicks, 0.3);
-               setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.9);
-           }
-           telemetry.addData("Raise Lift Function", "If Loop 3");
+            if (stateMap.get(LIFT_SYSTEM_NAME) == LIFT_POLE_GROUND &&
+                    heightInTicks > 0 &&
+                    position < 30) {
+                runAllMotorsToPosition(heightInTicks, 1);
+            } else if (heightInTicks > 300){
+                runAllMotorsToPosition(heightInTicks, 0.5);
+            } else {
+                runAllMotorsToPosition(heightInTicks, 0.3);
+            }
+            telemetry.addData("Raise Lift Function", "If Loop 3");
         } else if (heightInTicks == 0) {
             setAllMotorPowers(0.0);
-           telemetry.addData("Raise Lift Function", "If Loop 4");
+            telemetry.addData("Raise Lift Function", "If Loop 4");
         } else {
             setAllMotorPowers(0.15);
-           telemetry.addData("Raise Lift Function", "If Loop 5");
+            telemetry.addData("Raise Lift Function", "If Loop 5");
         }
 
 
