@@ -318,18 +318,12 @@ public class Lift implements Subsystem {
     public void raiseHeightTo(int heightInTicks) {
         int position = getAvgLiftPosition();
 
-        // calculate the error
-        telemetry.addData("Lift Position ", position);
-        telemetry.addData("heightInTicks ", heightInTicks);
-        telemetry.addData("subheight ", subheight);
 
         int error = heightInTicks - position;
         if (position < (heightInTicks - 200)) {
             setAllMotorPowers(1.0);
-            telemetry.addData("Raise Lift Function", "If Loop 1");
         } else if (position > (heightInTicks + 150)) {
             setAllMotorPowers(-0.5);
-            telemetry.addData("Raise Lift Function", "If Loop 2");
         } else if (position <= heightInTicks - 7 || position >= heightInTicks + 7) {
             if (stateMap.get(LIFT_SYSTEM_NAME) == LIFT_POLE_GROUND &&
                     heightInTicks > 0 &&
@@ -340,13 +334,10 @@ public class Lift implements Subsystem {
             } else {
                 runAllMotorsToPosition(heightInTicks, 0.3);
             }
-            telemetry.addData("Raise Lift Function", "If Loop 3");
         } else if (heightInTicks == 0) {
             setAllMotorPowers(0.0);
-            telemetry.addData("Raise Lift Function", "If Loop 4");
         } else {
             setAllMotorPowers(0.15);
-            telemetry.addData("Raise Lift Function", "If Loop 5");
         }
 
 
