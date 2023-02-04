@@ -79,8 +79,8 @@ public class Lift implements Subsystem {
         private static final boolean LIFT_MOTOR_4_REVERSED = false;
 
         //lift PID constants
-        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 0.02;
-        private static final double INTEGRAL_COLLECTING_TO_HIGH = 2;
+        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 0.012;
+        private static final double INTEGRAL_COLLECTING_TO_HIGH = 3;
         private static final double DERIVATIVE_COLLECTING_TO_HIGH = 0.001; //.001
 
         private static final double PROPORTIONAL_COLLECTING_TO_LOW = 0;
@@ -336,9 +336,11 @@ public class Lift implements Subsystem {
                    position < 30) {
                runAllMotorsToPosition(heightInTicks, 1);
            } else if (heightInTicks > 300){
-               runAllMotorsToPosition(heightInTicks, 0.5);
+               //runAllMotorsToPosition(heightInTicks, 0.5);
+               setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.15);
            } else {
-               runAllMotorsToPosition(heightInTicks, 0.3);
+               //runAllMotorsToPosition(heightInTicks, 0.3);
+               setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.9);
            }
            telemetry.addData("Raise Lift Function", "If Loop 3");
         } else if (heightInTicks == 0) {
