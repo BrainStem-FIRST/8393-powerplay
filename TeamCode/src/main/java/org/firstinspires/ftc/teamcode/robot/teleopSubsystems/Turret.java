@@ -21,7 +21,7 @@ public class Turret implements Subsystem {
     public final double     CENTER_POSITION_SERVO_VALUE = 1375;
     public final double     RIGHT_POSITION_SERVO_VALUE = 2166;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 309;
-    public final double TURRET_CENTER_POSITION = 0.500;
+    public final double TURRET_CENTER_POSITION = 0.51;
 
     public Telemetry telemetry;
     private ServoImplEx leftTurretServo;
@@ -79,7 +79,7 @@ public class Turret implements Subsystem {
     public void selectTransition(String desiredLevel){
         switch(desiredLevel){
             case LEFT_POSITION:{
-                transitionToPosition(0);
+                transitionToPosition(0.03);
                 break;
             } case CENTER_POSITION:{
                 transitionToPosition(TURRET_CENTER_POSITION);

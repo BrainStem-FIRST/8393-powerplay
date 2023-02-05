@@ -63,10 +63,10 @@ public class AutoTurret {
     public void selectTransition(String desiredLevel){
         switch(desiredLevel){
             case LEFT_POSITION:{
-                transitionToPosition(0);
+                transitionToPosition(0.03);
                 break;
             } case CENTER_POSITION:{
-                transitionToPosition(0.5);
+                transitionToPosition(0.51);
                 break;
             } case RIGHT_POSITION:{
                 transitionToPosition(1);
