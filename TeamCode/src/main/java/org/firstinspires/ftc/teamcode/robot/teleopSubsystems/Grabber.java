@@ -24,6 +24,7 @@ public class Grabber implements Subsystem {
     public final String OPEN_STATE = "OPEN";
     public final String FULLY_OPEN = "FULLYOPEN";
     public final String CLOSED_STATE = "CLOSED";
+    public final String CLOSED_STATE_CAP = "CLOSED_CAP";
     Constants constants = new Constants();
 
     public final double REGULAR_OPEN = 900; //520 for passive
@@ -64,9 +65,11 @@ public class Grabber implements Subsystem {
     public void setState(Lift lift) {
         if (stateMap.get(SYSTEM_NAME) == CLOSED_STATE) {
             close();
+        } else if  (stateMap.get(SYSTEM_NAME) == CLOSED_STATE_CAP) {
+            opencap();
         } else if (stateMap.get(SYSTEM_NAME) == OPEN_STATE) {
             open();
-        } else if (stateMap.get(SYSTEM_NAME) == FULLY_OPEN) {
+        }  else if (stateMap.get(SYSTEM_NAME) == FULLY_OPEN) {
             if (lift.getAvgLiftPosition() > 350) {
                 maxOpen();
             } else {
@@ -78,6 +81,8 @@ public class Grabber implements Subsystem {
     public void open() {
         grabber.setPosition(0.52);
     }
+
+    public void opencap() { grabber.setPosition(0.85);}
 
     public void maxOpen() {
         grabber.setPosition(0.0);

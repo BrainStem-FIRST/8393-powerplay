@@ -100,6 +100,7 @@ public class RobotTeleOp extends LinearOpMode {
     Constants constants = new Constants();
 
     Map<String, Boolean> toggleMap = new HashMap<String, Boolean>() {{
+        put(GAMEPAD_2_RIGHT_TRIGGER_STATE, false);
         put(GAMEPAD_1_A_STATE, false);
         put(GAMEPAD_1_A_IS_PRESSED, false);
         put(GAMEPAD_1_B_STATE, false);
@@ -164,7 +165,9 @@ public class RobotTeleOp extends LinearOpMode {
             bottomHeightStickyButtonRightTrigger.update(gamepad2.right_trigger > 0.5);
             bottomHeightStickyButtonLeftTrigger.update(gamepad2.left_trigger > 0.5);
 
-
+             if(gamepad2.right_trigger > 0.2) {
+                 stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE_CAP);
+             }
 
             if ((gamepad2.right_stick_button && gamepad2.left_stick_button) || (gamepad1.right_stick_button && gamepad1.left_stick_button)) {
                 robot.lift.setAllMotorPowers(-0.25);
