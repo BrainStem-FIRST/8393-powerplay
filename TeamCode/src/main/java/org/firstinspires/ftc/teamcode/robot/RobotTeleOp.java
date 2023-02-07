@@ -73,8 +73,6 @@ public class RobotTeleOp extends LinearOpMode {
     private Pose2d zeroPose = new Pose2d(0, 0, Math.toRadians(0));
 
 
-    private final double SLOWMODE = 0.45;
-
     boolean disableDrivetrain = false;
 
 
@@ -95,7 +93,9 @@ public class RobotTeleOp extends LinearOpMode {
 
     private int bottomAdjustmentHeight = 0;
     private double driver2_ground_adjusted_subheight = 0;
-    private double driver2_placement_adjusted_subheight = 0;
+
+    private double conePickUp = 0.26;
+    private double driver2_placement_adjusted_subheight;
 
     Constants constants = new Constants();
 
@@ -114,13 +114,13 @@ public class RobotTeleOp extends LinearOpMode {
         put(GAMEPAD_1_LEFT_TRIGGER_PRESSED, false);
         put(GAMEPAD_1_Y_STATE, false);
         put(GAMEPAD_1_Y_PRESSED, false);
-        put(GAMEPAD_1_RIGHT_TRIGGER_PRESSED, false);
         put(GAMEPAD_1_RIGHT_TRIGGER_STATE, false);
         put(GAMEPAD_2_X_BUTTON_TOGGLE, false);
         put(GAMEPAD_2_X_BUTTON_PRESSED, false);
+        put(GAMEPAD_2_RIGHT_TRIGGER_STATE, false);
 
     }};
-    //DO NOT DELETE THIS OR COMMENT IT OUT! IT LOOKS UNUSED BUT IF DELETED, TELEOP WON'T RUN!
+
     public RobotTeleOp() {
 
     }
@@ -143,7 +143,6 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-        //stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
         stateMap.put(constants.EXTENSION_TARGET, String.valueOf(1));
 
 
@@ -165,9 +164,11 @@ public class RobotTeleOp extends LinearOpMode {
             bottomHeightStickyButtonRightTrigger.update(gamepad2.right_trigger > 0.5);
             bottomHeightStickyButtonLeftTrigger.update(gamepad2.left_trigger > 0.5);
 
-             if(gamepad2.right_trigger > 0.2) {
-                 stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE_CAP);
-             }
+             if(gamepad2.right_trigger > 0.35 && conePickUp == 0.26) {
+                 conePickUp = 0;
+             } else if (gamepad2.right_trigger > 0.35 && conePickUp == 0) {
+                 conePickUp = 0.26;
+            }
 
             if ((gamepad2.right_stick_button && gamepad2.left_stick_button) || (gamepad1.right_stick_button && gamepad1.left_stick_button)) {
                 robot.lift.setAllMotorPowers(-0.25);
@@ -200,7 +201,7 @@ public class RobotTeleOp extends LinearOpMode {
                 if (liftDelayCollectingBoolean && liftDelayCollecting.seconds() > 0.05) {
                     liftDelayCollectingBoolean = false;
                     if (driver2_ground_adjusted_subheight < 0.1) {
-                        robot.lift.setSubheight(0.26);
+                        robot.lift.setSubheight(conePickUp); // FIXME
                     } else {
                         driver2_ground_adjusted_subheight += 0.5;
                     }
@@ -371,6 +372,8 @@ public class RobotTeleOp extends LinearOpMode {
                 telemetry.addData("Bottom adjustment height: ", robot.lift.LIFT_POSITION_GROUND);
                 telemetry.addData("Gamepad 1 A Button Toggle State ", toggleMap.get(GAMEPAD_1_A_STATE));
                 telemetry.addData("Lift Position Being Set ", stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
+                telemetry.addData("Gamepad 2 Right Trigger State", toggleMap.get(GAMEPAD_2_RIGHT_TRIGGER_STATE));
+                telemetry.addData("Cone Up Adjust ", conePickUp);
 
 
                 driveCancelable.update();
