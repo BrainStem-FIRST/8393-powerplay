@@ -32,7 +32,7 @@ public class Lift implements Subsystem {
         private static final int BOTTOM_ENCODER_TICKS = 0;
         private static final int LOW_POLE_ENCODER_TICKS = 705;
         private static final int MIDDLE_POLE_ENCODER_TICKS = 1175;
-        private static final int HIGH_POLE_ENCODER_TICKS = 1570;
+        private static final int HIGH_POLE_ENCODER_TICKS = 1590;
         private static final int JUNCTION_ENCODER_TICKS = 0;
         public static int COLLECTING_ENCODER_TICKS = 0;
 
