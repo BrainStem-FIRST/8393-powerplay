@@ -82,13 +82,13 @@ public class Grabber implements Subsystem {
         grabber.setPosition(0.52);
     }
 
-    public void opencap() { grabber.setPosition(0.85);}
+    public void opencap() { grabber.setPosition(0.9);}
 
     public void maxOpen() {
         grabber.setPosition(0.0);
     }
 
     public void close() {
-        grabber.setPosition(1.0);
+        grabber.setPosition(0.96);
     }
 }
