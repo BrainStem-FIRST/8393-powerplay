@@ -30,11 +30,11 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     // Locations - For Left /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
     private Pose2d initialApproach = new Pose2d(-36, -24, Math.toRadians(-90));
-    private Pose2d highPoleDepositingPosition = new Pose2d(-22.85, -11.5, Math.toRadians(180));
-    private Pose2d highPoleDepositingPosition2 = new Pose2d(-22.85, -11.5, Math.toRadians(180));
+    private Pose2d highPoleDepositingPositionRight = new Pose2d(-22.85, 12, Math.toRadians(180));
+    private Pose2d highPoleDepositingPositionLeft = new Pose2d(-23.5, -12, Math.toRadians(180));
+    private Pose2d highPoleDepositingPosition;
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
-    private Pose2d highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() - 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
-    private Vector2d collectConesPosition = new Vector2d(-54, -11.75);
+    private Vector2d collectConesPosition = new Vector2d(-56, -12);
     private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(0));
@@ -55,7 +55,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private Vector2d parking3 = new Vector2d(-12, -12.5);
     private Vector2d parking2 = new Vector2d(-36, -12.5);
     private Vector2d parking1 = new Vector2d(-60, -12.5);
-    private Vector2d endParking;
+    private Pose2d endParking;
 
 
     private int initialTangent = -80;
@@ -119,10 +119,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 depositPreloadSpline2Tangent = -115;
                 startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(90));
                 initialTurn = 90;
-                highPoleDepositingPosition = new Pose2d(highPoleDepositingPosition.getX(), -highPoleDepositingPosition.getY(), Math.toRadians(180));
-                highPoleDepositingPosition2 = new Pose2d(highPoleDepositingPosition2.getX(), -highPoleDepositingPosition2.getY(), Math.toRadians(180));
+                highPoleDepositingPosition = new Pose2d(highPoleDepositingPositionRight.getX(), highPoleDepositingPositionRight.getY(), Math.toRadians(180));
                 lowPoleDepositingPosition = new Pose2d(lowPoleDepositingPosition.getX(), -lowPoleDepositingPosition.getY(), Math.toRadians(180));
-                highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() + 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
                 depositPreloadForward = new Pose2d(depositPreloadForward.getX(), -depositPreloadForward.getY(), -depositPreloadForward.getHeading());
                 depositPreLoadForwardVector = new Vector2d(depositPreLoadForwardVector.getX(), -depositPreLoadForwardVector.getY());
                 depositPreLoadForwardHeading = Math.toRadians(-100);
@@ -137,9 +135,9 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 parking1 = new Vector2d(-12, 12.5);
                 parking2 = new Vector2d(-36, 12.5);
                 parking3 = new Vector2d(-60, 12.5);
-                endParking = new Vector2d(-36, 12.5);
                 break;
             case LEFT:
+                highPoleDepositingPosition = new Pose2d(highPoleDepositingPositionLeft.getX(), highPoleDepositingPositionLeft.getY(), Math.toRadians(180));
                 LEFTSIDE = true;
                 initialTangent = -80;
                 initialApproachTangent = 100;
@@ -209,7 +207,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
 
         while (!this.opModeIsActive() && !this.isStopRequested()) {
-            endParking = new Vector2d(parking1.getX(), parking1.getY());
+            endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
             autoTrajectorySequence = initializeTrajectories(robot, drive);
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
@@ -225,7 +223,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                         tagFound = true;
                         telemetry.addData("Open CV :", "Mid");
                         telemetry.update();
-                        endParking = new Vector2d(parking2.getX(), parking2.getY());
+                        endParking = new Pose2d(parking2.getX(), parking2.getY(), startPosition.getHeading());
                         break;
 
                     } else if (tag.id == RIGHT) {
@@ -235,7 +233,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                         tagFound = true;
                         telemetry.addData("Open CV :", "Right");
                         telemetry.update();
-                        endParking = new Vector2d(parking3.getX(), parking3.getY());
+                        endParking = new Pose2d(parking3.getX(), parking3.getY(), startPosition.getHeading());
                         break;
 
                     } else {
@@ -245,7 +243,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                         parking = 1;
                         telemetry.addData("Open CV :", "Left");
                         telemetry.update();
-                        endParking = new Vector2d(parking1.getX(), parking1.getY());
+                        endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
                         break;
 
                     }
@@ -275,31 +273,9 @@ public class HighPoleOnePlusFive extends LinearOpMode {
         drive.followTrajectorySequenceAsync(autoTrajectorySequence);
 
         while (opModeIsActive()) {
-
-            if (totalTime.seconds() < 28.6) {
-                telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
-                drive.update();
-                robot.updateSystems();
-                telemetry.update();
-                telemetry.addData("Lift state", stateMap.get(robot.lift.LIFT_SYSTEM_NAME));
-                telemetry.addData("Arm state", stateMap.get(robot.arm.SYSTEM_NAME));
-                telemetry.addData("Turret State", stateMap.get(robot.turret.SYSTEM_NAME));
-            } else {
-                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-                stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
-                robot.updateSystems();
-                Trajectory parkingTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToConstantHeading(endParking)
-                        .build();
-                drive.followTrajectory(parkingTrajectory);
-
-
-            }
+            drive.update();
+            robot.updateSystems();
         }
-
     }
 
 
@@ -317,7 +293,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .splineToSplineHeading(initialApproach, Math.toRadians(initialApproachTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
-                .splineToSplineHeading(highPoleDepositingPosition2, Math.toRadians(highPoleDepositingPositionTangent),
+                .splineToSplineHeading(highPoleDepositingPosition, Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(50))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
@@ -332,7 +308,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionDeliverySide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
@@ -375,7 +351,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.1)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
@@ -393,7 +369,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
 
 
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
 
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
@@ -437,7 +413,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
@@ -455,7 +431,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
 
 
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
 
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
@@ -498,7 +474,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
@@ -516,7 +492,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
 
 
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
 
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
@@ -558,7 +534,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
@@ -576,7 +552,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
 
 
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
 
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
@@ -618,7 +594,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
@@ -636,7 +612,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
 
 
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
 
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
@@ -650,11 +626,13 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
                     robot.lift.setSubheight(0);
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_1);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
                 })
+                .waitSeconds(0.6)
+                .splineToLinearHeading(endParking, Math.toRadians(180 - highPoleDepositingPositionTangent),
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(60))
 
-
-                .waitSeconds(0.75)
                 .build();
 
         return deliverPreload;
