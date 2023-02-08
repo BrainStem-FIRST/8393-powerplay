@@ -164,10 +164,10 @@ public class RobotTeleOp extends LinearOpMode {
             bottomHeightStickyButtonRightTrigger.update(gamepad2.right_trigger > 0.5);
             bottomHeightStickyButtonLeftTrigger.update(gamepad2.left_trigger > 0.5);
 
-             if(gamepad2.right_trigger > 0.35 && conePickUp == 0.26) {
-                 conePickUp = 0;
-             } else if (gamepad2.right_trigger > 0.35 && conePickUp == 0) {
-                 conePickUp = 0.26;
+            if(gamepad2.right_trigger > 0.35 && conePickUp == 0.26) {
+                conePickUp = 0;
+            } else if (gamepad2.right_trigger > 0.35 && conePickUp == 0) {
+                conePickUp = 0.26;
             }
 
             if ((gamepad2.right_stick_button && gamepad2.left_stick_button) || (gamepad1.right_stick_button && gamepad1.left_stick_button)) {
