@@ -165,8 +165,8 @@ public class RobotTeleOp extends LinearOpMode {
             bottomHeightStickyButtonLeftTrigger.update(gamepad2.left_trigger > 0.5);
 
             if(gamepad2.right_trigger > 0.35 && conePickUp == 0.26) {
-                conePickUp = 0;
-            } else if (gamepad2.right_trigger > 0.35 && conePickUp == 0) {
+                conePickUp = 0.09;
+            } else if (gamepad2.right_trigger > 0.35 && conePickUp == 0.09) {
                 conePickUp = 0.26;
             }
 
@@ -192,7 +192,12 @@ public class RobotTeleOp extends LinearOpMode {
                         robot.lift.setSubheight(0);
                     }
                 } else if (gamepad1.right_trigger > 0.5 && robot.lift.getAvgLiftPosition() < 500) {
-                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+                    if(conePickUp == 0.26) {
+                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+                    }
+                    else if(conePickUp == 0.09){
+                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE_CAP);
+                    }
                     liftDelay.reset();
                     liftDelayCollecting.reset();
                     liftDelayCollectingBoolean = true;
