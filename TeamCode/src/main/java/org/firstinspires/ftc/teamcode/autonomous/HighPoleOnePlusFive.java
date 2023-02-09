@@ -52,9 +52,10 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private boolean LEFTSIDE;
     private int initialTurn = -90;
 
-    private Vector2d parking3 = new Vector2d(-12, -12.5);
-    private Vector2d parking2 = new Vector2d(-36, -12.5);
-    private Vector2d parking1 = new Vector2d(-60, -12.5);
+
+    private Pose2d parking3 = new Pose2d(-12, -12.5, startPosition.getHeading());
+    private Pose2d parking2 = new Pose2d(-36, -12.5, startPosition.getHeading());
+    private Pose2d parking1 = new Pose2d(-60, -12.5, Math.toRadians(180));
     private Pose2d endParking;
 
 
@@ -76,6 +77,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private boolean step5a = false;
 
     private int parking;
+
+    private boolean trajectoryCalculated = false;
 
     private ArrayList liftCollectionHeights;
     Constants constants = new Constants();
@@ -132,9 +135,9 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 depositOnHighPole2 = new Pose2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY(), Math.toRadians(180));
 
 
-                parking1 = new Vector2d(-12, 12.5);
-                parking2 = new Vector2d(-36, 12.5);
-                parking3 = new Vector2d(-60, 12.5);
+                parking1 = new Pose2d(-12, 12.5, startPosition.getHeading());
+                parking2 = new Pose2d(-36, 12.5, startPosition.getHeading());
+                parking3 = new Pose2d(-60, 12.5, Math.toRadians(180));
                 break;
             case LEFT:
                 highPoleDepositingPosition = new Pose2d(highPoleDepositingPositionLeft.getX(), highPoleDepositingPositionLeft.getY(), Math.toRadians(180));
@@ -168,6 +171,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 turretPickupPosition = robot.turret.LEFT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.RIGHT_POSITION;
                 extensionDeliverySide = robot.arm.RIGHT_SIDE_EXTENDED_AUTO;
+                endParking = new Pose2d(parking3.getX(), parking3.getY(), startPosition.getHeading());
                 break;
             case RIGHT:
                 lowTurretDeliveryPosition = robot.turret.RIGHT_POSITION;
@@ -175,6 +179,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 turretPickupPosition = robot.turret.RIGHT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.LEFT_POSITION;
                 extensionDeliverySide = robot.arm.LEFT_SIDE_EXTENDED_AUTO;
+                endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
                 break;
         }
 
@@ -204,11 +209,15 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
         telemetry.setMsTransmissionInterval(50);
         robot.grabber.close();
-
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+        stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
+        stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
+        stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
+        stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
+        drive.setPoseEstimate(startPosition);
 
         while (!this.opModeIsActive() && !this.isStopRequested()) {
-            endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
-            autoTrajectorySequence = initializeTrajectories(robot, drive);
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
             if (currentDetections.size() != 0) {
@@ -219,68 +228,66 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     if (tag.id == MIDDLE) {
                         tagOfInterest = tag;
                         location = ParkingLocation.MID;
+                        if (parking != 2) {
+                            trajectoryCalculated = false;
+                        }
                         parking = 2;
                         tagFound = true;
                         telemetry.addData("Open CV :", "Mid");
-                        telemetry.update();
-                        endParking = new Pose2d(parking2.getX(), parking2.getY(), startPosition.getHeading());
+                        endParking = parking2;
                         break;
 
                     } else if (tag.id == RIGHT) {
                         tagOfInterest = tag;
                         location = ParkingLocation.RIGHT;
+                        if (parking != 3) {
+                            trajectoryCalculated = false;
+                        }
                         parking = 3;
                         tagFound = true;
                         telemetry.addData("Open CV :", "Right");
-                        telemetry.update();
-                        endParking = new Pose2d(parking3.getX(), parking3.getY(), startPosition.getHeading());
+                        endParking = parking3;
                         break;
 
                     } else {
                         tagOfInterest = tag;
                         location = ParkingLocation.LEFT;
                         tagFound = true;
+                        if (parking != 1) {
+                            trajectoryCalculated = false;
+                        }
                         parking = 1;
                         telemetry.addData("Open CV :", "Left");
-                        telemetry.update();
-                        endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
+                        endParking = parking1;
                         break;
 
                     }
                 }
-
-
             }
-        }
 
+            if (trajectoryCalculated == false) {
+                autoTrajectorySequence = initializeTrajectories(robot, drive);
+                trajectoryCalculated = true;
+            }
+
+            if (endParking != null) {
+                telemetry.addData("Parking", endParking);
+            }
+            telemetry.update();
+        }
 
         this.waitForStart();
         camera.closeCameraDevice();
-        drive.setPoseEstimate(startPosition);
-        telemetry.addLine("init");
-        telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
-        telemetry.update();
-        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
-        stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
         robot.updateSystems();
-
-        totalTime.reset();
-
         drive.followTrajectorySequenceAsync(autoTrajectorySequence);
 
         while (opModeIsActive()) {
+            telemetry.addData("Parking", endParking);
+            telemetry.update();
             drive.update();
             robot.updateSystems();
         }
     }
-
-
-
-
 
     private TrajectorySequence initializeTrajectories(AutoBrainSTEMRobot robot, SampleMecanumDrive drive) {
 
@@ -366,11 +373,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionDeliverySide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-
-
-
                     robot.lift.setSubheight(1.0);
-
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
@@ -629,7 +632,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
                 })
                 .waitSeconds(0.6)
-                .splineToLinearHeading(endParking, Math.toRadians(180 - highPoleDepositingPositionTangent),
+                .lineToLinearHeading(endParking,
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(60))
 

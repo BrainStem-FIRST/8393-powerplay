@@ -158,6 +158,9 @@ public class Lift implements Subsystem {
     private ArrayList<DcMotorEx> liftMotors;
 
     public int LIFT_POSITION_GROUND = LiftConstants.BOTTOM_ENCODER_TICKS;
+    public int stackIncrement = 0;
+    private int stackIncrementHeight = 0;
+
 
     //PID controller
     PIDController liftPIDController;
@@ -252,6 +255,45 @@ public class Lift implements Subsystem {
         subheight = (int) (452.42 * driverInput);
     }
 
+    public void incrementStack() {
+        stackIncrement += 1;
+        if (stackIncrement == 5) {
+            stackIncrement = 0;
+        }
+    }
+
+    public void decrementStack() {
+        stackIncrement -= 1;
+        if (stackIncrement == -1) {
+            stackIncrement = 4;
+        }
+    }
+
+    private void setStackHeight() {
+        switch (stackIncrement) {
+            case 0: {
+                stackIncrementHeight = 0;
+                break;
+            }
+            case 1: {
+                stackIncrementHeight = 80;
+                break;
+            }
+            case 2: {
+                stackIncrementHeight = 130;
+                break;
+            }
+            case 3: {
+                stackIncrementHeight = 195;
+                break;
+            }
+            case 4: {
+                stackIncrementHeight = 250;
+                break;
+            }
+        }
+    }
+
     private void selectTransition(String desiredLevel) {
         switch (desiredLevel) {
             case LIFT_POLE_LOW: {
@@ -267,9 +309,16 @@ public class Lift implements Subsystem {
                 break;
             }
             case LIFT_POLE_GROUND: {
+                int adjusted_subheight = 0;
+                if (stackIncrement > 0) {
+                    adjusted_subheight = subheight * 2;
+                } else {
+                    adjusted_subheight = subheight;
+                }
+                setStackHeight();
                 telemetry.addData("GROUND POSITION", LIFT_POSITION_GROUND);
                 telemetry.addData("SUBHEIGHT", subheight);
-                transitionToLiftPosition(LIFT_POSITION_GROUND + subheight);
+                transitionToLiftPosition(LIFT_POSITION_GROUND + adjusted_subheight + stackIncrementHeight);
                 break;
             }
             case STACK_5: {
@@ -280,6 +329,9 @@ public class Lift implements Subsystem {
             }
             case STACK_3: {
                 transitionToLiftPosition(LiftHeight.STACK_3.getTicks());
+            }
+            case STACK_2: {
+                transitionToLiftPosition(LiftHeight.STACK_2.getTicks());
             }
             default: {
                 setAllMotorPowers(heightFactor(getPosition()));
@@ -308,7 +360,6 @@ public class Lift implements Subsystem {
 
     public void runAllMotorsToPosition(int position, double power) {
         for (DcMotor liftMotor : liftMotors) {
-            liftMotor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
             liftMotor.setTargetPosition(position);
             liftMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             liftMotor.setPower(power);

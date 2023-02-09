@@ -32,6 +32,8 @@ public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_LEFT_TRIGGER_STATE = "GAMEPAD_1_LEFT_TRIGGER_STATE";
     private final String GAMEPAD_1_LEFT_TRIGGER_PRESSED = "GAMEPAD_1_LEFT_TRIGGER_PRESSED";
     private final String GAMEPAD_2_X_BUTTON_TOGGLE = "GAMEPAD_2_X_BUTTON_TOGGLE";
+    private final String GAMEPAD_2_DPAD_DOWN_STATE = "GAMEPAD_2_DPAD_DOWN_STATE";
+    private final String GAMEPAD_2_DPAD_DOWN_PRESSED = "GAMEPAD_2_DPAD_DOWN_PRESSED";
     private final String GAMEPAD_1_Y_STATE = "GAMEPAD_1_Y_STATE";
     private final String GAMEPAD_1_Y_PRESSED = "GAMEPAD_1_Y_IS_PRESSED";
     private final double AUTO_EXTENSION_ADJUSTMENT = 0.0;
@@ -83,10 +85,12 @@ public class RobotTeleOp extends LinearOpMode {
 
     //open grabber boolean
     private boolean openGrabberConeCycle = false;
+    private boolean resetComplete = true;
 
     //lift bring in delay
     private boolean bringLiftDownBoolean = false;
     private ElapsedTime liftDelay = new ElapsedTime();
+    private ElapsedTime resetDelay = new ElapsedTime();
 
     private boolean liftDelayCollectingBoolean = false;
     private ElapsedTime liftDelayCollecting = new ElapsedTime();
@@ -94,8 +98,11 @@ public class RobotTeleOp extends LinearOpMode {
     private int bottomAdjustmentHeight = 0;
     private double driver2_ground_adjusted_subheight = 0;
 
-    private double conePickUp = 0.26;
+    private double conePickUp = 0.31;
     private double driver2_placement_adjusted_subheight;
+
+    private boolean gamepad2RightTriggerPressed = false;
+    private boolean gamepad2LeftTriggerPressed = false;
 
     Constants constants = new Constants();
 
@@ -118,6 +125,8 @@ public class RobotTeleOp extends LinearOpMode {
         put(GAMEPAD_2_X_BUTTON_TOGGLE, false);
         put(GAMEPAD_2_X_BUTTON_PRESSED, false);
         put(GAMEPAD_2_RIGHT_TRIGGER_STATE, false);
+        put(GAMEPAD_2_DPAD_DOWN_STATE, false);
+        put(GAMEPAD_2_DPAD_DOWN_PRESSED, false);
 
     }};
 
@@ -161,22 +170,47 @@ public class RobotTeleOp extends LinearOpMode {
         while (!isStopRequested()) {
             robot.lights.setBothLEDRed();
 
-            bottomHeightStickyButtonRightTrigger.update(gamepad2.right_trigger > 0.5);
-            bottomHeightStickyButtonLeftTrigger.update(gamepad2.left_trigger > 0.5);
-
-            if(gamepad2.right_trigger > 0.35 && conePickUp == 0.26) {
-                conePickUp = 0.09;
-            } else if (gamepad2.right_trigger > 0.35 && conePickUp == 0.09) {
-                conePickUp = 0.26;
+            telemetry.addData("Stack Increment", robot.lift.stackIncrement);
+            if (gamepad2.right_trigger > 0.5 && !gamepad2RightTriggerPressed) {
+                robot.lift.incrementStack();
+                gamepad2RightTriggerPressed = true;
+            } else if (gamepad2.right_trigger <= 0.5) {
+                gamepad2RightTriggerPressed = false;
             }
 
+            if (gamepad2.left_trigger > 0.5 && !gamepad2LeftTriggerPressed) {
+                robot.lift.decrementStack();
+                gamepad2LeftTriggerPressed = true;
+            } else if (gamepad2.left_trigger <= 0.5) {
+                gamepad2LeftTriggerPressed = false;
+            }
+
+            if(toggleMap.get(GAMEPAD_2_DPAD_DOWN_STATE)) {
+                conePickUp = 0.09;
+                robot.grabber.cap = true;
+            } else {
+                conePickUp = 0.31;
+                robot.grabber.cap = false;
+            }
+
+            telemetry.addData("ConePickup", conePickUp);
+
             if ((gamepad2.right_stick_button && gamepad2.left_stick_button) || (gamepad1.right_stick_button && gamepad1.left_stick_button)) {
+                resetComplete = false;
+                resetDelay.startTime();
+            }
+
+            if (resetComplete == false && resetDelay.seconds() < 0.4) {
                 robot.lift.setAllMotorPowers(-0.25);
                 robot.turret.centerTurret();
                 robot.arm.extendHome();
+            } else if (resetDelay.seconds() < 0.5 && resetComplete == false) {
                 robot.lift.resetEncoders();
             } else {
                 setButtons();
+
+                resetComplete = true;
+                resetDelay.reset();
 
                 if (stateMap.get(robot.lift.LIFT_SYSTEM_NAME) != robot.lift.LIFT_POLE_GROUND) {
                     if (gamepad1.right_trigger > 0.05 && gamepad1.right_trigger < 0.9) {
@@ -192,12 +226,7 @@ public class RobotTeleOp extends LinearOpMode {
                         robot.lift.setSubheight(0);
                     }
                 } else if (gamepad1.right_trigger > 0.5 && robot.lift.getAvgLiftPosition() < 500) {
-                    if(conePickUp == 0.26) {
-                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
-                    }
-                    else if(conePickUp == 0.09){
-                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE_CAP);
-                    }
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                     liftDelay.reset();
                     liftDelayCollecting.reset();
                     liftDelayCollectingBoolean = true;
@@ -433,6 +462,7 @@ public class RobotTeleOp extends LinearOpMode {
     }
 
     private void setButtons() {
+        toggleButton(GAMEPAD_2_DPAD_DOWN_STATE, GAMEPAD_2_DPAD_DOWN_PRESSED, gamepad2.dpad_down);
         toggleButton(GAMEPAD_2_X_BUTTON_TOGGLE, GAMEPAD_2_X_BUTTON_PRESSED, gamepad2.x);
         toggleButton(GAMEPAD_1_A_STATE, GAMEPAD_1_A_IS_PRESSED, gamepad1.a);
         toggleButton(GAMEPAD_1_B_STATE, GAMEPAD_1_B_IS_PRESSED, gamepad1.b);
