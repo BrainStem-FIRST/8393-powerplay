@@ -225,7 +225,7 @@ public class RobotTeleOp extends LinearOpMode {
                     } else {
                         robot.lift.setSubheight(0);
                     }
-                } else if (gamepad1.right_trigger > 0.5 && robot.lift.getAvgLiftPosition() < 500) {
+                } else if (gamepad1.right_trigger > 0.5 && robot.lift.getMedianLiftPosition() < 500) {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                     liftDelay.reset();
                     liftDelayCollecting.reset();
@@ -251,7 +251,7 @@ public class RobotTeleOp extends LinearOpMode {
                         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
                     }
 
-                    if (liftDelay.seconds() > 0.15 && robot.lift.getAvgLiftPosition() > 750) {
+                    if (liftDelay.seconds() > 0.15 && robot.lift.getMedianLiftPosition() > 750) {
                         toggleMap.put(GAMEPAD_1_A_STATE, false);
                     }
 

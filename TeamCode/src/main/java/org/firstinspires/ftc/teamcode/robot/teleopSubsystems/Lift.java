@@ -13,6 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 import com.acmerobotics.dashboard.config.Config;
@@ -77,11 +78,6 @@ public class Lift implements Subsystem {
         private static final boolean LIFT_MOTOR_2_REVERSED = false;
         private static final boolean LIFT_MOTOR_3_REVERSED = false;
         private static final boolean LIFT_MOTOR_4_REVERSED = false;
-
-        //lift PID constants
-        private static final double PROPORTIONAL_COLLECTING_TO_HIGH = 0.012;
-        private static final double INTEGRAL_COLLECTING_TO_HIGH = 3;
-        private static final double DERIVATIVE_COLLECTING_TO_HIGH = 0.001; //.001
 
         private static final double PROPORTIONAL_COLLECTING_TO_LOW = 0;
         private static final double INTEGRAL_COLLECTING_TO_LOW = 0;
@@ -168,6 +164,10 @@ public class Lift implements Subsystem {
     private Map stateMap;
     private int subheight;
 
+    private double liftProportional = 0.012;
+    private double liftIntegral = 3;
+    private double liftDerivative = 0.001;
+
     public Lift(HardwareMap hardwareMap, Telemetry telemetry, Map stateMap, boolean isAuto) {
 
         //telemetry
@@ -190,7 +190,7 @@ public class Lift implements Subsystem {
         liftMotors = new ArrayList<>();
 
         //lift PID controller
-        this.liftPIDController = new PIDController(LiftConstants.PROPORTIONAL_COLLECTING_TO_HIGH, 0, 0);
+        this.liftPIDController = new PIDController(liftProportional, liftIntegral, liftDerivative);
         liftPIDController.setOutputBounds(0, 1);
         //setPIDControllerTransition(LIFT_POSITION_GROUND, LiftHeight.HIGH.getTicks());
         liftPIDController.setInputBounds(LiftHeight.COLLECTING.getTicks(), LiftHeight.HIGH.getTicks());
@@ -367,108 +367,45 @@ public class Lift implements Subsystem {
     }
 
     public void raiseHeightTo(int heightInTicks) {
-        int position = getAvgLiftPosition();
+        int position = getMedianLiftPosition();
 
 
         int error = heightInTicks - position;
         if (position < (heightInTicks - 200)) {
+            updateLiftPIDController(liftProportional, liftIntegral, liftDerivative);
             setAllMotorPowers(1.0);
         } else if (position > (heightInTicks + 150)) {
+            updateLiftPIDController(liftProportional, liftIntegral, liftDerivative);
             setAllMotorPowers(-0.5);
         } else if (position <= heightInTicks - 7 || position >= heightInTicks + 7) {
             if (stateMap.get(LIFT_SYSTEM_NAME) == LIFT_POLE_GROUND &&
                     heightInTicks > 0 &&
                     position < 30) {
-                runAllMotorsToPosition(heightInTicks, 1);
+                updateLiftPIDController(liftProportional, liftIntegral, liftDerivative);
+                setAllMotorPowers(liftPIDController.updateWithError(error) + 0.1);
+                //runAllMotorsToPosition(heightInTicks, 1);
             } else if (heightInTicks > 300){
-                runAllMotorsToPosition(heightInTicks, 0.5);
+                updateLiftPIDController(liftProportional, liftIntegral, liftDerivative);
+                setAllMotorPowers(liftPIDController.updateWithError(error) + 0.2);
+                //runAllMotorsToPosition(heightInTicks, 0.5);
             } else {
-                runAllMotorsToPosition(heightInTicks, 0.3);
+                updateLiftPIDController(liftProportional * 2, liftIntegral, liftDerivative);
+                setAllMotorPowers(liftPIDController.updateWithError(error));
+                //runAllMotorsToPosition(heightInTicks, 0.3);
             }
         } else if (heightInTicks == 0) {
             setAllMotorPowers(0.0);
         } else {
             setAllMotorPowers(0.15);
         }
-
-
-
-//        if (isCycleInProgress(constants.CYCLE_LIFT_DOWN)) {
-//            //telemetry.update();
-//            if (getAvgLiftPosition() < 400) {
-//                setAllMotorPowers(-0.1);
-//            } else {
-//                runAllMotorsToPosition(heightInTicks + LiftConstants.LIFT_ADJUSTMENT_HIGH, 1);
-//            }
-//        } else if (isCycleInProgress(constants.CYCLE_LIFT_UP)) {
-//            setAllMotorPowers(1);
-//            //runAllMotorsToPosition(heightInTicks, 1);
-//        } else if (position >= heightInTicks - 10 && position <= heightInTicks + 10) {
-//            if (heightInTicks == 0) {
-//                setAllMotorPowers(-0.1);
-//            } else if (heightInTicks > 400) {
-//                setAllMotorPowers(0.45);
-//            } else {
-//                if (heightInTicks < 100) {
-//                    if (position < 10) {
-//                        setAllMotorSpeedsPercentage(-liftPIDController.updateWithError(error));
-//                    } else {
-//                        if (heightInTicks != 0) {
-//                            setAllMotorPowers(0.2);
-//                        } else {
-//                            setAllMotorPowers(-0.01);
-//                        }
-//                    }
-//                } else {
-//                    setAllMotorPowers(0.2);
-//                }
-//            }
-//        } else if (position > heightInTicks) {
-//            if (heightInTicks == 0) {
-//                setAllMotorPowers(-0.1);
-//            } else if (position > heightInTicks + 200) {
-//                setAllMotorPowers(-0.1);
-//            } else if (position < 35 && heightInTicks < 35) {
-//                setAllMotorPowers(0);
-//            } else {
-//                runAllMotorsToPosition(heightInTicks, 1);
-//            }
-//        } else {
-//            if (position < heightInTicks - 150) {
-//                setAllMotorPowers(1);
-//            } else {
-////                setAllMotorSpeedsPercentage(liftPIDController.updateWithError(error) + 0.4);
-//            }
-//        }
     }
 
     /////////////////////
     //GETTERS & SETTERS//
     /////////////////////
 
-    private void setPIDControllerTransition(int initialHeight, int desiredHeight) {
-        if (initialHeight == liftPIDController.getLowerInputBound() && desiredHeight == liftPIDController.getUpperInputBound()) {
-            return;
-        }
-
-        double proportional = 0;
-        double integral = 0;
-        double derivative = 0;
-        if (initialHeight < 200 && desiredHeight > 600) {
-            proportional = LiftConstants.PROPORTIONAL_COLLECTING_TO_HIGH;
-            integral = LiftConstants.INTEGRAL_COLLECTING_TO_HIGH;
-            derivative = LiftConstants.DERIVATIVE_COLLECTING_TO_HIGH;
-        } else if (initialHeight < 120 && desiredHeight > 200) {
-            proportional = LiftConstants.PROPORTIONAL_COLLECTING_TO_LOW;
-            integral = LiftConstants.INTEGRAL_COLLECTING_TO_LOW;
-            derivative = LiftConstants.DERIVATIVE_COLLECTING_TO_LOW;
-        } else {
-            proportional = LiftConstants.PROPORTIONAL_COLLECTING_TO_LOW;
-            integral = LiftConstants.INTEGRAL_COLLECTING_TO_LOW;
-            derivative = LiftConstants.DERIVATIVE_COLLECTING_TO_LOW;
-        }
-        liftPIDController.setPIDValues(proportional, integral, derivative);
-        liftPIDController.setInputBounds(initialHeight, desiredHeight);
+    private void updateLiftPIDController(double p, double i, double d) {
+        liftPIDController.setPIDValues(p, i, d);
     }
 
     public double getAvgLiftSpeed() {
@@ -529,7 +466,7 @@ public class Lift implements Subsystem {
     }
 
     public void setAllMotorPowers(double power) {
-        for (DcMotor liftMotor : liftMotors) {
+        for (DcMotorEx liftMotor : liftMotors) {
             liftMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
             liftMotor.setPower(power);
         }
@@ -553,10 +490,19 @@ public class Lift implements Subsystem {
 
     public int getAvgLiftPosition() {
         double positionSum = 0;
-        for (DcMotor liftMotor : liftMotors) {
+        for (DcMotorEx liftMotor : liftMotors) {
             positionSum += liftMotor.getCurrentPosition();
         }
         return (int) (positionSum / liftMotors.size());
+    }
+
+    public int getMedianLiftPosition() {
+        ArrayList<Integer> liftPositions = new ArrayList<>();
+        for(DcMotorEx liftMotor: liftMotors) {
+            liftPositions.add(liftMotor.getCurrentPosition());
+        }
+        Collections.sort(liftPositions);
+        return (int)((liftPositions.get(1) + liftPositions.get(2))/2);
     }
 
     public ArrayList<Double> getLiftMotorPowers() {
