@@ -10,6 +10,7 @@ import static java.lang.Thread.sleep;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Extension;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Flippers;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Grabber;
 //import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Guide;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.LEDLights;
@@ -46,6 +47,7 @@ public class BrainSTEMRobot {
     public Turret turret;
     public Lift lift;
     public Extension arm;
+    public Flippers flippers;
     //public PoleAligner poleAligner;
     public SampleMecanumDrive drive;
     public LEDLights lights;
@@ -67,6 +69,7 @@ public class BrainSTEMRobot {
         turret = new Turret(hwMap, telemetry, stateMap, isAuto);
         lift = new Lift(hwMap, telemetry, stateMap, isAuto);
         arm = new Extension(hwMap, telemetry, stateMap, isAuto);
+        flippers = new Flippers(hwMap, telemetry, stateMap);
         //poleAligner = new PoleAligner(hwMap, telemetry, stateMap, isAuto);
         drive = new SampleMecanumDrive(hwMap);
         grabber = new Grabber(hwMap, telemetry, stateMap, isAuto);
@@ -90,62 +93,12 @@ public class BrainSTEMRobot {
     public void updateSystems() {
         stateMap.put(constants.SYSTEM_TIME, System.currentTimeMillis());
 
-//        guide.setState();
         lift.setState();
+        flippers.setState();
         grabber.setState(lift);
         turret.setState(lift);
         arm.setState((String) stateMap.get(arm.SYSTEM_NAME), lift);
-        //poleAligner.setState((String) stateMap.get(poleAligner.SYSTEM_NAME), lift);
 
-    }
-
-    public void coneCycle() {
-        if (startliftDown()) {
-            stateMap.put(constants.CONE_CYCLE_START_TIME, String.valueOf(System.currentTimeMillis()));
-            stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_IN_PROGRESS);
-            stateMap.put(lift.LIFT_SUBHEIGHT, lift.PLACEMENT_HEIGHT);
-        } else if (startGrabberAction()) {
-            stateMap.put(constants.CYCLE_GRABBER, constants.STATE_IN_PROGRESS);
-        } else if (startLiftUp()) {
-            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_IN_PROGRESS);
-            if (lift.getAvgLiftPosition() > 400) {
-                grabber.maxOpen();
-            }
-            stateMap.put(lift.LIFT_SUBHEIGHT, lift.APPROACH_HEIGHT);
-        } else if (isConeCycleComplete()) {
-            stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
-            stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
-            stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
-            stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
-        }
-
-        setConeCycleSystems();
-    }
-
-    private void setConeCycleSystems() {
-        lift.setState();
-        grabber.setState(lift);
-    }
-
-    private boolean startLiftUp() {
-        return ((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
-                ((String) stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_NOT_STARTED);
-    }
-
-    private boolean startliftDown() {
-        return (((String) stateMap.get(constants.CONE_CYCLE)).equalsIgnoreCase(constants.STATE_IN_PROGRESS) &&
-                ((String) (stateMap.get(constants.CYCLE_LIFT_DOWN))).equalsIgnoreCase(constants.STATE_NOT_STARTED));
-    }
-
-    private boolean startGrabberAction() {
-        return ((String) stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
-                ((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_NOT_STARTED);
-    }
-
-    private boolean isConeCycleComplete() {
-        return (((String) stateMap.get(constants.CYCLE_LIFT_DOWN)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
-                ((String) stateMap.get(constants.CYCLE_GRABBER)).equalsIgnoreCase(constants.STATE_COMPLETE) &&
-                ((String) stateMap.get(constants.CYCLE_LIFT_UP)).equalsIgnoreCase(constants.STATE_COMPLETE));
     }
 }
 
