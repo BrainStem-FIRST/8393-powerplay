@@ -34,7 +34,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private Pose2d highPoleDepositingPositionLeft = new Pose2d(-23.5, -12, Math.toRadians(180));
     private Pose2d highPoleDepositingPosition;
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
-    private Vector2d collectConesPosition = new Vector2d(-56, -12);
+    private Vector2d collectConesPosition = new Vector2d(-55.5, -12);
     private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(0));

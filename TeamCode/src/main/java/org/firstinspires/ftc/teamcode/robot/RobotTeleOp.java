@@ -313,7 +313,7 @@ public class RobotTeleOp extends LinearOpMode {
 
                 // Driver 2 //
 
-
+      /*
                 if (stateMap.get(robot.lift.LIFT_SYSTEM_NAME) == robot.lift.LIFT_POLE_GROUND) {
                     if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
                         driver2_ground_adjusted_subheight += 0.1 * (-gamepad2.right_stick_y * Math.abs(gamepad2.right_stick_y));
@@ -323,6 +323,8 @@ public class RobotTeleOp extends LinearOpMode {
                         driver2_placement_adjusted_subheight += 0.1 * (gamepad2.right_stick_y * Math.abs(gamepad2.right_stick_y));
                     }
                 }
+                */
+
 
                 if (driver2_ground_adjusted_subheight != 0) {
                     robot.lift.setSubheight(driver2_ground_adjusted_subheight);

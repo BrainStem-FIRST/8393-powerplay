@@ -257,7 +257,7 @@ public class Lift implements Subsystem {
 
     public void incrementStack() {
         stackIncrement += 1;
-        if (stackIncrement == 5) {
+        if (stackIncrement == 6) {
             stackIncrement = 0;
         }
     }
@@ -265,7 +265,7 @@ public class Lift implements Subsystem {
     public void decrementStack() {
         stackIncrement -= 1;
         if (stackIncrement == -1) {
-            stackIncrement = 4;
+            stackIncrement = 5;
         }
     }
 
@@ -276,18 +276,22 @@ public class Lift implements Subsystem {
                 break;
             }
             case 1: {
-                stackIncrementHeight = 80;
+                stackIncrementHeight = 40;
                 break;
             }
             case 2: {
-                stackIncrementHeight = 130;
+                stackIncrementHeight = 80;
                 break;
             }
             case 3: {
-                stackIncrementHeight = 195;
+                stackIncrementHeight = 130;
                 break;
             }
             case 4: {
+                stackIncrementHeight = 195;
+                break;
+            }
+            case 5: {
                 stackIncrementHeight = 250;
                 break;
             }
