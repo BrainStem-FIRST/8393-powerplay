@@ -30,8 +30,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     // Locations - For Left /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
     private Pose2d initialApproach = new Pose2d(-36, -24, Math.toRadians(-90));
-    private Pose2d highPoleDepositingPositionRight = new Pose2d(-22.85, 12, Math.toRadians(180));
-    private Pose2d highPoleDepositingPositionLeft = new Pose2d(-23.5, -12, Math.toRadians(180));
+    private Pose2d highPoleDepositingPositionRight = new Pose2d(-22.35, 12, Math.toRadians(180));
+    private Pose2d highPoleDepositingPositionLeft = new Pose2d(-23.0, -12, Math.toRadians(180));
     private Pose2d highPoleDepositingPosition;
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
     private Vector2d collectConesPosition = new Vector2d(-55.5, -12);
@@ -631,7 +631,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
                 })
-                .waitSeconds(0.6)
+                .waitSeconds(0.7)
                 .lineToLinearHeading(endParking,
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(60))

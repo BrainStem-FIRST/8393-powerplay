@@ -388,7 +388,7 @@ public class RobotTeleOp extends LinearOpMode {
                     }
                 }
 
-
+/*
                 if(gamepad1.right_bumper) {
                     if(stateMap.get(robot.flippers.SYSTEM_NAME).equalsIgnoreCase(robot.flippers.RIGHT_UP)){
                         stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.RIGHT_DOWN);
@@ -404,6 +404,8 @@ public class RobotTeleOp extends LinearOpMode {
                         stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.LEFT_UP);
                     }
                 }
+                */
+
 
 
 

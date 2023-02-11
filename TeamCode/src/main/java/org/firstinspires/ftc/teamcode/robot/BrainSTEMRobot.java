@@ -10,7 +10,7 @@ import static java.lang.Thread.sleep;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Extension;
-import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Flippers;
+//import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Flippers;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Grabber;
 //import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Guide;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.LEDLights;
@@ -47,7 +47,7 @@ public class BrainSTEMRobot {
     public Turret turret;
     public Lift lift;
     public Extension arm;
-    public Flippers flippers;
+    //public Flippers flippers;
     //public PoleAligner poleAligner;
     public SampleMecanumDrive drive;
     public LEDLights lights;
@@ -69,7 +69,7 @@ public class BrainSTEMRobot {
         turret = new Turret(hwMap, telemetry, stateMap, isAuto);
         lift = new Lift(hwMap, telemetry, stateMap, isAuto);
         arm = new Extension(hwMap, telemetry, stateMap, isAuto);
-        flippers = new Flippers(hwMap, telemetry, stateMap);
+        //flippers = new Flippers(hwMap, telemetry, stateMap);
         //poleAligner = new PoleAligner(hwMap, telemetry, stateMap, isAuto);
         drive = new SampleMecanumDrive(hwMap);
         grabber = new Grabber(hwMap, telemetry, stateMap, isAuto);
@@ -94,7 +94,7 @@ public class BrainSTEMRobot {
         stateMap.put(constants.SYSTEM_TIME, System.currentTimeMillis());
 
         lift.setState();
-        flippers.setState();
+        //flippers.setState();
         grabber.setState(lift);
         turret.setState(lift);
         arm.setState((String) stateMap.get(arm.SYSTEM_NAME), lift);
