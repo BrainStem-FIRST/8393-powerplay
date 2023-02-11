@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 //@Disabled
 @TeleOp(name = "PRESENTATION")
+@Disabled
 public class PresentationTeleOp extends RobotTeleOp {
     public PresentationTeleOp() {
         super(true);
