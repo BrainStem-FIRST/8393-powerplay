@@ -389,6 +389,25 @@ public class RobotTeleOp extends LinearOpMode {
                 }
 
 
+                if(gamepad1.right_bumper) {
+                    if(stateMap.get(robot.flippers.SYSTEM_NAME).equalsIgnoreCase(robot.flippers.RIGHT_UP)){
+                        stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.RIGHT_DOWN);
+                    } else {
+                        stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.RIGHT_UP);
+                    }
+                }
+
+                if(gamepad1.left_bumper) {
+                    if(stateMap.get(robot.flippers.SYSTEM_NAME).equalsIgnoreCase(robot.flippers.LEFT_UP)){
+                        stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.LEFT_DOWN);
+                    } else {
+                        stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.LEFT_UP);
+                    }
+                }
+
+
+
+
 //                if (bottomHeightStickyButtonRightTrigger.getState()) {
 //                    updateBottomHeightAdjustment(true);
 //                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
