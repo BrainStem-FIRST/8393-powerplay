@@ -169,17 +169,17 @@ public class DefensiveAuto extends LinearOpMode {
         switch (side) {
             case LEFT:
                 lowTurretDeliveryPosition = robot.turret.LEFT_POSITION;
-                extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_LEFT;
-                turretPickupPosition = robot.turret.LEFT_PICKUP_AUTO;
-                turretDeliveryPosition = robot.turret.RIGHT_POSITION;
+                extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_RIGHT;
+                turretPickupPosition = robot.turret.RIGHT_PICKUP_AUTO;
+                turretDeliveryPosition = robot.turret.LEFT_POSITION;
                 extensionDeliverySide = robot.arm.RIGHT_SIDE_EXTENDED_AUTO;
                 endParking = new Pose2d(parking3.getX(), parking3.getY(), startPosition.getHeading());
                 break;
             case RIGHT:
                 lowTurretDeliveryPosition = robot.turret.RIGHT_POSITION;
-                extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_RIGHT;
-                turretPickupPosition = robot.turret.RIGHT_PICKUP_AUTO;
-                turretDeliveryPosition = robot.turret.LEFT_POSITION;
+                extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_LEFT;
+                turretPickupPosition = robot.turret.LEFT_PICKUP_AUTO;
+                turretDeliveryPosition = robot.turret.RIGHT_POSITION;
                 extensionDeliverySide = robot.arm.LEFT_SIDE_EXTENDED_AUTO;
                 endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
                 break;
@@ -296,13 +296,17 @@ public class DefensiveAuto extends LinearOpMode {
         TrajectorySequence deliverPreload = drive.trajectorySequenceBuilder(startPosition)
                 .setReversed(true)
                 .setTangent(initialTangent)
-                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.2, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_4);
                 })
+                .waitSeconds(3.3)
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5);
+                })
                 .lineToConstantHeading(initialApproach,
-                        SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(45))
-                .waitSeconds(24)
+                        SampleMecanumDrive.getVelocityConstraint(57, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(57))
+                .waitSeconds(20)
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
@@ -314,34 +318,38 @@ public class DefensiveAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionDeliverySide);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(18.3, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(16, () -> {
                     robot.lift.setSubheight(1.0);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(18.7, () -> {
+
+
+                .waitSeconds(0.5)
+
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(18.74, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.2, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
 
-                .UNSTABLE_addTemporalMarkerOffset(18.785, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(18.9, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     robot.lift.setSubheight(0);
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 })
-
-                .waitSeconds(0.5)
 
                 .lineToLinearHeading(new Pose2d(collectConesPosition, Math.toRadians(180)))
 
 
 
+
                 .lineToLinearHeading(endParking,
-                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(60))
+                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(55))
 
                 .build();
 

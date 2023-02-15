@@ -11,7 +11,7 @@ import com.noahbres.meepmeep.roadrunner.trajectorysequence.TrajectorySequence;
 import java.util.ArrayList;
 import java.util.Map;
 
-public class MeepMeepTesting {
+public class MeepMeepTesting2 {
 
 
     public static void main(String[] args) {
