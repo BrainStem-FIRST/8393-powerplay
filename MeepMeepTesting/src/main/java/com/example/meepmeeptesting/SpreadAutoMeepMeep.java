@@ -85,7 +85,7 @@ public class SpreadAutoMeepMeep {
         int MIDDLE = 2;
         int RIGHT = 3;
 
-        String side = "Left";
+        String side = "Right";
 
         if (side == "Left") {
             initialTangent = -80;
@@ -124,7 +124,7 @@ public class SpreadAutoMeepMeep {
             endParking = new Vector2d(-36, 12.5);
         }
 
-        MeepMeep meepMeep = new MeepMeep(900, 60);
+        MeepMeep meepMeep = new MeepMeep(900, 24);
 
         Pose2d finalHighPoleDepositingPosition2 = highPoleDepositingPosition2;
         int finalHighPoleDepositingPositionTangent = highPoleDepositingPositionTangent;
@@ -402,6 +402,207 @@ public class SpreadAutoMeepMeep {
                                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
 
                                 })
+
+
+                                .waitSeconds(1)
+
+
+//
+//                                .setReversed(false)
+//                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(60))
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+//
+//                                })
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+//
+//                                })
+//                                .waitSeconds(0.1)
+//                                .setReversed(true)
+//                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+//                                        Math.toRadians(finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(45))
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+//
+//                                })
+//
+//
+//                                .waitSeconds(1)
+//
+//                                //CYCLE THREE
+//
+//                                .setReversed(false)
+//                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(60))
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+//
+//                                })
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+//
+//                                })
+//                                .waitSeconds(0.1)
+//                                .setReversed(true)
+//                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+//                                        Math.toRadians(finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(45))
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+//
+//                                })
+//
+//                                .waitSeconds(1)
+//
+//                                //CYCLE FOUR
+//
+//                                .setReversed(false)
+//                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(60))
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+//                                })
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+//                                })
+//                                .waitSeconds(0.1)
+//                                .setReversed(true)
+//                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+//                                        Math.toRadians(finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(45))
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+//
+//                                })
+//
+//
+//                                .waitSeconds(1)
+//
+//                                //CYCLE FIVE
+//                                .setReversed(false)
+//                                .splineToConstantHeading(finalCollectConesPosition, Math.toRadians(180 - finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(60, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(60))
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
+//
+//                                })
+//
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
+//
+//                                })
+//                                .waitSeconds(0.1)
+//                                .setReversed(true)
+//                                .splineToConstantHeading(new Vector2d(finalHighPoleDepositingPosition.getX(), finalHighPoleDepositingPosition.getY()),
+//                                        Math.toRadians(finalHighPoleDepositingPositionTangent),
+//                                        SampleMecanumDrive.getVelocityConstraint(45, 4.5, 12),
+//                                        SampleMecanumDrive.getAccelerationConstraint(45))
+//                                .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
+//
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.8, () -> {
+//
+//                                })
+//                                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
+//
+//                                })
+
+
                                 .waitSeconds(1).build());
 
         meepMeep.setBackground(MeepMeep.Background.FIELD_POWERPLAY_KAI_DARK)
