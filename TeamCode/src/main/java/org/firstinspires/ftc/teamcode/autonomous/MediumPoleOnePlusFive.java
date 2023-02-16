@@ -23,18 +23,18 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MediumOnePlusFiveCore extends LinearOpMode {
+public class MediumPoleOnePlusFive extends LinearOpMode {
     private final AutoOrientation side;
     private Map stateMap;
 
     // Locations - For Left /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
     private Pose2d initialApproach = new Pose2d(-36, -24, Math.toRadians(-90));
-    private Pose2d highPoleDepositingPosition = new Pose2d(-22.85, -11.5, Math.toRadians(180));
-    private Pose2d highPoleDepositingPosition2 = new Pose2d(-22.85, -11.5, Math.toRadians(180));
+    private Pose2d highPoleDepositingPositionRight = new Pose2d(-22.35, 12, Math.toRadians(180));
+    private Pose2d highPoleDepositingPositionLeft = new Pose2d(-23.0, -12, Math.toRadians(180));
+    private Pose2d highPoleDepositingPosition;
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
-    private Pose2d highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() - 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
-    private Vector2d collectConesPosition = new Vector2d(-54, -11.75);
+    private Vector2d collectConesPosition = new Vector2d(-55.0, -12); //-55.5
     private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(0));
@@ -52,10 +52,11 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
     private boolean LEFTSIDE;
     private int initialTurn = -90;
 
-    private Vector2d parking3 = new Vector2d(-12, -12.5);
-    private Vector2d parking2 = new Vector2d(-36, -12.5);
-    private Vector2d parking1 = new Vector2d(-60, -12.5);
-    private Vector2d endParking;
+
+    private Pose2d parking3 = new Pose2d(-12, -12.5, startPosition.getHeading());
+    private Pose2d parking2 = new Pose2d(-36, -12.5, startPosition.getHeading());
+    private Pose2d parking1 = new Pose2d(-60, -12.5, Math.toRadians(180));
+    private Pose2d endParking;
 
 
     private int initialTangent = -80;
@@ -76,6 +77,8 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
     private boolean step5a = false;
 
     private int parking;
+
+    private boolean trajectoryCalculated = false;
 
     private ArrayList liftCollectionHeights;
     Constants constants = new Constants();
@@ -107,7 +110,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
         RIGHT, LEFT
     }
 
-    public MediumOnePlusFiveCore(AutoOrientation side) {
+    public MediumPoleOnePlusFive(AutoOrientation side) {
         this.side = side;
         switch (side) {
             case RIGHT:
@@ -119,10 +122,8 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 depositPreloadSpline2Tangent = -115;
                 startPosition = new Pose2d(startPosition.getX(), -startPosition.getY(), Math.toRadians(90));
                 initialTurn = 90;
-                highPoleDepositingPosition = new Pose2d(highPoleDepositingPosition.getX(), -highPoleDepositingPosition.getY(), Math.toRadians(180));
-                highPoleDepositingPosition2 = new Pose2d(highPoleDepositingPosition2.getX(), -highPoleDepositingPosition2.getY(), Math.toRadians(180));
+                highPoleDepositingPosition = new Pose2d(highPoleDepositingPositionRight.getX(), highPoleDepositingPositionRight.getY(), Math.toRadians(180));
                 lowPoleDepositingPosition = new Pose2d(lowPoleDepositingPosition.getX(), -lowPoleDepositingPosition.getY(), Math.toRadians(180));
-                highPoleDepositingIntermediatePoint = new Pose2d(highPoleDepositingPosition.getX() + 2, highPoleDepositingPosition.getY(), highPoleDepositingPosition.getHeading());
                 depositPreloadForward = new Pose2d(depositPreloadForward.getX(), -depositPreloadForward.getY(), -depositPreloadForward.getHeading());
                 depositPreLoadForwardVector = new Vector2d(depositPreLoadForwardVector.getX(), -depositPreLoadForwardVector.getY());
                 depositPreLoadForwardHeading = Math.toRadians(-100);
@@ -134,12 +135,12 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 depositOnHighPole2 = new Pose2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY(), Math.toRadians(180));
 
 
-                parking1 = new Vector2d(-12, 12.5);
-                parking2 = new Vector2d(-36, 12.5);
-                parking3 = new Vector2d(-60, 12.5);
-                endParking = new Vector2d(-36, 12.5);
+                parking1 = new Pose2d(-12, 12.5, startPosition.getHeading());
+                parking2 = new Pose2d(-36, 12.5, startPosition.getHeading());
+                parking3 = new Pose2d(-60, 12.5, Math.toRadians(180));
                 break;
             case LEFT:
+                highPoleDepositingPosition = new Pose2d(highPoleDepositingPositionLeft.getX(), highPoleDepositingPositionLeft.getY(), Math.toRadians(180));
                 LEFTSIDE = true;
                 initialTangent = -80;
                 initialApproachTangent = 100;
@@ -165,18 +166,20 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
 
         switch (side) {
             case LEFT:
+                lowTurretDeliveryPosition = robot.turret.LEFT_POSITION;
                 extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_LEFT;
                 turretPickupPosition = robot.turret.RIGHT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.LEFT_POSITION;
-                lowTurretDeliveryPosition = robot.turret.RIGHT_POSITION;
-                extensionDeliverySide = robot.arm.RIGHT_SIDE_EXTENDED_AUTO;
+                extensionDeliverySide = robot.arm.LEFT_SIDE_EXTENDED_AUTO;
+                endParking = new Pose2d(parking3.getX(), parking3.getY(), startPosition.getHeading());
                 break;
             case RIGHT:
                 lowTurretDeliveryPosition = robot.turret.RIGHT_POSITION;
                 extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_RIGHT;
                 turretPickupPosition = robot.turret.LEFT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.RIGHT_POSITION;
-                extensionDeliverySide = robot.arm.LEFT_SIDE_EXTENDED_AUTO;//this should be left
+                extensionDeliverySide = robot.arm.RIGHT_SIDE_EXTENDED_AUTO;
+                endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
                 break;
         }
 
@@ -206,11 +209,15 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
 
         telemetry.setMsTransmissionInterval(50);
         robot.grabber.close();
-
+        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+        stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
+        stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
+        stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
+        stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
+        drive.setPoseEstimate(startPosition);
 
         while (!this.opModeIsActive() && !this.isStopRequested()) {
-            endParking = new Vector2d(parking1.getX(), parking1.getY());
-            autoTrajectorySequence = initializeTrajectories(robot, drive);
             ArrayList<AprilTagDetection> currentDetections = aprilTagDetectionPipeline.getLatestDetections();
 
             if (currentDetections.size() != 0) {
@@ -221,90 +228,66 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                     if (tag.id == MIDDLE) {
                         tagOfInterest = tag;
                         location = ParkingLocation.MID;
+                        if (parking != 2) {
+                            trajectoryCalculated = false;
+                        }
                         parking = 2;
                         tagFound = true;
                         telemetry.addData("Open CV :", "Mid");
-                        telemetry.update();
-                        endParking = new Vector2d(parking2.getX(), parking2.getY());
+                        endParking = parking2;
                         break;
 
                     } else if (tag.id == RIGHT) {
                         tagOfInterest = tag;
                         location = ParkingLocation.RIGHT;
+                        if (parking != 3) {
+                            trajectoryCalculated = false;
+                        }
                         parking = 3;
                         tagFound = true;
                         telemetry.addData("Open CV :", "Right");
-                        telemetry.update();
-                        endParking = new Vector2d(parking3.getX(), parking3.getY());
+                        endParking = parking3;
                         break;
 
                     } else {
                         tagOfInterest = tag;
                         location = ParkingLocation.LEFT;
                         tagFound = true;
+                        if (parking != 1) {
+                            trajectoryCalculated = false;
+                        }
                         parking = 1;
                         telemetry.addData("Open CV :", "Left");
-                        telemetry.update();
-                        endParking = new Vector2d(parking1.getX(), parking1.getY());
+                        endParking = parking1;
                         break;
 
                     }
                 }
-
-
             }
-        }
 
+            if (trajectoryCalculated == false) {
+                autoTrajectorySequence = initializeTrajectories(robot, drive);
+                trajectoryCalculated = true;
+            }
+
+            if (endParking != null) {
+                telemetry.addData("Parking", endParking);
+            }
+            telemetry.update();
+        }
 
         this.waitForStart();
         camera.closeCameraDevice();
-        drive.setPoseEstimate(startPosition);
-        telemetry.addLine("init");
-        telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
-        telemetry.update();
-        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
-        stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
         robot.updateSystems();
-
-        totalTime.reset();
-
         drive.followTrajectorySequenceAsync(autoTrajectorySequence);
 
         while (opModeIsActive()) {
-
-            if (totalTime.seconds() < 28.6) {
-                telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
-                drive.update();
-                robot.updateSystems();
-                telemetry.update();
-                telemetry.addData("Lift state", stateMap.get(robot.lift.LIFT_SYSTEM_NAME));
-                telemetry.addData("Arm state", stateMap.get(robot.arm.SYSTEM_NAME));
-                telemetry.addData("Turret State", stateMap.get(robot.turret.SYSTEM_NAME));
-            } else {
-                stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-                stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-                stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-                stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
-                stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
-                robot.updateSystems();
-                Trajectory parkingTrajectory = drive.trajectoryBuilder(drive.getPoseEstimate())
-                        .lineToConstantHeading(endParking)
-                        .build();
-                drive.followTrajectory(parkingTrajectory);
-
-
-            }
+            telemetry.addData("Parking", endParking);
+            telemetry.update();
+            drive.update();
+            robot.updateSystems();
         }
-
     }
-
-
-
-
 
     private TrajectorySequence initializeTrajectories(AutoBrainSTEMRobot robot, SampleMecanumDrive drive) {
 
@@ -317,11 +300,11 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 .splineToSplineHeading(initialApproach, Math.toRadians(initialApproachTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
-                .splineToSplineHeading(highPoleDepositingPosition2, Math.toRadians(highPoleDepositingPositionTangent),
+                .splineToSplineHeading(highPoleDepositingPosition, Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(50))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_MEDIUM);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
@@ -332,7 +315,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionDeliverySide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
@@ -358,7 +341,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(60))
+                        SampleMecanumDrive.getAccelerationConstraint(50))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -375,12 +358,12 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 })
                 .waitSeconds(0.1)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_MEDIUM);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
@@ -390,11 +373,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionDeliverySide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-
-
-
-                    robot.lift.setSubheight(1.4);
-
+                    robot.lift.setSubheight(1.0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
@@ -420,7 +399,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(60))
+                        SampleMecanumDrive.getAccelerationConstraint(50))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -437,12 +416,12 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_MEDIUM);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
@@ -455,7 +434,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
 
 
 
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
 
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
@@ -481,7 +460,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(60))
+                        SampleMecanumDrive.getAccelerationConstraint(50))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -498,12 +477,12 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_MEDIUM);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
@@ -516,7 +495,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
 
 
 
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
 
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
@@ -541,7 +520,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(60))
+                        SampleMecanumDrive.getAccelerationConstraint(50))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -558,12 +537,12 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_MEDIUM);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
@@ -576,7 +555,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
 
 
 
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
 
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
@@ -601,7 +580,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(60))
+                        SampleMecanumDrive.getAccelerationConstraint(50))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.6, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -618,12 +597,12 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition2.getX(), highPoleDepositingPosition2.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_MEDIUM);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
@@ -636,7 +615,7 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
 
 
 
-                    robot.lift.setSubheight(1.4);
+                    robot.lift.setSubheight(1.0);
 
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.7, () -> {
@@ -650,11 +629,13 @@ public class MediumOnePlusFiveCore extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
                     robot.lift.setSubheight(0);
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_1);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
                 })
+                .waitSeconds(0.7)
+                .lineToLinearHeading(endParking,
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(60))
 
-
-                .waitSeconds(0.75)
                 .build();
 
         return deliverPreload;

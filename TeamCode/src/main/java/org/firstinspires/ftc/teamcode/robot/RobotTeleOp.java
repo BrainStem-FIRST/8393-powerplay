@@ -16,7 +16,7 @@ import org.firstinspires.ftc.teamcode.util.ToggleButton;
 import java.util.HashMap;
 import java.util.Map;
 
-@TeleOp(name = "TELEOPERATED", group = "Robot")
+@TeleOp(name = "TeleOp", group = "Robot")
 public class RobotTeleOp extends LinearOpMode {
 
     private final String GAMEPAD_1_A_STATE = "GAMEPAD_1_A_STATE";
@@ -342,13 +342,7 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_HIGH);
                 }
 
-//                if(gamepad2.dpad_down) {
-//                    stateMap.put(robot.guide.SYSTEM_NAME, robot.guide.DOWN_POSITION);
-//                }
-//
-//                if(gamepad2.dpad_up) {
-//                    stateMap.put(robot.guide.SYSTEM_NAME, robot.guide.UP_POSITION);
-//                }
+
 
 
                 //Change extension preset values
@@ -491,8 +485,6 @@ public class RobotTeleOp extends LinearOpMode {
         toggleButton(GAMEPAD_1_B_STATE, GAMEPAD_1_B_IS_PRESSED, gamepad1.b);
         toggleButton(GAMEPAD_1_X_STATE, GAMEPAD_1_X_IS_PRESSED, gamepad1.x);
         toggleButton(GAMEPAD_1_RIGHT_TRIGGER_STATE, GAMEPAD_1_RIGHT_TRIGGER_PRESSED, gamepad1.right_trigger > 0.5);
-//        toggleButton(GAMEPAD_1_RIGHT_STICK_STATE, GAMEPAD_1_RIGHT_STICK_PRESSED, gamepad1.right_stick_button);
-//        toggleButton(GAMEPAD_1_LEFT_STICK_STATE, GAMEPAD_1_LEFT_STICK_PRESSED, gamepad1.left_stick_button);
         toggleButton(GAMEPAD_1_LEFT_TRIGGER_STATE, GAMEPAD_1_LEFT_STICK_PRESSED, gamepad1.left_trigger >= 0.5);
         toggleButton(GAMEPAD_1_Y_STATE, GAMEPAD_1_Y_PRESSED, gamepad1.y);
 
@@ -500,6 +492,7 @@ public class RobotTeleOp extends LinearOpMode {
 
     private boolean toggleButton(String buttonStateName, String buttonPressName,
                                  boolean buttonState) {
+
         boolean buttonPressed = toggleMap.get(buttonPressName);
         boolean toggle = toggleMap.get(buttonStateName);
 
@@ -511,8 +504,6 @@ public class RobotTeleOp extends LinearOpMode {
         } else {
             toggleMap.put(buttonPressName, false);
         }
-
         return toggleMap.get(buttonStateName);
     }
-
 }

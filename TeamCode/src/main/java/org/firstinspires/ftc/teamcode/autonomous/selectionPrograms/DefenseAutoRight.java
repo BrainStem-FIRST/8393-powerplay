@@ -1,11 +1,9 @@
+
 package org.firstinspires.ftc.teamcode.autonomous.selectionPrograms;
-
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-
 import org.firstinspires.ftc.teamcode.autonomous.DefensiveAuto;
 
-@Autonomous(name = "Right Defense")
+@Autonomous(name = "RIGHT DEFENCE")
 
 public class DefenseAutoRight extends DefensiveAuto {
     public DefenseAutoRight() {super(AutoOrientation.RIGHT);}

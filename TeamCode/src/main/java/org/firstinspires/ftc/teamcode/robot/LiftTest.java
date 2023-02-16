@@ -30,7 +30,7 @@ public class LiftTest extends LinearOpMode {
 
             liftPose = robot.lift.getAvgLiftPosition();
 
-            telemetry.addData("Lift Curretn Pose ::",liftPose );
+            telemetry.addData("Lift Current Pose ::" ,liftPose );
             telemetry.update();
         }
     }
