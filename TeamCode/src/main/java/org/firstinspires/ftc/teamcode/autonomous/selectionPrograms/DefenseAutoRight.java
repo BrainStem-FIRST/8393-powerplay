@@ -3,7 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous.selectionPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.autonomous.DefensiveAuto;
 
-@Autonomous(name = "RIGHT DEFENCE")
+@Autonomous(name = "RIGHT DEFENSE")
 
 public class DefenseAutoRight extends DefensiveAuto {
     public DefenseAutoRight() {super(AutoOrientation.RIGHT);}
