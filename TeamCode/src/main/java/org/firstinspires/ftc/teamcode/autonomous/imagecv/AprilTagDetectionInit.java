@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous.imagecv;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 
@@ -9,9 +10,9 @@ import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
-
 import java.util.ArrayList;
 
+@Disabled
 @Autonomous (name = "April Tag Detection Test")
 public class AprilTagDetectionInit extends LinearOpMode {
     public OpenCvCamera camera;
