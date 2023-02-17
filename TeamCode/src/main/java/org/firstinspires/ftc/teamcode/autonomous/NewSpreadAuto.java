@@ -36,10 +36,10 @@ public class NewSpreadAuto extends LinearOpMode {
 
     private Pose2d highPoleDepositingPosition;
 
-    private Pose2d sharedHighPoleDepositPosition = new Pose2d(0.0, -11.5, Math.toRadians(180));
-    private Pose2d mediumPoleDepositPosition = new Pose2d(-24.0, -11.5);
-    private Pose2d coneStackLowPole = new Pose2d(-48.0, -11.5);
-    private Pose2d lowPoleSubstation = new Pose2d(-24.0, -36);
+    private Pose2d sharedHighPoleDepositPosition = new Pose2d(0.0, -12, Math.toRadians(180));
+    private Pose2d mediumPoleDepositPosition = new Pose2d(-23.75, -12.2);
+    private Pose2d coneStackLowPole = new Pose2d(-48.0, -12.2);
+    private Pose2d lowPoleSubstation = new Pose2d(-36, -27);
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
     private Vector2d collectConesPosition = new Vector2d(-55.0, -12); //-55.5
     private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
@@ -62,10 +62,10 @@ public class NewSpreadAuto extends LinearOpMode {
     private int initialTurn = -90;
 
 
-    private Pose2d parking3 = new Pose2d(-12, -12.5, startPosition.getHeading());
-    private Pose2d parking2 = new Pose2d(-36, -12.5, startPosition.getHeading());
-    private Pose2d parking1 = new Pose2d(-60, -12.5, Math.toRadians(180));
-    private Pose2d endParking;
+    private Vector2d parking3 = new Vector2d(-11.5, -12.5);
+    private Vector2d parking2 = new Vector2d(-35.5, -12.5);
+    private Vector2d parking1 = new Vector2d(-59.5, -12.5);
+    private Vector2d endParking;
 
 
     private int initialTangent = -80;
@@ -150,9 +150,9 @@ public class NewSpreadAuto extends LinearOpMode {
 
 
 
-                parking1 = new Pose2d(-12, 12.5, startPosition.getHeading());
-                parking2 = new Pose2d(-36, 12.5, startPosition.getHeading());
-                parking3 = new Pose2d(-60, 12.5, Math.toRadians(180));
+                parking1 = new Vector2d(-11.5, 12.5);
+                parking2 = new Vector2d(-35.5, 12.5);
+                parking3 = new Vector2d(-59.5, 12.5);
                 break;
             case LEFT:
                 highPoleDepositingPosition = new Pose2d(highPoleDepositingPositionLeft.getX(), highPoleDepositingPositionLeft.getY(), Math.toRadians(180));
@@ -187,7 +187,7 @@ public class NewSpreadAuto extends LinearOpMode {
                 turretDeliveryPositionLeftSide = robot.turret.RIGHT_POSITION;
                 turretDeliveryPositionRightSide = robot.turret.LEFT_POSITION;
                 extensionDeliverySide = robot.arm.RIGHT_SIDE_EXTENDED_AUTO;
-                endParking = new Pose2d(parking3.getX(), parking3.getY(), startPosition.getHeading());
+                endParking = new Vector2d(parking3.getX(), parking3.getY());
                 break;
             case RIGHT:
                 lowTurretDeliveryPosition = robot.turret.RIGHT_POSITION;
@@ -196,7 +196,7 @@ public class NewSpreadAuto extends LinearOpMode {
                 turretDeliveryPositionLeftSide = robot.turret.LEFT_POSITION;
                 turretDeliveryPositionRightSide = robot.turret.RIGHT_POSITION;
                 extensionDeliverySide = robot.arm.LEFT_SIDE_EXTENDED_AUTO;
-                endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
+                endParking = new Vector2d(parking1.getX(), parking1.getY());
                 break;
         }
 
@@ -579,48 +579,20 @@ public class NewSpreadAuto extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.74, () -> {
                     robot.lift.setSubheight(0);
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
+                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.785, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0.9, () -> {
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_1);
                 })
 
-
-                .waitSeconds(0.2)
-
-                // CYCLE 5
-                .setReversed(false)
-                .splineToConstantHeading(collectConesPosition, Math.toRadians(180 - highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(50))
-
-                .UNSTABLE_addTemporalMarkerOffset(-0.7, () -> {
-                    stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
-                })
-
-                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
-                    stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
-                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
-                })
-                .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
-                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
-                })
-                .waitSeconds(0.2)
-
-                .splineToConstantHeading(new Vector2d(lowPoleSubstation.getX(), lowPoleSubstation.getY()),
-                        Math.toRadians(highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(45))
-
-
-                .waitSeconds(60)
+                .waitSeconds(2)
 
 
 
 
-                .lineToLinearHeading(endParking,
+
+                .lineToConstantHeading(endParking,
                         SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(55))
 
