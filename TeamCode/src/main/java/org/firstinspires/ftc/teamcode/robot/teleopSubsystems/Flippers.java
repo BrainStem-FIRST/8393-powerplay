@@ -13,25 +13,29 @@ import java.util.Map;
 
 
 public class Flippers implements Subsystem {
+
+    private static final class FlippersConstants {
+        private static final int LEFT_DOWN_POSITION = 2250; //FIXME
+        private static final int RIGHT_DOWN_POSITION = 0; //FIXME
+        private static final int LEFT_UP_POSITION = 0; //FIXME
+        private static final int RIGHT_UP_POSITION = 2250; //FIXME
+
+    }
     private Telemetry telemetry;
 
     public ServoImplEx leftFlipper;
     public ServoImplEx rightFlipper;
 
 
-    public final String SYSTEM_NAME = "FLIPPERS";
+    public final String RIGHT_SYSTEM_NAME = "RIGHT_FLIPPERS";
+    public final String LEFT_SYSTEM_NAME = "LEFT_FLIPPERS";
     public final String LEFT_DOWN = "LEFT_DOWN";
     public final String RIGHT_DOWN = "RIGHT_DOWN";
     public final String LEFT_UP = "LEFT_UP";
     public final String RIGHT_UP = "RIGHT_UP";
-    public final String BOTH_DOWN = "BOTH_DOWN";
-    public final String BOTH_UP = "BOTH_UP";
 
 
-    public final double LEFT_DOWN_POSITION = 0; //FIXME
-    public final double RIGHT_DOWN_POSITION = 0; //FIXME
-    public final double LEFT_UP_POSITION = 2250; //FIXME
-    public final double RIGHT_UP_POSITION = 2250; //FIXME
+
 
 
     private Map stateMap;
@@ -39,14 +43,15 @@ public class Flippers implements Subsystem {
     private boolean isAuto;
 
     public Flippers(HardwareMap hwMap, Telemetry telemetry, Map stateMap) {
+
         this.telemetry = telemetry;
         this.stateMap = stateMap;
 
 
         leftFlipper = new CachingServo(hwMap.get(ServoImplEx.class, "leftFlipper"));
         rightFlipper = new CachingServo(hwMap.get(ServoImplEx.class, "rightFlipper"));
-        leftFlipper.setPwmRange(new PwmControl.PwmRange(LEFT_UP_POSITION, LEFT_DOWN_POSITION));
-        rightFlipper.setPwmRange(new PwmControl.PwmRange(RIGHT_UP_POSITION, RIGHT_DOWN_POSITION));
+        leftFlipper.setPwmRange(new PwmControl.PwmRange(FlippersConstants.LEFT_UP_POSITION, FlippersConstants.LEFT_DOWN_POSITION));
+        rightFlipper.setPwmRange(new PwmControl.PwmRange(FlippersConstants.RIGHT_UP_POSITION, FlippersConstants.RIGHT_DOWN_POSITION));
 
     }
 
@@ -65,33 +70,26 @@ public class Flippers implements Subsystem {
         return null;
     }
 
-    public void setState(String desiredState) {
-        switch(desiredState){
+    public void setState(String leftDesiredState, String rightDesiredState) {
+        switch(leftDesiredState){
             case LEFT_DOWN: {
-                telemetry.addData("LEFT FLIPPER DOWN", "LEFT FLIPPER DOWN");
-                leftFlipper.setPosition(0.7);
-                break;
-            }
-            case RIGHT_DOWN: {
-                rightFlipper.setPosition(0.7);
+                leftFlipper.setPosition(0.73);
                 break;
             }
             case LEFT_UP: {
-                leftFlipper.setPosition(0.3);
+                leftFlipper.setPosition(0.28);
+                break;
+            }
+        }
+
+        switch(rightDesiredState){
+            case RIGHT_DOWN: {
+                rightFlipper.setPosition(0.735);
                 break;
             }
             case RIGHT_UP: {
-                rightFlipper.setPosition(0.3);
+                rightFlipper.setPosition(0.28);
                 break;
-            }
-            case BOTH_DOWN: {
-                rightFlipper.setPosition(0.7);
-                leftFlipper.setPosition(0.7);
-                break;
-            }
-            case BOTH_UP: {
-                rightFlipper.setPosition(0.3);
-                leftFlipper.setPosition(0.3);
             }
         }
     }

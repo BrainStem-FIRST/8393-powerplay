@@ -94,7 +94,7 @@ public class BrainSTEMRobot {
         stateMap.put(constants.SYSTEM_TIME, System.currentTimeMillis());
 
         lift.setState();
-        flippers.setState((String) stateMap.get(flippers.SYSTEM_NAME));
+        flippers.setState((String) stateMap.get(flippers.LEFT_SYSTEM_NAME), (String) stateMap.get(flippers.RIGHT_SYSTEM_NAME));
         grabber.setState(lift);
         turret.setState(lift);
         arm.setState((String) stateMap.get(arm.SYSTEM_NAME), lift);

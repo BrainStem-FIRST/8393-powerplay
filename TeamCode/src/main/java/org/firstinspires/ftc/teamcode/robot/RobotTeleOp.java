@@ -157,7 +157,8 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         stateMap.put(constants.EXTENSION_TARGET, String.valueOf(1));
-        stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.BOTH_UP);
+        stateMap.put(robot.flippers.LEFT_SYSTEM_NAME, robot.flippers.LEFT_UP);
+        stateMap.put(robot.flippers.RIGHT_SYSTEM_NAME, robot.flippers.RIGHT_UP);
 
 
         while (!opModeIsActive()) {
@@ -390,15 +391,15 @@ public class RobotTeleOp extends LinearOpMode {
                 rightFlipperToggleButton.update(gamepad1.right_bumper);
 
                 if(leftFlipperToggleButton.getState()) {
-                        stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.LEFT_DOWN);
+                    stateMap.put(robot.flippers.LEFT_SYSTEM_NAME, robot.flippers.LEFT_DOWN);
                 } else {
-                    stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.LEFT_UP);
+                    stateMap.put(robot.flippers.LEFT_SYSTEM_NAME, robot.flippers.LEFT_UP);
                 }
 
                 if(rightFlipperToggleButton.getState()) {
-                    stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.RIGHT_DOWN);
+                    stateMap.put(robot.flippers.RIGHT_SYSTEM_NAME, robot.flippers.RIGHT_DOWN);
                 } else {
-                    stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.RIGHT_UP);
+                    stateMap.put(robot.flippers.RIGHT_SYSTEM_NAME, robot.flippers.RIGHT_UP);
                 }
 
 
