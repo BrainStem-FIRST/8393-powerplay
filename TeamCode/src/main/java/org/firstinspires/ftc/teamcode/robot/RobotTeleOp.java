@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.util.NewToggleButton;
 import org.firstinspires.ftc.teamcode.util.StickyButton;
 import org.firstinspires.ftc.teamcode.util.ToggleButton;
 
@@ -101,6 +102,9 @@ public class RobotTeleOp extends LinearOpMode {
     private double conePickUp = 0.31;
     private double driver2_placement_adjusted_subheight;
 
+    private NewToggleButton leftFlipperToggleButton = new NewToggleButton();
+    private NewToggleButton rightFlipperToggleButton = new NewToggleButton();
+
     private boolean gamepad2RightTriggerPressed = false;
     private boolean gamepad2LeftTriggerPressed = false;
 
@@ -153,6 +157,7 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         stateMap.put(constants.EXTENSION_TARGET, String.valueOf(1));
+        stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.BOTH_UP);
 
 
         while (!opModeIsActive()) {
@@ -381,24 +386,21 @@ public class RobotTeleOp extends LinearOpMode {
                         );
                     }
                 }
+                leftFlipperToggleButton.update(gamepad1.left_bumper);
+                rightFlipperToggleButton.update(gamepad1.right_bumper);
 
-/*
-                if(gamepad1.right_bumper) {
-                    if(stateMap.get(robot.flippers.SYSTEM_NAME).equalsIgnoreCase(robot.flippers.RIGHT_UP)){
-                        stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.RIGHT_DOWN);
-                    } else {
-                        stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.RIGHT_UP);
-                    }
-                }
-
-                if(gamepad1.left_bumper) {
-                    if(stateMap.get(robot.flippers.SYSTEM_NAME).equalsIgnoreCase(robot.flippers.LEFT_UP)){
+                if(leftFlipperToggleButton.getState()) {
                         stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.LEFT_DOWN);
-                    } else {
-                        stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.LEFT_UP);
-                    }
+                } else {
+                    stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.LEFT_UP);
                 }
-                */
+
+                if(rightFlipperToggleButton.getState()) {
+                    stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.RIGHT_DOWN);
+                } else {
+                    stateMap.put(robot.flippers.SYSTEM_NAME, robot.flippers.RIGHT_UP);
+                }
+
 
 
 
