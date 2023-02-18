@@ -36,7 +36,7 @@ public class SpreadAuto extends LinearOpMode {
 
     private Pose2d highPoleDepositingPosition;
 
-    private Pose2d sharedHighPoleDepositPosition = new Pose2d(0.0, -12, Math.toRadians(180));
+    private Pose2d uncontestedHighPolePosition = new Pose2d(0.5, -12, Math.toRadians(180));
     private Pose2d mediumPoleDepositPosition = new Pose2d(-23.75, -12.2);
     private Pose2d coneStackLowPole = new Pose2d(-48.0, -12.2);
     private Pose2d lowPoleSubstation = new Pose2d(-36, -27);
@@ -133,7 +133,7 @@ public class SpreadAuto extends LinearOpMode {
                 depositPreLoad = new Vector2d(depositPreLoad.getX(), -depositPreLoad.getY());
                 initialTurn = 90;
                 highPoleDepositingPosition = new Pose2d(highPoleDepositingPositionRight.getX(), highPoleDepositingPositionRight.getY(), Math.toRadians(180));
-                sharedHighPoleDepositPosition = new Pose2d(sharedHighPoleDepositPosition.getX(), -sharedHighPoleDepositPosition.getY(), Math.toRadians(180));
+                uncontestedHighPolePosition = new Pose2d(uncontestedHighPolePosition.getX(), -uncontestedHighPolePosition.getY(), Math.toRadians(180));
                 mediumPoleDepositPosition = new Pose2d(mediumPoleDepositPosition.getX(), -mediumPoleDepositPosition.getY(), Math.toRadians(180));
                 coneStackLowPole = new Pose2d(coneStackLowPole.getX(), -coneStackLowPole.getY(), Math.toRadians(180));
                 lowPoleSubstation = new Pose2d(lowPoleSubstation.getX(), -lowPoleSubstation.getY(), Math.toRadians(180));
@@ -495,7 +495,7 @@ public class SpreadAuto extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(sharedHighPoleDepositPosition.getX(), sharedHighPoleDepositPosition.getY()),
+                .splineToConstantHeading(new Vector2d(uncontestedHighPolePosition.getX(), uncontestedHighPolePosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(45))
