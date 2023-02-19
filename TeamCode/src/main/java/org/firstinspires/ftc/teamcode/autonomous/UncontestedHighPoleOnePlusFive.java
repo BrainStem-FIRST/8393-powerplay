@@ -542,7 +542,7 @@ public class UncontestedHighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
+                .splineToConstantHeading(new Vector2d(uncontestedHighPolePosition.getX(), uncontestedHighPolePosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(50))
@@ -551,14 +551,12 @@ public class UncontestedHighPoleOnePlusFive extends LinearOpMode {
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);
+                    stateMap.put(robot.turret.SYSTEM_NAME, uncontestedTurretDeliveryPosition);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionDeliverySide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-
-
 
                     robot.lift.setSubheight(1.0);
 
@@ -602,7 +600,7 @@ public class UncontestedHighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(uncontestedHighPolePosition.getX(), uncontestedHighPolePosition.getY()),
+                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(50))
@@ -611,7 +609,7 @@ public class UncontestedHighPoleOnePlusFive extends LinearOpMode {
                     robot.lift.setSubheight(0);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
-                    stateMap.put(robot.turret.SYSTEM_NAME, uncontestedTurretDeliveryPosition);
+                    stateMap.put(robot.turret.SYSTEM_NAME, turretDeliveryPosition);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionDeliverySide);
