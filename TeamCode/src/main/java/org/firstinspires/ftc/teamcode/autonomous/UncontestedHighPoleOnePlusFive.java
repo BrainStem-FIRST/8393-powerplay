@@ -29,7 +29,7 @@ public class UncontestedHighPoleOnePlusFive extends LinearOpMode {
     // Locations - For Left /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
     private Pose2d initialApproach = new Pose2d(-36, -24, Math.toRadians(-90));
-    private Pose2d highPoleDepositingPositionRight = new Pose2d(-21.9, 12, Math.toRadians(180));
+    private Pose2d highPoleDepositingPositionRight = new Pose2d(-21.6, 12, Math.toRadians(180));
     private Pose2d highPoleDepositingPositionLeft = new Pose2d(-23.6, -12, Math.toRadians(180));
     private Pose2d uncontestedHighPolePosition = new Pose2d(0.5, -12, Math.toRadians(180));
     private Pose2d highPoleDepositingPosition;
