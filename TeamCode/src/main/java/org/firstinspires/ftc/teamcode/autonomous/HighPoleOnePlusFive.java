@@ -30,8 +30,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     // Locations - For Left /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
     private Pose2d initialApproach = new Pose2d(-36, -24, Math.toRadians(-90));
-    private Pose2d highPoleDepositingPositionRight = new Pose2d(-22.35, 12, Math.toRadians(180));
-    private Pose2d highPoleDepositingPositionLeft = new Pose2d(-23.0, -12, Math.toRadians(180));
+    private Pose2d highPoleDepositingPositionRight = new Pose2d(-21.9, 12, Math.toRadians(180));
+    private Pose2d highPoleDepositingPositionLeft = new Pose2d(-23.6, -12, Math.toRadians(180));
     private Pose2d highPoleDepositingPosition;
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.5, -11.5, Math.toRadians(0));
     private Vector2d collectConesPosition = new Vector2d(-55.0, -12); //-55.5
@@ -298,8 +298,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_4);
                 })
                 .splineToSplineHeading(initialApproach, Math.toRadians(initialApproachTangent),
-                        SampleMecanumDrive.getVelocityConstraint(45, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(45))
+                        SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(50))
                 .splineToSplineHeading(highPoleDepositingPosition, Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(50))
