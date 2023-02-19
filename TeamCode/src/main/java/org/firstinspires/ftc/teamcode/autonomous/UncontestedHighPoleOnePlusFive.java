@@ -558,7 +558,6 @@ public class UncontestedHighPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
 
-
                     robot.lift.setSubheight(1.0);
 
                 })
