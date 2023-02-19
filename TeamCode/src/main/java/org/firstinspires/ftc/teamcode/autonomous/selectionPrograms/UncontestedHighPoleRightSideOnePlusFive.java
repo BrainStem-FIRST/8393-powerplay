@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.teamcode.autonomous.HighPoleOnePlusFive;
 import org.firstinspires.ftc.teamcode.autonomous.UncontestedHighPoleOnePlusFive;
 
-@Autonomous(name="3 - Uncontested Right 1+5 High")
+@Autonomous(name="0 - Uncontested Right 1+5 High 🏆")
 public class UncontestedHighPoleRightSideOnePlusFive extends UncontestedHighPoleOnePlusFive {
     public UncontestedHighPoleRightSideOnePlusFive() {super(AutoOrientation.RIGHT);}
     @Override

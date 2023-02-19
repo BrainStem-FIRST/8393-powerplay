@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.SpreadAuto;
 
-@Autonomous(name="1 - Right Spread Auto")
+@Autonomous(name="3 - Right Spread Auto 🤮")
 public class SpreadAutoRight extends SpreadAuto {
     public SpreadAutoRight() {super(AutoOrientation.RIGHT);}
     @Override

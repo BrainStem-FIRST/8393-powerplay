@@ -4,7 +4,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.MediumPoleOnePlusFive;
 
-@Autonomous(name="2- Medium 1+5 Right")
+@Autonomous(name="2 - Medium 1+5 Right 😖")
 public class MediumOnePlusFiveRight extends MediumPoleOnePlusFive {
     public MediumOnePlusFiveRight() {super(AutoOrientation.RIGHT);}
     @Override
