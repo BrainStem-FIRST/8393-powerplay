@@ -350,7 +350,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
@@ -408,7 +408,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
@@ -469,7 +469,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
@@ -529,7 +529,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
@@ -589,7 +589,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.15, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(0, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.3, () -> {
