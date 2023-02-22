@@ -10,8 +10,10 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoExtension;
 import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoGrabber;
 import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoLift;
+import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoPoleAligner;
 import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoTurret;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.LEDLights;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.PoleAligner;
 
 import java.util.Map;
 //import java.util.Map;
@@ -32,6 +34,7 @@ public class AutoBrainSTEMRobot {
     public LEDLights lights;
 
     public AutoGrabber grabber;
+    public AutoPoleAligner poleAligner;
     private Map stateMap;
     Constants constants = new Constants();
 
@@ -46,6 +49,8 @@ public class AutoBrainSTEMRobot {
         drive   = new SampleMecanumDrive(hwMap);
         grabber   = new AutoGrabber(hwMap, telemetry, stateMap, isAuto);
         lights = new LEDLights(hwMap, telemetry, isAuto);
+        poleAligner = new AutoPoleAligner(hwMap, telemetry, stateMap);
+
 
 
         stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
@@ -72,6 +77,7 @@ public class AutoBrainSTEMRobot {
             grabber.setState(lift);
             turret.setState(lift);
             arm.setState((String) stateMap.get(arm.SYSTEM_NAME), lift);
+            poleAligner.setState((String) stateMap.get(poleAligner.SYSTEM_NAME));
         }
 
     }

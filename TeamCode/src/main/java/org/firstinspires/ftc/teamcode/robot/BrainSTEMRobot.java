@@ -15,6 +15,7 @@ import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Grabber;
 //import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Guide;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.LEDLights;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Lift;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.PoleAligner;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Turret;
 
 import java.util.Map;
@@ -48,6 +49,7 @@ public class BrainSTEMRobot {
     public Lift lift;
     public Extension arm;
     public Flippers flippers;
+    public PoleAligner poleAligner;
 
     public SampleMecanumDrive drive;
     public LEDLights lights;
@@ -74,6 +76,7 @@ public class BrainSTEMRobot {
         drive = new SampleMecanumDrive(hwMap);
         grabber = new Grabber(hwMap, telemetry, stateMap, isAuto);
         lights = new LEDLights(hwMap, telemetry, isAuto);
+        poleAligner = new PoleAligner(hwMap, telemetry, stateMap);
 
 
         stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
@@ -98,6 +101,7 @@ public class BrainSTEMRobot {
         grabber.setState(lift);
         turret.setState(lift);
         arm.setState((String) stateMap.get(arm.SYSTEM_NAME), lift);
+        poleAligner.setState((String) stateMap.get(poleAligner.SYSTEM_NAME));
 
     }
 }
