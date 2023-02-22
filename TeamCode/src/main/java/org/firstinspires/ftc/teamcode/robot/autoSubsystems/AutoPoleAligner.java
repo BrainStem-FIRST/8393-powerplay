@@ -38,7 +38,7 @@ public class AutoPoleAligner implements Subsystem {
         this.stateMap = stateMap;
 
 
-        poleAlignerServo = new CachingServo(hwMap.get(ServoImplEx.class, "poleAligner"));
+        poleAlignerServo = new CachingServo(hwMap.get(ServoImplEx.class, "rightTurret"));
         poleAlignerServo.setPwmRange(new PwmControl.PwmRange(AutoPoleAlignerConstants.UP_POSITION, AutoPoleAlignerConstants.DOWN_POSITION));
 
     }

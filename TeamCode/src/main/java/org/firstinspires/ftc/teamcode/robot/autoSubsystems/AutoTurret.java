@@ -41,10 +41,10 @@ public class AutoTurret {
         leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretLeft"));
 
         //used to be the guide...havent changed config yet so
-        rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
+        //rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
 
         leftTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE,  RIGHT_POSITION_LEFT_SERVO_VALUE));
-        rightTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE, RIGHT_POSITION_LEFT_SERVO_VALUE));
+        //rightTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_LEFT_SERVO_VALUE, RIGHT_POSITION_LEFT_SERVO_VALUE));
 
     }
 
@@ -92,7 +92,7 @@ public class AutoTurret {
     public void transitionToPosition (double position) {
         //raising heights to reach different junctions, so four values
         leftTurretServo.setPosition(position);
-        rightTurretServo.setPosition(position);
+        //rightTurretServo.setPosition(position);
 //        otherturretServo.setPosition(position);
     }
 

@@ -159,6 +159,7 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(constants.EXTENSION_TARGET, String.valueOf(1));
         stateMap.put(robot.flippers.LEFT_SYSTEM_NAME, robot.flippers.LEFT_UP);
         stateMap.put(robot.flippers.RIGHT_SYSTEM_NAME, robot.flippers.RIGHT_UP);
+        stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
 
 
         while (!opModeIsActive()) {
@@ -346,6 +347,14 @@ public class RobotTeleOp extends LinearOpMode {
 
                 if (gamepad2.y) {
                     stateMap.put(robot.lift.LIFT_TARGET_HEIGHT, robot.lift.LIFT_POLE_HIGH);
+                }
+
+                if(gamepad1.dpad_up){
+                    stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
+                }
+
+                if(gamepad1.dpad_down){
+                    stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.DOWN);
                 }
 
 

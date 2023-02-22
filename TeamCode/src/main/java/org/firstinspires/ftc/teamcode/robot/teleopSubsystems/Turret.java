@@ -25,7 +25,7 @@ public class Turret implements Subsystem {
 
     public Telemetry telemetry;
     private ServoImplEx leftTurretServo;
-    private ServoImplEx rightTurretServo;
+    //private ServoImplEx rightTurretServo;
     private Map stateMap;
     private boolean isAuto;
 
@@ -35,10 +35,10 @@ public class Turret implements Subsystem {
         this.isAuto = isAuto;
 
         leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretLeft"));
-        rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
+        //rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
 
         leftTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_SERVO_VALUE,  RIGHT_POSITION_SERVO_VALUE));
-        rightTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_SERVO_VALUE,  RIGHT_POSITION_SERVO_VALUE));
+        //rightTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_SERVO_VALUE,  RIGHT_POSITION_SERVO_VALUE));
     }
     @Override
     public void reset() {
@@ -97,7 +97,7 @@ public class Turret implements Subsystem {
     public void transitionToPosition (double position) {
         //raising heights to reach different junctions, so four values
         leftTurretServo.setPosition(position);
-        rightTurretServo.setPosition(position);
+        //rightTurretServo.setPosition(position);
     }
 
     public void centerTurret(){
