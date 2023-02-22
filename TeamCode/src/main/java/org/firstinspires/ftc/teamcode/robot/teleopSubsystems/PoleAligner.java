@@ -14,8 +14,8 @@ import java.util.Map;
 public class PoleAligner implements Subsystem {
 
     private static final class PoleAlignerConstants {
-        private static final int UP_POSITION = 0; //FIXME
-        private static final int DOWN_POSITION = 2250; //FIXME
+        private static final int UP_POSITION = 2002;
+        private static final int DOWN_POSITION = 743;
     }
 
     private Telemetry telemetry;
@@ -38,7 +38,7 @@ public class PoleAligner implements Subsystem {
         this.stateMap = stateMap;
 
 
-        poleAlignerServo = new CachingServo(hwMap.get(ServoImplEx.class, "rightTurretServo"));
+        poleAlignerServo = new CachingServo(hwMap.get(ServoImplEx.class, "rightTurret"));
         poleAlignerServo.setPwmRange(new PwmControl.PwmRange(PoleAlignerConstants.UP_POSITION, PoleAlignerConstants.DOWN_POSITION));
 
     }
@@ -61,11 +61,11 @@ public class PoleAligner implements Subsystem {
     public void setState(String desiredState) {
         switch(desiredState){
             case UP: {
-                poleAlignerServo.setPosition(0.73);
+                poleAlignerServo.setPosition(PoleAlignerConstants.UP_POSITION);
                 break;
             }
             case DOWN: {
-                poleAlignerServo.setPosition(0.28);
+                poleAlignerServo.setPosition(PoleAlignerConstants.DOWN_POSITION);
                 break;
             }
         }
