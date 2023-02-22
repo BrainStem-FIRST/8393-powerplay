@@ -34,7 +34,7 @@ public class Turret implements Subsystem {
         this.stateMap = stateMap;
         this.isAuto = isAuto;
 
-        leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretLeft"));
+        leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turret"));
         //rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
 
         leftTurretServo.setPwmRange(new PwmControl.PwmRange(LEFT_POSITION_SERVO_VALUE,  RIGHT_POSITION_SERVO_VALUE));

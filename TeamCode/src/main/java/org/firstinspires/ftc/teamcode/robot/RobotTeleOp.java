@@ -161,7 +161,6 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(robot.flippers.RIGHT_SYSTEM_NAME, robot.flippers.RIGHT_UP);
         stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
 
-
         while (!opModeIsActive()) {
             robot.lights.setBothLEDAmber();
             stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);

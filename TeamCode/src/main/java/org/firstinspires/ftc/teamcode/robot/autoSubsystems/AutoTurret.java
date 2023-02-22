@@ -38,7 +38,7 @@ public class AutoTurret {
         this.stateMap = stateMap;
         this.isAuto = isAuto;
 
-        leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretLeft"));
+        leftTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turret"));
 
         //used to be the guide...havent changed config yet so
         //rightTurretServo = new CachingServo(hwMap.get(ServoImplEx.class, "turretRight"));
