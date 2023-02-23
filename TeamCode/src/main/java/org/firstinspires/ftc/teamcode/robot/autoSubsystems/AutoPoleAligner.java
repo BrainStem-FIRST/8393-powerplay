@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.teleopSubsystems;
+package org.firstinspires.ftc.teamcode.robot.autoSubsystems;
 
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.PwmControl;
@@ -26,6 +26,7 @@ public class AutoPoleAligner implements Subsystem {
     public final String SYSTEM_NAME = "POLE_ALIGNER";
     public final String DOWN = "DOWN";
     public final String UP = "UP";
+    public final String INIT = "INIT";
 
 
     private Map stateMap;
@@ -64,6 +65,9 @@ public class AutoPoleAligner implements Subsystem {
                 telemetry.addData("Pole aligner up", true);
                 poleAlignerServo.setPosition(0.03);
                 break;
+            }
+            case INIT: {
+                poleAlignerServo.setPosition(0.35);
             }
             case DOWN: {
                 poleAlignerServo.setPosition(1.0);
