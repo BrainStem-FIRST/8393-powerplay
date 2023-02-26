@@ -23,7 +23,7 @@ public class AutoTurret {
     public final double     RIGHT_POSITION_LEFT_SERVO_VALUE = 2166;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 50;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET_IN_AUTO = 70;
-    public final double TURRET_CENTER_POSITION = 0.5;
+    public final double TURRET_CENTER_POSITION = 0.49;
 
     public Telemetry telemetry;
 
