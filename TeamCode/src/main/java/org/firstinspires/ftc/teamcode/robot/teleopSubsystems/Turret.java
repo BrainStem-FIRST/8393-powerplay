@@ -21,7 +21,7 @@ public class Turret implements Subsystem {
     public final double     CENTER_POSITION_SERVO_VALUE = 1375;
     public final double     RIGHT_POSITION_SERVO_VALUE = 2166;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 309;
-    public final double TURRET_CENTER_POSITION = 0.51;
+    public final double TURRET_CENTER_POSITION = 0.5;
 
     public Telemetry telemetry;
     private ServoImplEx leftTurretServo;

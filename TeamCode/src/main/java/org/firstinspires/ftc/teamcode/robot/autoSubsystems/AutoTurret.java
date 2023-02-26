@@ -66,7 +66,7 @@ public class AutoTurret {
                 transitionToPosition(0.03);
                 break;
             } case CENTER_POSITION:{
-                transitionToPosition(0.51);
+                transitionToPosition(TURRET_CENTER_POSITION);
                 break;
             } case RIGHT_POSITION:{
                 transitionToPosition(1);
