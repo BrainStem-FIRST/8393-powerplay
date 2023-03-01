@@ -14,7 +14,7 @@ import java.util.Map;
 public class PoleAligner implements Subsystem {
 
     private static final class PoleAlignerConstants {
-        private static final int UP_POSITION = (int)(740*1.04);
+        private static final int UP_POSITION = (int)(743*1.04);
         private static final int DOWN_POSITION = 2260;
     }
 
