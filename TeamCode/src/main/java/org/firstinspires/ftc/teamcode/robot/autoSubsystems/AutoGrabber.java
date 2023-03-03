@@ -88,6 +88,6 @@ public class AutoGrabber implements Subsystem {
     }
 
     public void collectingOpenAuto() {
-        grabber.setPosition(0.1);
+        grabber.setPosition(0.5);
     }
 }

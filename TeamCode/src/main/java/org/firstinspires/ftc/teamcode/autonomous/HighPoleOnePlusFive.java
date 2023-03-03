@@ -35,7 +35,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private Pose2d highPoleDepositingPosition;
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.50, -11.50, Math.toRadians(0));
 //    private Vector2d collectConesPosition = new Vector2d(-55.50, -12.00); //-55.5
-    private Vector2d collectConesPositionPreload = new Vector2d(-56.00, -12.00); //-55.5
+    private Vector2d collectConesPositionPreload = new Vector2d(-56.5, -12.00); //-55.5
     private Vector2d collectConesPositionApproach = new Vector2d(-49, -12.00); //-55.5
     private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
@@ -353,13 +353,13 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPositionApproach, Math.toRadians(180 - highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(50))
-                .UNSTABLE_addTemporalMarkerOffset(-0.95, () -> {
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(53))
+                .UNSTABLE_addTemporalMarkerOffset(-1.05, () -> {
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-0.3, () -> {
-                    stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.LEFT_SIDE_EXTENDED_AUTO);
                 })
                 .forward(Math.abs(Math.abs(collectConesPositionPreload.getX()) - Math.abs(collectConesPositionApproach.getX())),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
@@ -367,16 +367,16 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 //                .splineToConstantHeading(collectConesPositionPreload, Math.toRadians(180 - highPoleDepositingPositionTangent),
 //                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
 //                        SampleMecanumDrive.getAccelerationConstraint(23))
-                .UNSTABLE_addTemporalMarkerOffset(-0.35, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.55, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(-0.05, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.25, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
-                .waitSeconds(0.02)
+                //.waitSeconds(0.02)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -420,9 +420,9 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPositionApproach, Math.toRadians(180 - highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(50))
-                .UNSTABLE_addTemporalMarkerOffset(-0.95, () -> {
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(53))
+                .UNSTABLE_addTemporalMarkerOffset(-1.05, () -> {
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-0.55, () -> {
@@ -437,16 +437,16 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 //                .splineToConstantHeading(collectConesPositionPreload, Math.toRadians(180 - highPoleDepositingPositionTangent),
 //                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
 //                        SampleMecanumDrive.getAccelerationConstraint(23))
-                .UNSTABLE_addTemporalMarkerOffset(-0.35, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.55, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(-0.05, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.25, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
-                .waitSeconds(0.02)
+                //.waitSeconds(0.02)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -492,9 +492,9 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPositionApproach, Math.toRadians(180 - highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(50))
-                .UNSTABLE_addTemporalMarkerOffset(-0.95, () -> {
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(53))
+                .UNSTABLE_addTemporalMarkerOffset(-1.05, () -> {
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-0.55, () -> {
@@ -509,16 +509,16 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 //                .splineToConstantHeading(collectConesPositionPreload, Math.toRadians(180 - highPoleDepositingPositionTangent),
 //                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
 //                        SampleMecanumDrive.getAccelerationConstraint(23))
-                .UNSTABLE_addTemporalMarkerOffset(-0.35, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.55, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(-0.05, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.25, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
-                .waitSeconds(0.02)
+                //.waitSeconds(0.02)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -563,16 +563,16 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPositionApproach, Math.toRadians(180 - highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(50))
-                .UNSTABLE_addTemporalMarkerOffset(-0.95, () -> {
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(53))
+                .UNSTABLE_addTemporalMarkerOffset(-1.05, () -> {
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-0.55, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_2);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-0.3, () -> {
-                    stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.LAST_TWO_CYCLES);
                 })
                 .forward(Math.abs(Math.abs(collectConesPositionPreload.getX()) - Math.abs(collectConesPositionApproach.getX())),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
@@ -580,16 +580,16 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 //                .splineToConstantHeading(collectConesPositionPreload, Math.toRadians(180 - highPoleDepositingPositionTangent),
 //                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
 //                        SampleMecanumDrive.getAccelerationConstraint(23))
-                .UNSTABLE_addTemporalMarkerOffset(-0.35, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.55, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(-0.05, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.25, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
-                .waitSeconds(0.02)
+                //.waitSeconds(0.02)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -634,9 +634,9 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 //CYCLE FIVE
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPositionApproach, Math.toRadians(180 - highPoleDepositingPositionTangent),
-                        SampleMecanumDrive.getVelocityConstraint(55, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(50))
-                .UNSTABLE_addTemporalMarkerOffset(-0.95, () -> {
+                        SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(53))
+                .UNSTABLE_addTemporalMarkerOffset(-1.05, () -> {
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-0.55, () -> {
@@ -651,16 +651,16 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 //                .splineToConstantHeading(collectConesPositionPreload, Math.toRadians(180 - highPoleDepositingPositionTangent),
 //                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
 //                        SampleMecanumDrive.getAccelerationConstraint(23))
-                .UNSTABLE_addTemporalMarkerOffset(-0.35, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.55, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(-0.05, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.25, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
-                .UNSTABLE_addTemporalMarkerOffset(0.1, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_COLLECTING_VALUE);
                 })
-                .waitSeconds(0.02)
+                //.waitSeconds(0.02)
                 .setReversed(true)
                 .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
@@ -708,7 +708,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(60))
 
-                .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.9, () -> {
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
 
                 })

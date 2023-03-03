@@ -43,6 +43,7 @@ public class AutoExtension implements Subsystem {
     public final String AUTO_EXTENSION_COLLECT_LEFT = "AUTO_EXTEND_COLLECT_LEFT";
     public final String DEFAULT_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String DEFAULT_SIDE_EXTENDED_AUTO = "DEFAULT_SIDE_EXTENDED_AUTO";
+    public final String LAST_TWO_CYCLES = "LAST_TWO_CYCLES";
     public final String DEFAULT_SIDE_EXTENDED_AUTO_PRELOAD = "DEFAULT_SIDE_EXTEND_PRELOAD_AUTO";
     public final String SIDE_DEPOSIT = "SIDE_DEPOSIT";
     public final String TRANSITION_STATE = "TRANSITION";
@@ -122,12 +123,16 @@ public class AutoExtension implements Subsystem {
     private void selectTransition(String desiredLevel) {
         switch (desiredLevel) {
             case DEFAULT_COLLECTING_VALUE: {
-                extendInAuto(0.2);
+                extendInAuto(0.16);
                 break;
             }
             case DEFAULT_VALUE: {
                 extendHome();
                 telemetry.addData("Home", "true");
+                break;
+            }
+            case LAST_TWO_CYCLES: {
+                extendInAuto(0.62);
                 break;
             }
             case FULL_EXTEND: {
