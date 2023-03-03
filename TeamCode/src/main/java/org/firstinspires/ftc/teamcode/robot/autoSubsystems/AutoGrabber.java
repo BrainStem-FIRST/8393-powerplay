@@ -24,6 +24,8 @@ public class AutoGrabber implements Subsystem {
     public final String OPEN_STATE = "OPEN";
     public final String FULLY_OPEN = "FULLYOPEN";
     public final String CLOSED_STATE = "CLOSED";
+
+    public final String COLLECTING_OPEN_AUTO = "COLLECTING_OPEN_AUTO";
     Constants constants = new Constants();
 
     public final double REGULAR_OPEN = 900; //520 for passive
@@ -67,6 +69,8 @@ public class AutoGrabber implements Subsystem {
             open();
         } else if (stateMap.get(SYSTEM_NAME) == FULLY_OPEN) {
             maxOpen();
+        } else if (stateMap.get(SYSTEM_NAME) == COLLECTING_OPEN_AUTO) {
+            collectingOpenAuto();
         }
 
     }
@@ -81,5 +85,9 @@ public class AutoGrabber implements Subsystem {
 
     public void close() {
         grabber.setPosition(0.96);
+    }
+
+    public void collectingOpenAuto() {
+        grabber.setPosition(0.1);
     }
 }
