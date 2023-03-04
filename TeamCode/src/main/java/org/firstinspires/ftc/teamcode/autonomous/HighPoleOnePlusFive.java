@@ -703,7 +703,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 })
 
 
-                .waitSeconds(0.5)
+                .waitSeconds(0.6)
                 .lineToLinearHeading(endParking,
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(60))
