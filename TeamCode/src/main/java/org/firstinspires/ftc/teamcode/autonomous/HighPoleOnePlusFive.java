@@ -213,13 +213,14 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
         telemetry.setMsTransmissionInterval(50);
         robot.grabber.close();
+        robot.poleAligner.poleAlignerServo.setPosition(0.201);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
         stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
         stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
         stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
         stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
-        stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
+        stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.INIT);
         drive.setPoseEstimate(startPosition);
 
         while (!this.opModeIsActive() && !this.isStopRequested()) {

@@ -379,7 +379,9 @@ public class Lift implements Subsystem {
             setAllMotorPowers(1.0);
         } else if (position > (heightInTicks + 150)) {
             setAllMotorPowers(-0.5);
-        } else if (position <= heightInTicks - 15 || position >= heightInTicks + 15) { // THIS IS THE RANGE THAT IT SITS IN WHEN ITS SET TO A PLACE TO GO
+        } else if (heightInTicks == 0 && (position < heightInTicks + 15)) {
+            setAllMotorPowers(0.0);
+        }else if (position <= heightInTicks - 7 || position >= heightInTicks + 7) { // THIS IS THE RANGE THAT IT SITS IN WHEN ITS SET TO A PLACE TO GO
             if (stateMap.get(LIFT_SYSTEM_NAME) == LIFT_POLE_GROUND &&
                     heightInTicks > 0 &&
                     position < 30) {
@@ -389,9 +391,7 @@ public class Lift implements Subsystem {
             } else {
                 runAllMotorsToPosition(heightInTicks, 0.3);
             }
-        } else if (heightInTicks == 0) {
-            setAllMotorPowers(0.0);
-        } else {
+        }  else {
             setAllMotorPowers(0.15);
         }
 

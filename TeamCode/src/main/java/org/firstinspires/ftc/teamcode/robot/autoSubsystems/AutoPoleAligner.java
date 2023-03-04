@@ -15,6 +15,7 @@ public class AutoPoleAligner implements Subsystem {
 
     private static final class PoleAlignerConstants {
         private static final int UP_POSITION = (int)(740*1.04);
+        private static final int INIT_POSITION = 1191;
         private static final int DOWN_POSITION = 2260;
     }
 
@@ -25,6 +26,7 @@ public class AutoPoleAligner implements Subsystem {
 
     public final String SYSTEM_NAME = "POLE_ALIGNER";
     public final String DOWN = "DOWN";
+
     public final String UP = "UP";
     public final String INIT = "INIT";
 
@@ -67,7 +69,8 @@ public class AutoPoleAligner implements Subsystem {
                 break;
             }
             case INIT: {
-                poleAlignerServo.setPosition(0.35);
+                poleAlignerServo.setPosition(0.201);
+                break;
             }
             case DOWN: {
                 poleAlignerServo.setPosition(1.0);
