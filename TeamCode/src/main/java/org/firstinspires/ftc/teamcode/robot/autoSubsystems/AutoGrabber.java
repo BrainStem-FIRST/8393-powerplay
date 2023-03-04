@@ -22,7 +22,7 @@ public class AutoGrabber implements Subsystem {
 
     public final String SYSTEM_NAME = "GRABBER";
     public final String OPEN_STATE = "OPEN";
-    public final String FULLY_OPEN = "FULLYOPEN";
+    public final String FULLY_OPEN = "FULLY_OPEN";
     public final String CLOSED_STATE = "CLOSED";
 
     public final String COLLECTING_OPEN_AUTO = "COLLECTING_OPEN_AUTO";
@@ -80,7 +80,7 @@ public class AutoGrabber implements Subsystem {
     }
 
     public void maxOpen() {
-        grabber.setPosition(0.0);
+        grabber.setPosition(0.01);
     }
 
     public void close() {
