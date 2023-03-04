@@ -354,7 +354,7 @@ public class AutoLift implements Subsystem {
         if (position < (heightInTicks - 200)) {
             setAllMotorPowers(1.0);
         } else if (position > (heightInTicks + 150)) {
-            setAllMotorPowers(-0.5);
+            setAllMotorPowers(-0.7);
         } else if (position <= heightInTicks - 7 || position >= heightInTicks + 7) {
             if (stateMap.get(LIFT_SYSTEM_NAME) == LIFT_POLE_GROUND &&
                     heightInTicks > 0 &&

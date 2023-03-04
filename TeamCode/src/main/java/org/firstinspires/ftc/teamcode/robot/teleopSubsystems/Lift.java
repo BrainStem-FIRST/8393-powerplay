@@ -378,7 +378,7 @@ public class Lift implements Subsystem {
         if (position < (heightInTicks - 200)) {
             setAllMotorPowers(1.0);
         } else if (position > (heightInTicks + 150)) {
-            setAllMotorPowers(-0.5);
+            setAllMotorPowers(-0.7);
         } else if (heightInTicks == 0 && (position < heightInTicks + 15)) {
             setAllMotorPowers(0.0);
         }else if (position <= heightInTicks - 7 || position >= heightInTicks + 7) { // THIS IS THE RANGE THAT IT SITS IN WHEN ITS SET TO A PLACE TO GO
