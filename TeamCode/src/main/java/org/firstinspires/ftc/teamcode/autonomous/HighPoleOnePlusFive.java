@@ -309,7 +309,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                         SampleMecanumDrive.getAccelerationConstraint(40))
                 .splineToSplineHeading(highPoleDepositingPosition, Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(45))
+                        SampleMecanumDrive.getAccelerationConstraint(40))
                 .UNSTABLE_addTemporalMarkerOffset(-0.75, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.DOWN);
