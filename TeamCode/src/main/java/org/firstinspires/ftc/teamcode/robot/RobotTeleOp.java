@@ -70,8 +70,7 @@ public class RobotTeleOp extends LinearOpMode {
     private StickyButton extensionFineAdjustDown = new StickyButton();
     private StickyButton liftFineAdjustUp = new StickyButton();
     private StickyButton liftFineAdjustDown = new StickyButton();
-    private StickyButton bottomHeightStickyButtonRightTrigger = new StickyButton();
-    private StickyButton bottomHeightStickyButtonLeftTrigger = new StickyButton();
+
 
     private Pose2d zeroPose = new Pose2d(0, 0, Math.toRadians(0));
 
