@@ -169,7 +169,7 @@ public class UncontestedOnePlusFive extends LinearOpMode {
                 extensionDeliverySide = robot.arm.RIGHT_SIDE_EXTENDED_AUTO;
                 endParking = new Pose2d(parking3.getX(), parking3.getY(), startPosition.getHeading());
                 uncontestedTurretPosition = robot.turret.LEFT_POSITION;
-                uncontestedExtensionSide = robot.arm.LEFT_SIDE_EXTENDED_AUTO;
+                uncontestedExtensionSide = robot.arm.LEFT_SIDE_UNCONTESTED_EXTENDED_AUTO;
                 break;
             case RIGHT:
                 lowTurretDeliveryPosition = robot.turret.RIGHT_POSITION;
@@ -179,7 +179,7 @@ public class UncontestedOnePlusFive extends LinearOpMode {
                 extensionDeliverySide = robot.arm.LEFT_SIDE_EXTENDED_AUTO;
                 endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
                 uncontestedTurretPosition = robot.turret.RIGHT_POSITION;
-                uncontestedExtensionSide = robot.arm.RIGHT_SIDE_EXTENDED_AUTO;
+                uncontestedExtensionSide = robot.arm.RIGHT_SIDE_UNCONTESTED_EXTENDED_AUTO;
                 break;
         }
 

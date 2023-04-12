@@ -35,6 +35,12 @@ public class AutoExtension implements Subsystem {
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
     public final String DEFAULT_VALUE = "RETRACTED";
     public final String FULL_EXTEND = "EXTENDED";
+
+    public final String LEFT_SIDE_UNCONTESTED_EXTENDED_AUTO = "LEFT_SIDE_UNCONTESTED_EXTENDED_AUTO";
+    public final String RIGHT_SIDE_UNCONTESTED_EXTENDED_AUTO = "RIGHT_SIDE_UNCONTESTED_EXTENDED_AUTO";
+
+
+
     public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTENSION_DEPOSIT";
     public final String LEFT_SIDE_EXTENDED_AUTO = "LEFT_SIDE_EXTENDED_AUTO";
     public final String RIGHT_SIDE_EXTENDED_AUTO = "RIGHT_SIDE_EXTENDED_AUTO";
@@ -172,6 +178,13 @@ public class AutoExtension implements Subsystem {
                 telemetry.addData("Side extended", "true");
                 break;
             }
+            case LEFT_SIDE_UNCONTESTED_EXTENDED_AUTO: {
+                extendInAuto(0.75);
+            }
+            case RIGHT_SIDE_UNCONTESTED_EXTENDED_AUTO: {
+                extendInAuto(0.75);
+            }
+
             case RIGHT_SIDE_EXTENDED_AUTO: {
 
                 extendInAuto(0.71);
