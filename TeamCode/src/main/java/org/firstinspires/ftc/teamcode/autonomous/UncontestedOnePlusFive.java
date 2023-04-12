@@ -483,6 +483,7 @@ public class UncontestedOnePlusFive extends LinearOpMode {
 
                 //CYCLE THREE
 
+
                 .setReversed(false)
                 .splineToConstantHeading(collectConesPositionApproach, Math.toRadians(180 - highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(60, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
