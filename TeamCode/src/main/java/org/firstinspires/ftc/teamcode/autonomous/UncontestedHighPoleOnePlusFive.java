@@ -363,7 +363,7 @@ public class UncontestedHighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.1)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
+                .splineToConstantHeading(new Vector2d(uncontestedHighPolePosition.getX(), uncontestedHighPolePosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(50))
@@ -421,7 +421,7 @@ public class UncontestedHighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
+                .splineToConstantHeading(new Vector2d(uncontestedHighPolePosition.getX(), uncontestedHighPolePosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(50))
@@ -482,7 +482,7 @@ public class UncontestedHighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
+                .splineToConstantHeading(new Vector2d(uncontestedHighPolePosition.getX(), uncontestedHighPolePosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(50))
@@ -598,7 +598,7 @@ public class UncontestedHighPoleOnePlusFive extends LinearOpMode {
                 })
                 .waitSeconds(0.2)
                 .setReversed(true)
-                .splineToConstantHeading(new Vector2d(highPoleDepositingPosition.getX(), highPoleDepositingPosition.getY()),
+                .splineToConstantHeading(new Vector2d(uncontestedHighPolePosition.getX(), uncontestedHighPolePosition.getY()),
                         Math.toRadians(highPoleDepositingPositionTangent),
                         SampleMecanumDrive.getVelocityConstraint(50, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(50))
