@@ -405,6 +405,7 @@ public class UncontestedOnePlusFive extends LinearOpMode {
                     robot.lift.setSubheight(0);
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.COLLECTING_OPEN_AUTO);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5);
+                    stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
                 })
 
 
@@ -474,6 +475,7 @@ public class UncontestedOnePlusFive extends LinearOpMode {
                     robot.lift.setSubheight(0);
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.COLLECTING_OPEN_AUTO);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5);
+                    stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
                 })
 
 
@@ -542,6 +544,7 @@ public class UncontestedOnePlusFive extends LinearOpMode {
                     robot.lift.setSubheight(0);
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.COLLECTING_OPEN_AUTO);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5);
+                    stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
                 })
 
                 .waitSeconds(0.5)
@@ -609,6 +612,7 @@ public class UncontestedOnePlusFive extends LinearOpMode {
                     robot.lift.setSubheight(0);
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.COLLECTING_OPEN_AUTO);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5);
+                    stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
                 })
 
 
