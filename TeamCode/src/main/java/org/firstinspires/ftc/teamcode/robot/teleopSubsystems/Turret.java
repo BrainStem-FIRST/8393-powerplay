@@ -79,7 +79,7 @@ public class Turret implements Subsystem {
     public void selectTransition(String desiredLevel){
         switch(desiredLevel){
             case LEFT_POSITION:{
-                transitionToPosition(0.03);
+                transitionToPosition(0.01);
                 break;
             } case CENTER_POSITION:{
                 transitionToPosition(TURRET_CENTER_POSITION);

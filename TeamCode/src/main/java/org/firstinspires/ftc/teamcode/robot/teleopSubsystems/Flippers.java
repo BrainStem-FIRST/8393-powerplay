@@ -84,7 +84,7 @@ public class Flippers implements Subsystem {
 
         switch(rightDesiredState){
             case RIGHT_DOWN: {
-                rightFlipper.setPosition(0.735);
+                rightFlipper.setPosition(0.75);
                 break;
             }
             case RIGHT_UP: {
