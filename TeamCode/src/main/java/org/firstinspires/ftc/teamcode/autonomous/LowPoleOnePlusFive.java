@@ -13,6 +13,7 @@ import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.AutoBrainSTEMRobot;
 import org.firstinspires.ftc.teamcode.robot.Constants;
+import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Flippers;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
@@ -29,6 +30,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
 
     private Pose2d endParking;
 
+    public Flippers flippers;
 
     // Locations - For Red /////////////////////////////////////////////////////////////////////
     private Pose2d startPosition = new Pose2d(-36, -64, Math.toRadians(-90));
@@ -164,12 +166,12 @@ public class LowPoleOnePlusFive extends LinearOpMode {
 
         switch (side) {
             case LEFT:
-                extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_LEFT;
+                extensionCollectGoTo = robot.arm.AUTO_EXTENSION_LOW_COLLECT;
                 turretPickupPosition = robot.turret.LEFT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.LEFT_DELIVERY_AUTO;
                 break;
             case RIGHT:
-                extensionCollectGoTo = robot.arm.AUTO_EXTENSION_COLLECT_RIGHT;
+                extensionCollectGoTo = robot.arm.AUTO_EXTENSION_LOW_COLLECT;
                 turretPickupPosition = robot.turret.RIGHT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.RIGHT_DELIVERY_AUTO;
                 break;
@@ -245,12 +247,14 @@ public class LowPoleOnePlusFive extends LinearOpMode {
         this.waitForStart();
         camera.closeCameraDevice();
         drive.setPoseEstimate(startPosition);
+        robot.poleAligner.poleAlignerServo.setPosition(0.201);
         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
         stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
         stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
         stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
         stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
+        stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.INIT);
         robot.updateSystems();
 
         totalTime.reset();
@@ -262,6 +266,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(0.0, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                     robot.lift.setSubheight(0.9);
+
                 })
                 .splineToConstantHeading(depositPreloadSpline, Math.toRadians(depositPreloadSplineTangent), SampleMecanumDrive.getVelocityConstraint(24, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(25))
@@ -272,6 +277,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 .UNSTABLE_addTemporalMarkerOffset(-1.2, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                     robot.lift.setSubheight(0);
+
                 })
 
 //            FAKE
@@ -326,6 +332,8 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     robot.lift.setSubheight(0.95);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_5);
+                    stateMap.put(flippers.LEFT_SYSTEM_NAME, flippers.LEFT_DOWN);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1.4, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -335,6 +343,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(2.3, () -> {
                     robot.lift.setSubheight(0);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
 
                 .waitSeconds(2.5)
@@ -366,6 +375,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     robot.lift.setSubheight(1.1);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_4);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1.4, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -375,6 +385,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(2.3, () -> {
                     robot.lift.setSubheight(0);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
 
                 .waitSeconds(2.5)
@@ -406,6 +417,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     robot.lift.setSubheight(1.25);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_3);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1.4, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -415,6 +427,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(2.3, () -> {
                     robot.lift.setSubheight(0);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
 
                 .waitSeconds(2.5)
@@ -446,6 +459,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     robot.lift.setSubheight(1.6);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_2);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1.4, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -455,6 +469,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(2.3, () -> {
                     robot.lift.setSubheight(0);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
 
                 .waitSeconds(2.5)
@@ -486,6 +501,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.75, () -> {
                     robot.lift.setSubheight(1.75);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_1);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(1.4, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
@@ -495,6 +511,7 @@ public class LowPoleOnePlusFive extends LinearOpMode {
                 })
                 .UNSTABLE_addTemporalMarkerOffset(2.3, () -> {
                     robot.lift.setSubheight(0);
+                    stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
 
                 .waitSeconds(2.5)

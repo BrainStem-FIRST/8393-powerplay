@@ -47,6 +47,8 @@ public class AutoExtension implements Subsystem {
     public final String AUTO_EXTENSION_DEPOSIT_PRELOAD = "AUTO_EXTENSION_DEPOSIT_PRELOAD";
     public final String AUTO_EXTENSION_COLLECT_RIGHT = "AUTO_EXTEND_COLLECT_RIGHT";
     public final String AUTO_EXTENSION_COLLECT_LEFT = "AUTO_EXTEND_COLLECT_LEFT";
+
+    public final String AUTO_EXTENSION_LOW_COLLECT = "AUTO_EXTENSION_LOW_COLLECT";
     public final String DEFAULT_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String DEFAULT_SIDE_EXTENDED_AUTO = "DEFAULT_SIDE_EXTENDED_AUTO";
     public final String LAST_TWO_CYCLES = "LAST_TWO_CYCLES";
@@ -147,7 +149,7 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case AUTO_EXTENSION_DEPOSIT: {
-                extendInAuto(0.72);
+                extendInAuto(0.6);
                 telemetry.addData("0.72", "true");
                 break;
             }
@@ -164,6 +166,11 @@ public class AutoExtension implements Subsystem {
             case AUTO_EXTENSION_COLLECT_LEFT: {
                 extendInAuto(0.68);
                 telemetry.addData("0.8", "true");
+                break;
+            }
+            case AUTO_EXTENSION_LOW_COLLECT: {
+                extendInAuto(0.6);
+                telemetry.addData("0.6", "true");
                 break;
             }
             case DEFAULT_EXTEND_AUTO: {
