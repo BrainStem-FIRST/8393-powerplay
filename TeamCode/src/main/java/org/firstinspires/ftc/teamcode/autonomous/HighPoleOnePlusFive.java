@@ -139,8 +139,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 depositOnHighPole2 = new Pose2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY(), Math.toRadians(180));
 
 
-                parking1 = new Pose2d(-11.5, 12.5, startPosition.getHeading() + 20);
-                parking2 = new Pose2d(-36, 12.5, startPosition.getHeading() + 20);
+                parking1 = new Pose2d(-11.5, 12.5, startPosition.getHeading() );
+                parking2 = new Pose2d(-36, 12.5, startPosition.getHeading() );
                 parking3 = new Pose2d(-60, 12.5, Math.toRadians(180));
                 break;
             case LEFT:
@@ -183,7 +183,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 turretPickupPosition = robot.turret.RIGHT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.LEFT_POSITION;
                 extensionDeliverySide = robot.arm.LEFT_SIDE_EXTENDED_AUTO;
-                endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
+                endParking = new Pose2d(parking2.getX(), parking2.getY(), startPosition.getHeading());
                 break;
         }
 
@@ -240,7 +240,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                         parking = 2;
                         tagFound = true;
                         telemetry.addData("Open CV :", "Mid");
-                        endParking = parking2;
+                        endParking = new Pose2d(parking2.getX(), parking2.getY(), startPosition.getHeading());;
                         break;
 
                     } else if (tag.id == RIGHT) {
@@ -278,6 +278,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
             if (endParking != null) {
                 telemetry.addData("Parking", endParking);
+                telemetry.addData("Start Position get heading", startPosition.getHeading());
             }
             telemetry.update();
         }
