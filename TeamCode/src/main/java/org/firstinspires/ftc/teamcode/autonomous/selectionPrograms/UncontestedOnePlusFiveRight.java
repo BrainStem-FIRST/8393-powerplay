@@ -3,7 +3,6 @@ package org.firstinspires.ftc.teamcode.autonomous.selectionPrograms;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 
 import org.firstinspires.ftc.teamcode.autonomous.NewUncontestedOnePlusFive;
-import org.firstinspires.ftc.teamcode.autonomous.UncontestedOnePlusFive;
 
 @Autonomous(name="1 - Right Uncontested 1+5 WIP")
 public class UncontestedOnePlusFiveRight extends NewUncontestedOnePlusFive {
