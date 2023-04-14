@@ -37,7 +37,7 @@ public class UncontestedOnePlusFive extends LinearOpMode {
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.50, -11.50, Math.toRadians(0));
     //    private Vector2d collectConesPosition = new Vector2d(-55.50, -12.00); //-55.5
     private Vector2d collectConesPositionPreload = new Vector2d(-56.5, -12.00); //-55.5
-    private Vector2d collectConesPositionApproach = new Vector2d(-49, -12.00); //-55.5
+    private Vector2d collectConesPositionApproach = new Vector2d(-49.00, -12.00); //-55.5
     private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(0));
