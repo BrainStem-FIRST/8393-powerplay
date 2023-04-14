@@ -37,7 +37,7 @@ public class NewUncontestedOnePlusFive extends LinearOpMode {
     private Pose2d lowPoleDepositingPosition = new Pose2d(-47.50, -11.50, Math.toRadians(0));
     //    private Vector2d collectConesPosition = new Vector2d(-55.50, -12.00); //-55.5
     private Vector2d collectConesPositionPreload = new Vector2d(-56.5, -12.00); //-55.5
-    private Vector2d collectConesPositionApproach = new Vector2d(-49.25, -12.00); //-55.5
+    private Vector2d collectConesPositionApproach = new Vector2d(-51.25, -12.00); //-55.5
     private Pose2d depositOnHighPole1approach = new Pose2d(-35, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole1 = new Pose2d(-24, -12, Math.toRadians(0));
     private Pose2d depositOnHighPole2 = new Pose2d(-25, -12, Math.toRadians(0));
@@ -57,8 +57,8 @@ public class NewUncontestedOnePlusFive extends LinearOpMode {
     private int initialTurn = -90;
 
 
-    private Pose2d parking3 = new Pose2d(-12, -12.5, startPosition.getHeading());
-    private Pose2d parking2 = new Pose2d(-36, -12.5, startPosition.getHeading());
+    private Pose2d parking3 = new Pose2d(-12, -12.5, Math.toRadians(180));
+    private Pose2d parking2 = new Pose2d(-36, -12.5, Math.toRadians(180));
     private Pose2d parking1 = new Pose2d(-60, -12.5, Math.toRadians(180));
     private Pose2d endParking;
 
@@ -131,8 +131,8 @@ public class NewUncontestedOnePlusFive extends LinearOpMode {
                 depositOnHighPole2 = new Pose2d(depositOnHighPole2.getX(), -depositOnHighPole2.getY(), Math.toRadians(180));
 
 
-                parking1 = new Pose2d(-11.5, 12.5, startPosition.getHeading() + 20);
-                parking2 = new Pose2d(-36, 12.5, startPosition.getHeading() + 20);
+                parking1 = new Pose2d(-11.5, 12.5, Math.toRadians(180));
+                parking2 = new Pose2d(-36, 12.5, Math.toRadians(180));
                 parking3 = new Pose2d(-60, 12.5, Math.toRadians(180));
                 break;
             case LEFT:
@@ -167,7 +167,7 @@ public class NewUncontestedOnePlusFive extends LinearOpMode {
                 turretPickupPosition = robot.turret.LEFT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.RIGHT_POSITION;
                 extensionDeliverySide = robot.arm.RIGHT_SIDE_EXTENDED_AUTO;
-                endParking = new Pose2d(parking3.getX(), parking3.getY(), startPosition.getHeading());
+                endParking = new Pose2d(parking3.getX(), parking3.getY(), Math.PI);
                 uncontestedTurretPosition = robot.turret.LEFT_POSITION;
                 uncontestedExtensionSide = robot.arm.LEFT_SIDE_UNCONTESTED_EXTENDED_AUTO;
                 break;
@@ -177,7 +177,7 @@ public class NewUncontestedOnePlusFive extends LinearOpMode {
                 turretPickupPosition = robot.turret.RIGHT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.LEFT_POSITION;
                 extensionDeliverySide = robot.arm.LEFT_SIDE_EXTENDED_AUTO;
-                endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
+                endParking = new Pose2d(parking1.getX(), parking1.getY(), Math.PI);
                 uncontestedTurretPosition = robot.turret.RIGHT_POSITION;
                 uncontestedExtensionSide = robot.arm.RIGHT_SIDE_UNCONTESTED_EXTENDED_AUTO;
                 break;
@@ -496,7 +496,7 @@ public class NewUncontestedOnePlusFive extends LinearOpMode {
                 .forward(Math.abs(Math.abs(collectConesPositionPreload.getX()) - Math.abs(collectConesPositionApproach.getX())),
                         SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(23))
-                .UNSTABLE_addTemporalMarkerOffset(-0.55, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.5, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(-0.35, () -> {
@@ -671,7 +671,7 @@ public class NewUncontestedOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_LOW);
                 })
-                .waitSeconds(0.45)
+                .waitSeconds(0.55)
                 .lineToLinearHeading(endParking,
                         SampleMecanumDrive.getVelocityConstraint(65, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(65))
