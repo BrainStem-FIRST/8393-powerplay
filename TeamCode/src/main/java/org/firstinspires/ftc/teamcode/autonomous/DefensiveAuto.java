@@ -307,7 +307,10 @@ public class DefensiveAuto extends LinearOpMode {
                 .lineToConstantHeading(initialApproach,
                         SampleMecanumDrive.getVelocityConstraint(57, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(57))
-                .waitSeconds(25)
+                .forward(5)
+                .waitSeconds(5)
+                .back(5)
+                .waitSeconds(20)
                 .UNSTABLE_addTemporalMarkerOffset(-17, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_HIGH);
                     robot.lift.setSubheight(0);
