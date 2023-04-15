@@ -180,7 +180,7 @@ public class AutoExtension implements Subsystem {
             }
             case LEFT_SIDE_EXTENDED_AUTO: {
 
-                extendInAuto(0.71);
+                extendInAuto(0.72);
 
                 telemetry.addData("Side extended", "true");
                 break;
@@ -194,7 +194,7 @@ public class AutoExtension implements Subsystem {
 
             case RIGHT_SIDE_EXTENDED_AUTO: {
 
-                extendInAuto(0.71);
+                extendInAuto(0.72);
 
                 telemetry.addData("Side extended", "true");
                 break;

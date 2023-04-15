@@ -14,6 +14,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.robot.AutoBrainSTEMRobot;
 import org.firstinspires.ftc.teamcode.robot.Constants;
 import org.firstinspires.ftc.teamcode.trajectorysequence.TrajectorySequence;
+import org.firstinspires.ftc.teamcode.util.StickyButton;
 import org.openftc.apriltag.AprilTagDetection;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -65,6 +66,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private int initialApproachTangent = 180;
     private int highPoleDepositingPositionTangent = 90;
     private int depositPreloadSpline2Tangent = 125;
+
+    private double waitAtStart = 0;
     private String extensionCollectGoTo;
     private String lowTurretDeliveryPosition;
 
@@ -77,6 +80,8 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private boolean step4a = false;
     private boolean step5 = false;
     private boolean step5a = false;
+    private boolean waitForStartBooleanA;
+    private boolean waitForStartBooleanB;
 
     private int parking;
 
@@ -92,6 +97,9 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private ParkingLocation location = ParkingLocation.LEFT;
     public OpenCvCamera camera;
     AprilTagDetectionPipeline aprilTagDetectionPipeline;
+
+    StickyButton Abutton = new StickyButton();
+    StickyButton Bbutton = new StickyButton();
     static final double FEET_PER_METER = 3.28084;
     public int Ending_Location = 1;
     double fx = 578.272;
@@ -279,11 +287,35 @@ public class HighPoleOnePlusFive extends LinearOpMode {
             if (endParking != null) {
                 telemetry.addData("Parking", endParking);
                 telemetry.addData("Start Position get heading", startPosition.getHeading());
+                telemetry.addData("waitAtStart", waitAtStart);
+
             }
             telemetry.update();
+
+
+
+            if(gamepad1.a){
+                waitForStartBooleanA = true;
+            }
+            if(waitForStartBooleanA == true){
+                waitAtStart += 0.25;
+                waitForStartBooleanA = false;
+            }
+            if(gamepad1.b){
+                waitForStartBooleanB = true;
+            }
+            if(waitForStartBooleanB == true){
+                waitAtStart -= 0.25;
+                waitForStartBooleanB = false;
+            }
+
+
+
         }
 
+
         this.waitForStart();
+
         camera.closeCameraDevice();
         robot.updateSystems();
         drive.followTrajectorySequenceAsync(autoTrajectorySequence);
@@ -301,6 +333,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
         TrajectorySequence deliverPreload = drive.trajectorySequenceBuilder(startPosition)
                 .setReversed(true)
                 .setTangent(initialTangent)
+                .waitSeconds(waitAtStart)
                 .UNSTABLE_addTemporalMarkerOffset(-0.1, () -> {
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.STACK_4);
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
