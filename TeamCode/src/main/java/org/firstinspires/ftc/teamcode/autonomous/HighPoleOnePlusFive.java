@@ -83,6 +83,9 @@ public class HighPoleOnePlusFive extends LinearOpMode {
     private boolean waitForStartBooleanA;
     private boolean waitForStartBooleanB;
 
+    private StickyButton timeUpButton = new StickyButton();
+    private StickyButton timeDownButton = new StickyButton();
+
     private int parking;
 
     private boolean trajectoryCalculated = false;
@@ -286,30 +289,12 @@ public class HighPoleOnePlusFive extends LinearOpMode {
 
             if (endParking != null) {
                 telemetry.addData("Parking", endParking);
-                telemetry.addData("Start Position get heading", startPosition.getHeading());
-                telemetry.addData("waitAtStart", waitAtStart);
+                telemetry.addData("---------", "-----------");
+                telemetry.addData("Start Timer Delay", waitAtStart);
 
             }
             telemetry.update();
-
-
-
-            if(gamepad1.a){
-                waitForStartBooleanA = true;
-            }
-            if(waitForStartBooleanA == true){
-                waitAtStart += 0.25;
-                waitForStartBooleanA = false;
-            }
-            if(gamepad1.b){
-                waitForStartBooleanB = true;
-            }
-            if(waitForStartBooleanB == true){
-                waitAtStart -= 0.25;
-                waitForStartBooleanB = false;
-            }
-
-
+            startDelay();
 
         }
 
@@ -731,10 +716,32 @@ public class HighPoleOnePlusFive extends LinearOpMode {
         return deliverPreload;
     }
 
-    private void resetLift() {
-        stateMap.put(constants.CONE_CYCLE, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_LIFT_UP, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_LIFT_DOWN, constants.STATE_NOT_STARTED);
-        stateMap.put(constants.CYCLE_GRABBER, constants.STATE_NOT_STARTED);
+    private void setButtonStates() {
+        timeUpButton.update(gamepad1.a);
+        timeDownButton.update(gamepad1.b);
+    }
+
+    private void setButtons(){
+        if(timeDownButton.getState()) {
+            if(waitAtStart < 0.05) {
+
+            } else {
+                waitAtStart -= 0.1;
+            }
+        } else if (timeUpButton.getState()) {
+            if(waitAtStart > 0.95) {
+
+            } else {
+                waitAtStart += 0.1;
+            }
+        }
+        if (gamepad1.x) {
+            waitAtStart = 0.00;
+        }
+    }
+
+    private void startDelay() {
+        setButtonStates();
+        setButtons();
     }
 }
