@@ -288,26 +288,30 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 telemetry.addData("Parking", endParking);
                 telemetry.addData("Start Position get heading", startPosition.getHeading());
                 telemetry.addData("waitAtStart", waitAtStart);
+                telemetry.addData("abutton", Abutton.getState());
+
+                Abutton.update(gamepad1.a);
+                Bbutton.update(gamepad1.b);
+                if(Abutton.getState() == true){
+                    waitForStartBooleanA = true;
+                }
+                if(waitForStartBooleanA == true){
+                    waitAtStart += 0.25;
+                    waitForStartBooleanA = false;
+                }
+                if(Bbutton.getState() == true){
+                    waitForStartBooleanB = true;
+                }
+                if(waitForStartBooleanB == true){
+                    waitAtStart -= 0.25;
+                    waitForStartBooleanB = false;
+                }
 
             }
             telemetry.update();
 
 
 
-            if(gamepad1.a){
-                waitForStartBooleanA = true;
-            }
-            if(waitForStartBooleanA == true){
-                waitAtStart += 0.25;
-                waitForStartBooleanA = false;
-            }
-            if(gamepad1.b){
-                waitForStartBooleanB = true;
-            }
-            if(waitForStartBooleanB == true){
-                waitAtStart -= 0.25;
-                waitForStartBooleanB = false;
-            }
 
 
 
@@ -321,6 +325,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
         drive.followTrajectorySequenceAsync(autoTrajectorySequence);
 
         while (opModeIsActive()) {
+
             telemetry.addData("Parking", endParking);
             telemetry.update();
             drive.update();
