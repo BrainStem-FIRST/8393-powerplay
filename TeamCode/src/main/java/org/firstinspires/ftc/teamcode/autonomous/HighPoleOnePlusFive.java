@@ -288,6 +288,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
             }
 
             if (endParking != null) {
+                telemetry.addData("FTC 8393 -", "The GIANT Diencephalic BrainSTEM Robotics Team");
                 telemetry.addData("Parking", endParking);
                 telemetry.addData("---------", "-----------");
                 telemetry.addData("Start Timer Delay", waitAtStart);

@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.autonomous.DefensiveAuto;
 
 @Autonomous(name = "4 - Left Defense")
-//@Disabled
+@Disabled
 public class DefenseAutoLeft extends DefensiveAuto {
     public DefenseAutoLeft() {super(AutoOrientation.LEFT);}
 
