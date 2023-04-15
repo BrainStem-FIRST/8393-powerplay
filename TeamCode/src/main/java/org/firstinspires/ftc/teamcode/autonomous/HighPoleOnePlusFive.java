@@ -297,7 +297,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     waitForStartBooleanA = true;
                 }
                 if(waitForStartBooleanA == true){
-                    waitAtStart += 0.25;
+                    waitAtStart += 0.1;
                     waitForStartBooleanA = false;
                     trajectoryCalculated = false;
                 }
@@ -305,8 +305,12 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                     waitForStartBooleanB = true;
                 }
                 if(waitForStartBooleanB == true){
-                    waitAtStart -= 0.25;
+                    waitAtStart -= 0.1;
                     waitForStartBooleanB = false;
+                    trajectoryCalculated = false;
+                }
+                if(waitAtStart > 0.8){
+                    waitAtStart = 0.8;
                     trajectoryCalculated = false;
                 }
 
