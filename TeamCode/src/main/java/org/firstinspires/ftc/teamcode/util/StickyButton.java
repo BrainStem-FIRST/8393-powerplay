@@ -11,5 +11,4 @@ public class StickyButton {
         previousState = this.currentState;
         this.currentState = currentState;
     }
-
 }
