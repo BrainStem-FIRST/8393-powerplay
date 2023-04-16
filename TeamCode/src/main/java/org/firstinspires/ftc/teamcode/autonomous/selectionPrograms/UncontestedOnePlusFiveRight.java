@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.autonomous.NewUncontestedOnePlusFive;
 
-@Autonomous(name="1 - Right Uncontested 1+5 ")
+@Autonomous(name="2 - Right Uncontested 1+5 ")
 //@Disabled
 public class UncontestedOnePlusFiveRight extends NewUncontestedOnePlusFive {
     public UncontestedOnePlusFiveRight() {super(AutoOrientation.RIGHT);}
