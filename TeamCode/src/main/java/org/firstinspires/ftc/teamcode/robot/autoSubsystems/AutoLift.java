@@ -48,7 +48,7 @@ public class AutoLift implements Subsystem {
         private static final int STACK_5_ENCODER_TICKS = 225 + 20;
         private static final int STACK_4_ENCODER_TICKS = 170 + 10;
         private static final int STACK_3_ENCODER_TICKS = 100;
-        private static final int STACK_2_ENCODER_TICKS = 30;
+        private static final int STACK_2_ENCODER_TICKS = 40;
         private static final int STACK_1_ENCODER_TICKS = COLLECTING_ENCODER_TICKS + 10;
 
         //cone cycle adjustments

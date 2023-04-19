@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.autonomous.HighPoleOnePlusFive;
 
 @Autonomous(name="0 - Left 1+5 High")
-@Disabled
+//@Disabled
 public class HighPoleLeftSideOnePlusFive extends HighPoleOnePlusFive {
     public HighPoleLeftSideOnePlusFive() {super(AutoOrientation.LEFT);}
     @Override
