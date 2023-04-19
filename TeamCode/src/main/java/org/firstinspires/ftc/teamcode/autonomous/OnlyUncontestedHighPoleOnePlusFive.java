@@ -322,7 +322,7 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, uncontestedExtensionSide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.lift.setSubheight(1.2);
+                    robot.lift.setSubheight(1.5);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.55, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
@@ -392,7 +392,7 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, uncontestedExtensionSide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.lift.setSubheight(1.2);
+                    robot.lift.setSubheight(1.5);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.55, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
@@ -459,7 +459,7 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, uncontestedExtensionSide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.lift.setSubheight(1.2);
+                    robot.lift.setSubheight(1.5);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.55, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
@@ -526,7 +526,7 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, uncontestedExtensionSide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.lift.setSubheight(1.2);
+                    robot.lift.setSubheight(1.5);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.55, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
@@ -591,7 +591,7 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, uncontestedExtensionSide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.lift.setSubheight(1.2);
+                    robot.lift.setSubheight(1.5);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.55, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
@@ -658,7 +658,7 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionDeliverySide);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.4, () -> {
-                    robot.lift.setSubheight(1.2);
+                    robot.lift.setSubheight(1.5);
                 })
                 .UNSTABLE_addTemporalMarkerOffset(0.52, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.FULLY_OPEN);
