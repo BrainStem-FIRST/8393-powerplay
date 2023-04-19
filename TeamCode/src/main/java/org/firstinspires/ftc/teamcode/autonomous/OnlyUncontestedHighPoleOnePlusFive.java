@@ -681,12 +681,12 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                         SampleMecanumDrive.getVelocityConstraint(65, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
                         SampleMecanumDrive.getAccelerationConstraint(65))
 
-                .UNSTABLE_addTemporalMarkerOffset(-1.2, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.2, () -> {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
 
                 })
 
-                .UNSTABLE_addTemporalMarkerOffset(-0.9, () -> {
+                .UNSTABLE_addTemporalMarkerOffset(-0.2, () -> {
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
 
                 })
