@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous.selectionPrograms;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 import org.firstinspires.ftc.teamcode.autonomous.HighPoleOnePlusFive;
 import org.firstinspires.ftc.teamcode.autonomous.OnlyUncontestedHighPoleOnePlusFive;

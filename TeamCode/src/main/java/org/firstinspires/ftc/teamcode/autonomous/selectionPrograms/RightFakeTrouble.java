@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import org.firstinspires.ftc.teamcode.autonomous.PoleFakeTroubleAuto;
 
 @Autonomous(name="4 - Right Fake Pole Trouble")
-//@Disabled
+@Disabled
 public class RightFakeTrouble extends PoleFakeTroubleAuto {
     public RightFakeTrouble() {super(AutoOrientation.RIGHT);}
     @Override
