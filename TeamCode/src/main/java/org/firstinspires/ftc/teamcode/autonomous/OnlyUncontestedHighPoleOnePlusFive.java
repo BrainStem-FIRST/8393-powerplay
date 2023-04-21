@@ -361,8 +361,8 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.LEFT_SIDE_EXTENDED_AUTO);
                 })
                 .forward(Math.abs(Math.abs(collectConesPositionPreload.getX()) - Math.abs(collectConesPositionApproach.getX())),
-                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(18))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.3, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
@@ -431,8 +431,8 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
                 .forward(Math.abs(Math.abs(collectConesPositionPreload.getX()) - Math.abs(collectConesPositionApproach.getX())),
-                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(18))
                 .UNSTABLE_addTemporalMarkerOffset(-0.3, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
@@ -497,8 +497,8 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
                 .forward(Math.abs(Math.abs(collectConesPositionPreload.getX()) - Math.abs(collectConesPositionApproach.getX())),
-                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(18))
                 .UNSTABLE_addTemporalMarkerOffset(-0.3, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
@@ -562,8 +562,8 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
                 .forward(Math.abs(Math.abs(collectConesPositionPreload.getX()) - Math.abs(collectConesPositionApproach.getX())),
-                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(18))
                 .UNSTABLE_addTemporalMarkerOffset(-0.3, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 })
@@ -626,8 +626,8 @@ public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
                     stateMap.put(robot.arm.SYSTEM_NAME, extensionCollectGoTo);
                 })
                 .forward(Math.abs(Math.abs(collectConesPositionPreload.getX()) - Math.abs(collectConesPositionApproach.getX())),
-                        SampleMecanumDrive.getVelocityConstraint(30, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
-                        SampleMecanumDrive.getAccelerationConstraint(23))
+                        SampleMecanumDrive.getVelocityConstraint(25, DriveConstants.MAX_ANG_VEL, DriveConstants.TRACK_WIDTH),
+                        SampleMecanumDrive.getAccelerationConstraint(18))
 
                 .UNSTABLE_addTemporalMarkerOffset(-0.3, () -> {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);

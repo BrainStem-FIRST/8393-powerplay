@@ -51,6 +51,8 @@ public class AutoExtension implements Subsystem {
     public final String AUTO_EXTENSION_LOW_COLLECT = "AUTO_EXTENSION_LOW_COLLECT";
     public final String DEFAULT_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String DEFAULT_SIDE_EXTENDED_AUTO = "DEFAULT_SIDE_EXTENDED_AUTO";
+    public final String FOURTH_CYCLE = "FOURTH_CYCLE";
+
     public final String I_HATE_PHYSICS = "I_HATE_PHYSICS";
     public final String LAST_TWO_CYCLES = "LAST_TWO_CYCLES";
     public final String DEFAULT_SIDE_EXTENDED_AUTO_PRELOAD = "DEFAULT_SIDE_EXTEND_PRELOAD_AUTO";
@@ -160,12 +162,12 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case AUTO_EXTENSION_COLLECT_RIGHT: {
-                extendInAuto(0.68);
+                extendInAuto(0.64);
                 telemetry.addData("0.8", "true");
                 break;
             }
             case AUTO_EXTENSION_COLLECT_LEFT: {
-                extendInAuto(0.68);
+                extendInAuto(0.64);
                 telemetry.addData("0.8", "true");
                 break;
             }
@@ -181,16 +183,18 @@ public class AutoExtension implements Subsystem {
             }
             case LEFT_SIDE_EXTENDED_AUTO: {
 
-                extendInAuto(0.71);
+                extendInAuto(0.67);
 
                 telemetry.addData("Side extended", "true");
                 break;
             }
             case LEFT_SIDE_UNCONTESTED_EXTENDED_AUTO: {
                 extendInAuto(0.74);
+                break;
             }
             case RIGHT_SIDE_UNCONTESTED_EXTENDED_AUTO: {
                 extendInAuto(0.74);
+                break;
             }
 
             case RIGHT_SIDE_EXTENDED_AUTO: {
@@ -207,8 +211,13 @@ public class AutoExtension implements Subsystem {
                 telemetry.addData("Side extended", "true");
                 break;
             }
+            case FOURTH_CYCLE: {
+                extendInAuto(0.45);
+                break;
+            }
             case I_HATE_PHYSICS: {
                 extendInAuto(0.2);
+                break;
             }
         }
     }
