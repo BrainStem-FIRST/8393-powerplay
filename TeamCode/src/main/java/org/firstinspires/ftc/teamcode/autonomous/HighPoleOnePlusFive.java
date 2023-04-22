@@ -185,7 +185,7 @@ public class HighPoleOnePlusFive extends LinearOpMode {
                 turretPickupPosition = robot.turret.LEFT_PICKUP_AUTO;
                 turretDeliveryPosition = robot.turret.RIGHT_POSITION;
                 extensionDeliverySide = robot.arm.RIGHT_SIDE_EXTENDED_AUTO;
-                endParking = new Pose2d(parking1.getX(), parking1.getY(), startPosition.getHeading());
+                endParking = new Pose2d(parking3.getX(), parking3.getY(), startPosition.getHeading());
                 break;
             case RIGHT:
                 lowTurretDeliveryPosition = robot.turret.RIGHT_POSITION;
