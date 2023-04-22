@@ -206,7 +206,7 @@ public class RobotTeleOp extends LinearOpMode {
             }
 
             if (resetComplete == false && resetDelay.seconds() < 0.4) {
-                robot.lift.setAllMotorPowers(-0.25);
+                robot.lift.setAllMotorPowers(-0.15);
                 robot.turret.centerTurret();
                 robot.arm.extendHome();
             } else if (resetDelay.seconds() < 0.5 && resetComplete == false) {
