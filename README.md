@@ -1,7 +1,8 @@
 8393 Power Play Code 🧠
 
 OPR: 
- 
+  124.9 - FIRST Championship - Franklin 04/22/23
+  
   161.4 - Chesapeake Championship - Violet 02/11/23
 
   140.0 - PA Red and Black 12/18/22
