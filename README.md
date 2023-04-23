@@ -2,7 +2,7 @@
 
 OPR: 
   
-  124.9 - FIRST Championship - Franklin 04/22/23
+  124.9 - FIRST Championship - Franklin 04/18/23 - 04/22/23
   
   161.4 - Chesapeake Championship - Violet 02/11/23
 
