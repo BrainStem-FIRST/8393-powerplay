@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
+// Needs to be faster in all parts
+
 public class OnlyUncontestedHighPoleOnePlusFive extends LinearOpMode {
     private final AutoOrientation side;
     private Map stateMap;
