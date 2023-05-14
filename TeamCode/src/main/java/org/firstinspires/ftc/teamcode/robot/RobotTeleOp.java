@@ -356,22 +356,26 @@ public class RobotTeleOp extends LinearOpMode {
                 }
 
 
+                if (gamepad2.left_bumper ) {
+                    if ((robot.arm.EXTENSION_EDITABLE_POSITION > 0.9)) {
 
+                    } else {
+                        robot.arm.EXTENSION_EDITABLE_POSITION += 0.027;
+                        robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
+                        robot.arm.extendToTarget();
+                    }
 
-                //Change extension preset values
-
-                //extensionFineAdjustUp.update(gamepad2.left_bumper);
-                if (gamepad2.left_bumper) {
-                    robot.arm.EXTENSION_EDITABLE_POSITION += 0.027;
-                    robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
-                    robot.arm.extendToTarget();
                 }
 
-                //extensionFineAdjustDown.update(gamepad2.right_bumper);
                 if (gamepad2.right_bumper) {
-                    robot.arm.EXTENSION_EDITABLE_POSITION -= 0.027;
-                    robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
-                    robot.arm.extendToTarget();
+                    if ((robot.arm.EXTENSION_EDITABLE_POSITION < 0.15)) {
+
+                    } else {
+                        robot.arm.EXTENSION_EDITABLE_POSITION -= 0.027;
+                        robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
+                        robot.arm.extendToTarget();
+                    }
+
                 }
 
                 //double weightedDriveSpeedMultiplier  = robot.lift.getAvgLiftPosition() < 200 ? 0.7 : 0.5;
@@ -427,6 +431,7 @@ public class RobotTeleOp extends LinearOpMode {
 //                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
 //                }
 
+                telemetry.addData("Extension PWM Position ", robot.arm.EXTENSION_EDITABLE_POSITION);
                 telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
@@ -435,6 +440,7 @@ public class RobotTeleOp extends LinearOpMode {
                 telemetry.addData("Lift Position Being Set ", stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
                 telemetry.addData("Gamepad 2 Right Trigger State", toggleMap.get(GAMEPAD_2_RIGHT_TRIGGER_STATE));
                 telemetry.addData("Cone Up Adjust ", conePickUp);
+
 
 
                 driveCancelable.update();
