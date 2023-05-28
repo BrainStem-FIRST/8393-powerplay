@@ -38,7 +38,7 @@ public class Lift implements Subsystem {
 
 
         //auto stack heights
-        private static final int STACK_5_ENCODER_TICKS = 240;
+        private static final int STACK_5_ENCODER_TICKS = 225 + 20 + 5;
         private static final int STACK_4_ENCODER_TICKS = 185;
         private static final int STACK_3_ENCODER_TICKS = 115;
         private static final int STACK_2_ENCODER_TICKS = 65;
