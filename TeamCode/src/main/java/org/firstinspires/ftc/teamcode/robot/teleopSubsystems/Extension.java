@@ -92,7 +92,7 @@ public class Extension implements Subsystem {
 
     // Pulls the extension arm to its starting position (it is NOT in clear)
     public void extendHome() {
-        extension.setPosition(0.01);
+        extension.setPosition(0.1);
     }
 
     // Extends the arm to its maximum reach
