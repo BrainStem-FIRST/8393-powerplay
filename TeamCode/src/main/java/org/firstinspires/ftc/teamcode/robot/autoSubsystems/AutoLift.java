@@ -36,12 +36,12 @@ public class AutoLift implements Subsystem {
         private static final int TICKS_PER_REVOLUTION = 28;
         private static final int MAX_LIFT_TICKS_PER_SECOND = 1280;
         //encoder positions
-        private static final int BOTTOM_ENCODER_TICKS = 0;
+        private static final int BOTTOM_ENCODER_TICKS = 5;
         private static final int LOW_POLE_ENCODER_TICKS = 705;
         private static final int MIDDLE_POLE_ENCODER_TICKS = 1145;
         private static final int HIGH_POLE_ENCODER_TICKS = 1570;
-        private static final int JUNCTION_ENCODER_TICKS = 0;
-        public static int COLLECTING_ENCODER_TICKS = 0;
+        private static final int JUNCTION_ENCODER_TICKS = 5;
+        public static int COLLECTING_ENCODER_TICKS = 5;
 
 
         //auto stack heights
