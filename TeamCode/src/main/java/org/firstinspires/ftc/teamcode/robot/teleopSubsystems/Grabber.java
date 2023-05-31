@@ -27,8 +27,8 @@ public class Grabber implements Subsystem {
     public final String CLOSED_STATE_CAP = "CLOSED_CAP";
     Constants constants = new Constants();
 
-    public final double REGULAR_OPEN = 1750;
-    public final double CLOSED_VALUE = 2150;
+    public final double REGULAR_OPEN = 1250;
+    public final double CLOSED_VALUE = 2050;
 
     public boolean cap = false;
 

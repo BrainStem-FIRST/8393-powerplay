@@ -28,7 +28,7 @@ public class AutoGrabber implements Subsystem {
     public final String COLLECTING_OPEN_AUTO = "COLLECTING_OPEN_AUTO";
     Constants constants = new Constants();
 
-    public final double REGULAR_OPEN = 1200;
+    public final double REGULAR_OPEN = 1550;
     public final double CLOSED_VALUE = 2150;
 
     private Map stateMap;
