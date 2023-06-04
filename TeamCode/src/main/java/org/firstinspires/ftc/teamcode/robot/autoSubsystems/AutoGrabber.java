@@ -29,7 +29,7 @@ public class AutoGrabber implements Subsystem {
     Constants constants = new Constants();
 
     public final double REGULAR_OPEN = 1250;
-    public final double CLOSED_VALUE = 2050;
+    public final double CLOSED_VALUE = 2250;
 
     private Map stateMap;
 
