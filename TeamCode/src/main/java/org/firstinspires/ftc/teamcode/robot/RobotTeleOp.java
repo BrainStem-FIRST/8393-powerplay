@@ -58,6 +58,7 @@ public class RobotTeleOp extends LinearOpMode {
 
     private boolean coneCycleCenterAdjust = false;
 
+    private boolean extensionCenter = false;
 
     private ToggleButton coneCycleToggleG = new ToggleButton();
     private ToggleButton gamepad2xbutton = new ToggleButton();
@@ -298,20 +299,22 @@ public class RobotTeleOp extends LinearOpMode {
 
                 if (gamepad2.dpad_left) {
                     TURRET_POS = robot.turret.LEFT_POSITION;
-                    EXTENSION_POS = robot.arm.FULL_EXTEND;
+//                    EXTENSION_POS = robot.arm.FULL_EXTEND;
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
-                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+//                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
+                    extensionCenter = false;
                 } else if (gamepad2.dpad_up) {
                     robot.turret.centerTurret();
-                    robot.arm.extendHome();
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                     TURRET_POS = robot.turret.CENTER_POSITION;
                     EXTENSION_POS = robot.arm.DEFAULT_VALUE;
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                    extensionCenter = true;
                 } else if (gamepad2.dpad_right) {
                     TURRET_POS = robot.turret.RIGHT_POSITION;
-                    EXTENSION_POS = robot.arm.FULL_EXTEND;
+//                    EXTENSION_POS = robot.arm.FULL_EXTEND;
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
+                    extensionCenter = false;
                 } else if (gamepad1.left_trigger > 0.5) {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
                     robot.lift.setSubheight(0);
@@ -356,20 +359,23 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.DOWN);
                 }
 
-                if (robot.lift.getPosition() < 100) {
+                if (robot.lift.getPosition() < 100 || gamepad2.dpad_up || extensionCenter) {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                    extensionCenter = true;
                 } else {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
+                    extensionCenter = false;
                 }
 
 
                 if (gamepad2.left_bumper ) {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
                     if ((robot.arm.EXTENSION_EDITABLE_POSITION > 0.9)) {
-
+                        robot.arm.extension.setPosition(0.9);
                     } else {
                         robot.arm.EXTENSION_EDITABLE_POSITION += 0.027;
-                        robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
+                        robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
+//                        robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
                         robot.arm.extendToTarget();
                     }
 
@@ -378,11 +384,12 @@ public class RobotTeleOp extends LinearOpMode {
                 if (gamepad2.right_bumper) {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
                     if ((robot.arm.EXTENSION_EDITABLE_POSITION < 0.15)) {
-
+                        robot.arm.extension.setPosition(0.15);
                     } else {
                         robot.arm.EXTENSION_EDITABLE_POSITION -= 0.027;
-                        robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
-                        robot.arm.extendToTarget();
+                        robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
+//                        robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
+//                        robot.arm.extendToTarget();
                     }
 
                 }

@@ -17,9 +17,9 @@ public class Turret implements Subsystem {
     public final String     RIGHT_POSITION = "RIGHT_STATE";
     public final String     CENTER_POSITION = "CENTER_STATE";
     public final String     RIGHT_POSITION_AUTO = "RIGHT_POSITION_AUTO";
-    public final double     LEFT_POSITION_SERVO_VALUE = 532;
+    public final double     LEFT_POSITION_SERVO_VALUE = 552;
     public final double     CENTER_POSITION_SERVO_VALUE = 1375;
-    public final double     RIGHT_POSITION_SERVO_VALUE = 2166;
+    public final double     RIGHT_POSITION_SERVO_VALUE = 2106;
     public final int        LIFT_MIN_HEIGHT_TO_MOVE_TURRET = 309;
     public final double TURRET_CENTER_POSITION = 0.49;
 
