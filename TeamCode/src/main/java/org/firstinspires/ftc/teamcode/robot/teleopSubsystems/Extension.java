@@ -30,13 +30,14 @@ public class Extension implements Subsystem {
     public final double EXTENSION_POSITION_HOME = 1880;
     public double EXTENSION_POSITION_MAX  = 2372;
 
-    public double EXTENSION_EDITABLE_POSITION = 0.4;
+    public double EXTENSION_EDITABLE_POSITION = 0.5;
     // extension statemap values
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
     public final String DEFAULT_VALUE = "RETRACTED";
     public final String FULL_EXTEND = "EXTENDED";
     public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTEND_DEPOSIT";
     public final String AUTO_EXTENSION_COLLECT = "AUTO_EXTEND_COLLECT";
+    public final String TELE_EXTENSION = "TELE_EXTENSION";
     public final String FULL_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String TRANSITION_STATE = "TRANSITION";
     Constants constants = new Constants();
@@ -137,6 +138,10 @@ public class Extension implements Subsystem {
             }
             case FULL_EXTEND_AUTO: {
                 extendInAuto(0.7);
+                break;
+            }
+            case TELE_EXTENSION: {
+                extendToTarget();
                 break;
             }
         }

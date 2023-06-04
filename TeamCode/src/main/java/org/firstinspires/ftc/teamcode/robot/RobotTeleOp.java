@@ -154,7 +154,8 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
         stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+//        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+//        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
         stateMap.put(constants.EXTENSION_TARGET, String.valueOf(1));
         stateMap.put(robot.flippers.LEFT_SYSTEM_NAME, robot.flippers.LEFT_UP);
         stateMap.put(robot.flippers.RIGHT_SYSTEM_NAME, robot.flippers.RIGHT_UP);
@@ -355,8 +356,15 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.DOWN);
                 }
 
+                if (robot.lift.getPosition() < 100) {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                } else {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
+                }
+
 
                 if (gamepad2.left_bumper ) {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
                     if ((robot.arm.EXTENSION_EDITABLE_POSITION > 0.9)) {
 
                     } else {
@@ -368,6 +376,7 @@ public class RobotTeleOp extends LinearOpMode {
                 }
 
                 if (gamepad2.right_bumper) {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
                     if ((robot.arm.EXTENSION_EDITABLE_POSITION < 0.15)) {
 
                     } else {
@@ -418,18 +427,7 @@ public class RobotTeleOp extends LinearOpMode {
 
 
 
-//                if (bottomHeightStickyButtonRightTrigger.getState()) {
-//                    updateBottomHeightAdjustment(true);
-//                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
-//                }
-//                if (bottomHeightStickyButtonLeftTrigger.getState()) {
-//                    updateBottomHeightAdjustment(false);
-//                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
-//                }
-//                if (gamepad2.x) {
-//                    bottomAdjustmentHeight = 0;
-//                    robot.lift.LIFT_POSITION_GROUND = bottomAdjustmentHeight;
-//                }
+
 
                 telemetry.addData("Extension PWM Position ", robot.arm.EXTENSION_EDITABLE_POSITION);
                 telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
