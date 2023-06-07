@@ -48,7 +48,6 @@ public class RobotTeleOp extends LinearOpMode {
     private final String GAMEPAD_1_RIGHT_TRIGGER_PRESSED = "GAMEPAD_1_RIGHT_TRIGGER_PRESSED";
 
     private final String GAMEPAD_2_RIGHT_TRIGGER_STATE = "GAMEPAD_2_RIGHT_TRIGGER_STATE";
-    private final String GAMEPAD_2_RIGHT_TRIGGER_PRESSED = "GAMEPAD_2_RIGHT_TRIGGER_PRESSED";
 
     private final String GAMEPAD_2_X_BUTTON_PRESSED = "GAMEPAD_1_RIGHT_TRIGGER_PRESSED";
 
@@ -61,7 +60,6 @@ public class RobotTeleOp extends LinearOpMode {
     private boolean extensionCenter = false;
 
     private ToggleButton coneCycleToggleG = new ToggleButton();
-    private ToggleButton gamepad2xbutton = new ToggleButton();
     private StickyButton coneCyleStickyG = new StickyButton();
     private boolean coneCycleToggleGBoolean = false;
     private boolean coneCycleStickyBoolean = false;
@@ -82,10 +80,7 @@ public class RobotTeleOp extends LinearOpMode {
     private boolean isDriverDriving = true;
     private boolean slowMode = false;
 
-    private int liftDownIncrement;
 
-    //open grabber boolean
-    private boolean openGrabberConeCycle = false;
     private boolean resetComplete = true;
 
     //lift bring in delay
@@ -155,8 +150,6 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(robot.lift.LIFT_SYSTEM_NAME, robot.lift.LIFT_POLE_GROUND);
         stateMap.put(robot.lift.LIFT_SUBHEIGHT, robot.lift.APPROACH_HEIGHT);
         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-//        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
-//        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
         stateMap.put(constants.EXTENSION_TARGET, String.valueOf(1));
         stateMap.put(robot.flippers.LEFT_SYSTEM_NAME, robot.flippers.LEFT_UP);
         stateMap.put(robot.flippers.RIGHT_SYSTEM_NAME, robot.flippers.RIGHT_UP);
@@ -250,8 +243,8 @@ public class RobotTeleOp extends LinearOpMode {
 
                 if(bringLiftDownBoolean) {
                     if (liftDelay.seconds() > 0.05 && liftDelay.seconds() <= 0.2) {
-                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
+                        stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                     }
 
                     if (liftDelay.seconds() > 0.2) {
@@ -272,10 +265,12 @@ public class RobotTeleOp extends LinearOpMode {
                     slowMode = true;
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
                     if(bringLiftDownBoolean) {
+                        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                     } else {
-                        stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
                         stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
+                        stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
+
                     }
                 } else {
                     slowMode = false;
@@ -299,9 +294,7 @@ public class RobotTeleOp extends LinearOpMode {
 
                 if (gamepad2.dpad_left) {
                     TURRET_POS = robot.turret.LEFT_POSITION;
-//                    EXTENSION_POS = robot.arm.FULL_EXTEND;
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.LEFT_POSITION);
-//                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.FULL_EXTEND);
                     extensionCenter = false;
                 } else if (gamepad2.dpad_up) {
                     robot.turret.centerTurret();
@@ -312,7 +305,6 @@ public class RobotTeleOp extends LinearOpMode {
                     extensionCenter = true;
                 } else if (gamepad2.dpad_right) {
                     TURRET_POS = robot.turret.RIGHT_POSITION;
-//                    EXTENSION_POS = robot.arm.FULL_EXTEND;
                     stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.RIGHT_POSITION);
                     extensionCenter = false;
                 } else if (gamepad1.left_trigger > 0.5) {
@@ -320,20 +312,10 @@ public class RobotTeleOp extends LinearOpMode {
                     robot.lift.setSubheight(0);
                 }
 
+
+                //////////////
                 // Driver 2 //
-
-      /*
-                if (stateMap.get(robot.lift.LIFT_SYSTEM_NAME) == robot.lift.LIFT_POLE_GROUND) {
-                    if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
-                        driver2_ground_adjusted_subheight += 0.1 * (-gamepad2.right_stick_y * Math.abs(gamepad2.right_stick_y));
-                    }
-                } else {
-                    if (gamepad2.right_stick_y > 0.1 || gamepad2.right_stick_y < -0.1) {
-                        driver2_placement_adjusted_subheight += 0.1 * (gamepad2.right_stick_y * Math.abs(gamepad2.right_stick_y));
-                    }
-                }
-                */
-
+                //////////////
 
                 if (driver2_ground_adjusted_subheight != 0) {
                     robot.lift.setSubheight(driver2_ground_adjusted_subheight);
@@ -375,7 +357,6 @@ public class RobotTeleOp extends LinearOpMode {
                     } else {
                         robot.arm.EXTENSION_EDITABLE_POSITION += 0.027;
                         robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
-//                        robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
                         robot.arm.extendToTarget();
                     }
 
@@ -388,13 +369,11 @@ public class RobotTeleOp extends LinearOpMode {
                     } else {
                         robot.arm.EXTENSION_EDITABLE_POSITION -= 0.027;
                         robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
-//                        robot.arm.extension.setPwmRange(new PwmControl.PwmRange(robot.arm.EXTENSION_POSITION_HOME, robot.arm.EXTENSION_POSITION_MAX));
-//                        robot.arm.extendToTarget();
+
                     }
 
                 }
 
-                //double weightedDriveSpeedMultiplier  = robot.lift.getAvgLiftPosition() < 200 ? 0.7 : 0.5;
                 if(!disableDrivetrain) {
                     if (slowMode) {
                         driveCancelable.setWeightedDrivePower(
@@ -456,47 +435,6 @@ public class RobotTeleOp extends LinearOpMode {
 
             }
         }
-    }
-    private void updateBottomHeightAdjustment(boolean goingUp){
-        if(goingUp) {
-            if(bottomAdjustmentHeight == 0) {
-                bottomAdjustmentHeight = 40;
-                return;
-            } else if (bottomAdjustmentHeight == 40) {
-                bottomAdjustmentHeight = 82;
-                return;
-            } else if (bottomAdjustmentHeight == 82) {
-                bottomAdjustmentHeight = 110;
-                return;
-            } else if (bottomAdjustmentHeight == 110) {
-                bottomAdjustmentHeight = 140;
-                return;
-            } else if (bottomAdjustmentHeight == 140) {
-                bottomAdjustmentHeight = 300;
-                return;
-            }
-        } else {
-            if(bottomAdjustmentHeight == 0) {
-                bottomAdjustmentHeight = 0;
-                return;
-            } else if (bottomAdjustmentHeight == 40) {
-                bottomAdjustmentHeight = 0;
-                return;
-            } else if (bottomAdjustmentHeight == 82) {
-                bottomAdjustmentHeight = 40;
-                return;
-            } else if (bottomAdjustmentHeight == 110) {
-                bottomAdjustmentHeight = 82;
-                return;
-            } else if (bottomAdjustmentHeight == 140) {
-                bottomAdjustmentHeight = 110;
-                return;
-            } else if (bottomAdjustmentHeight == 300) {
-                bottomAdjustmentHeight = 140;
-                return;
-            }
-        }
-
     }
 
     private void setButtons() {
