@@ -413,9 +413,6 @@ public class RobotTeleOp extends LinearOpMode {
 
 
                 telemetry.addData("Extension PWM Position: ", robot.arm.EXTENSION_EDITABLE_POSITION);
-                telemetry.addData("Extension State: ", stateMap.get(robot.arm.SYSTEM_NAME));
-                telemetry.addData("Grabber State: ", stateMap.get(robot.grabber.SYSTEM_NAME));
-                telemetry.addData("Extension Last Position: ", robot.arm.getExtensionLastValue());
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
                 telemetry.addData("Bottom adjustment height: ", robot.lift.LIFT_POSITION_GROUND);
