@@ -31,7 +31,6 @@ public class Grabber implements Subsystem {
     public final double CLOSED_VALUE = 2250;
 
     public boolean cap = false;
-
     private Map stateMap;
 
     private boolean isAuto;
