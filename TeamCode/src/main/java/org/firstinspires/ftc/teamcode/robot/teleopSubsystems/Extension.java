@@ -97,9 +97,7 @@ public class Extension implements Subsystem {
     }
 
     // Extends the arm to its maximum reach
-    public void extendMax() {
-        extension.setPosition(EXTENSION_EDITABLE_POSITION);
-    }
+    public void extendMax() {extension.setPosition(EXTENSION_EDITABLE_POSITION);}
 
     public void extendToTarget() {
         extension.setPosition(EXTENSION_EDITABLE_POSITION);
@@ -118,6 +116,8 @@ public class Extension implements Subsystem {
         }
 
     }
+
+    public double getExtensionLastValue() {return extension.getPosition();}
 
     private void selectTransition(String desiredLevel){
         switch(desiredLevel) {
@@ -145,10 +145,6 @@ public class Extension implements Subsystem {
                 break;
             }
         }
-    }
-
-    public double getExtensionPosition() {
-        return extension.getPosition();
     }
 
     public boolean isLiftTooLow(Lift lift) {

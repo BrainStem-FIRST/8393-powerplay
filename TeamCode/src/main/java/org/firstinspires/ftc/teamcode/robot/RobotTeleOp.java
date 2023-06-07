@@ -235,7 +235,7 @@ public class RobotTeleOp extends LinearOpMode {
                 if (liftDelayCollectingBoolean && liftDelayCollecting.seconds() > 0.05) {
                     liftDelayCollectingBoolean = false;
                     if (driver2_ground_adjusted_subheight < 0.1) {
-                        robot.lift.setSubheight(conePickUp); // FIXME
+                        robot.lift.setSubheight(conePickUp);
                     } else {
                         driver2_ground_adjusted_subheight += 0.5;
                     }
@@ -264,9 +264,8 @@ public class RobotTeleOp extends LinearOpMode {
                 if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                     slowMode = true;
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
                     if(bringLiftDownBoolean) {
-                        stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
-                        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                     } else {
                         stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
                         stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
@@ -350,7 +349,7 @@ public class RobotTeleOp extends LinearOpMode {
                 }
 
 
-                if (gamepad2.left_bumper ) {
+                if (gamepad2.left_bumper && robot.lift.getPosition() > 600) {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
                     if ((robot.arm.EXTENSION_EDITABLE_POSITION > 0.9)) {
                         robot.arm.extension.setPosition(0.9);
@@ -362,7 +361,7 @@ public class RobotTeleOp extends LinearOpMode {
 
                 }
 
-                if (gamepad2.right_bumper) {
+                if (gamepad2.right_bumper && robot.lift.getPosition() > 600) {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
                     if ((robot.arm.EXTENSION_EDITABLE_POSITION < 0.15)) {
                         robot.arm.extension.setPosition(0.15);
@@ -415,15 +414,17 @@ public class RobotTeleOp extends LinearOpMode {
 
 
 
-                telemetry.addData("Extension PWM Position ", robot.arm.EXTENSION_EDITABLE_POSITION);
-                telemetry.addData("Grabber State", stateMap.get(robot.grabber.SYSTEM_NAME));
+                telemetry.addData("Extension PWM Position: ", robot.arm.EXTENSION_EDITABLE_POSITION);
+                telemetry.addData("Extension State: ", stateMap.get(robot.arm.SYSTEM_NAME));
+                telemetry.addData("Grabber State: ", stateMap.get(robot.grabber.SYSTEM_NAME));
+                telemetry.addData("Extension Last Position: ", robot.arm.getExtensionLastValue());
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
                 telemetry.addData("Bottom adjustment height: ", robot.lift.LIFT_POSITION_GROUND);
-                telemetry.addData("Gamepad 1 A Button Toggle State ", toggleMap.get(GAMEPAD_1_A_STATE));
-                telemetry.addData("Lift Position Being Set ", stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
-                telemetry.addData("Gamepad 2 Right Trigger State", toggleMap.get(GAMEPAD_2_RIGHT_TRIGGER_STATE));
-                telemetry.addData("Cone Up Adjust ", conePickUp);
+                telemetry.addData("Gamepad 1 A Button Toggle State: ", toggleMap.get(GAMEPAD_1_A_STATE));
+                telemetry.addData("Lift Position Being Set: ", stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
+                telemetry.addData("Gamepad 2 Right Trigger State: ", toggleMap.get(GAMEPAD_2_RIGHT_TRIGGER_STATE));
+                telemetry.addData("Cone Up Adjust: ", conePickUp);
 
 
 
