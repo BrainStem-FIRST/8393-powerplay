@@ -12,8 +12,6 @@ import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoGrabber;
 import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoLift;
 import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoPoleAligner;
 import org.firstinspires.ftc.teamcode.robot.autoSubsystems.AutoTurret;
-import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.LEDLights;
-import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.PoleAligner;
 
 import java.util.Map;
 //import java.util.Map;
@@ -31,7 +29,6 @@ public class AutoBrainSTEMRobot {
     public AutoLift lift;
     public AutoExtension arm;
     public SampleMecanumDrive drive;
-    public LEDLights lights;
 
     public AutoGrabber grabber;
     public AutoPoleAligner poleAligner;
@@ -48,7 +45,6 @@ public class AutoBrainSTEMRobot {
         arm     = new AutoExtension(hwMap, telemetry, stateMap, isAuto);
         drive   = new SampleMecanumDrive(hwMap);
         grabber   = new AutoGrabber(hwMap, telemetry, stateMap, isAuto);
-        lights = new LEDLights(hwMap, telemetry, isAuto);
         poleAligner = new AutoPoleAligner(hwMap, telemetry, stateMap);
 
 

@@ -38,6 +38,7 @@ public class Extension implements Subsystem {
     public final String AUTO_EXTENSION_DEPOSIT = "AUTO_EXTEND_DEPOSIT";
     public final String AUTO_EXTENSION_COLLECT = "AUTO_EXTEND_COLLECT";
     public final String TELE_EXTENSION = "TELE_EXTENSION";
+    public final String HALF_EXTEND = "HALF_EXTEND";
     public final String FULL_EXTEND_AUTO = "FULL_EXTEND_AUTO";
     public final String TRANSITION_STATE = "TRANSITION";
     Constants constants = new Constants();
@@ -97,7 +98,9 @@ public class Extension implements Subsystem {
     }
 
     // Extends the arm to its maximum reach
-    public void extendMax() {extension.setPosition(EXTENSION_EDITABLE_POSITION);}
+    public void extendMax() {extension.setPosition(1);}
+
+    public void halfExtend() {extension.setPosition(0.5);}
 
     public void extendToTarget() {
         extension.setPosition(EXTENSION_EDITABLE_POSITION);
@@ -125,13 +128,12 @@ public class Extension implements Subsystem {
                 extendHome();
                 break;
             }
-            case FULL_EXTEND: {
-                extendToTarget();
-                break;
-            }
             case AUTO_EXTENSION_DEPOSIT: {
                 extendInAuto(0.6);
                 break;
+            }
+            case HALF_EXTEND: {
+                halfExtend();
             }
             case AUTO_EXTENSION_COLLECT: {
                 extendInAuto(0.04);

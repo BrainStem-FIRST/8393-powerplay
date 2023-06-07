@@ -156,7 +156,6 @@ public class RobotTeleOp extends LinearOpMode {
         stateMap.put(robot.poleAligner.SYSTEM_NAME, robot.poleAligner.UP);
 
         while (!opModeIsActive()) {
-            robot.lights.setBothLEDAmber();
             stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
             stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
             robot.updateSystems();
@@ -168,7 +167,6 @@ public class RobotTeleOp extends LinearOpMode {
 
 
         while (!isStopRequested()) {
-            robot.lights.setBothLEDRed();
 
             telemetry.addData("Stack Increment", robot.lift.stackIncrement);
             if (gamepad2.right_trigger > 0.5 && !gamepad2RightTriggerPressed) {

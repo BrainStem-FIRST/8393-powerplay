@@ -13,7 +13,6 @@ import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Extension;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Flippers;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Grabber;
 //import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Guide;
-import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.LEDLights;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Lift;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.PoleAligner;
 import org.firstinspires.ftc.teamcode.robot.teleopSubsystems.Turret;
@@ -52,7 +51,6 @@ public class BrainSTEMRobot {
     public PoleAligner poleAligner;
 
     public SampleMecanumDrive drive;
-    public LEDLights lights;
 
     //    public Guide guide;
     public Grabber grabber;
@@ -66,16 +64,13 @@ public class BrainSTEMRobot {
         this.stateMap = stateMap;
         this.opMode = opMode;
         this.isAuto = isAuto;
-        // instantiate components turret, lift, arm, grabber
-//        guide = new Guide(hwMap, telemetry, stateMap);
+
         turret = new Turret(hwMap, telemetry, stateMap, isAuto);
         lift = new Lift(hwMap, telemetry, stateMap, isAuto);
         arm = new Extension(hwMap, telemetry, stateMap, isAuto);
         flippers = new Flippers(hwMap, telemetry, stateMap);
-        //poleAligner = new PoleAligner(hwMap, telemetry, stateMap, isAuto);
         drive = new SampleMecanumDrive(hwMap);
         grabber = new Grabber(hwMap, telemetry, stateMap, isAuto);
-        lights = new LEDLights(hwMap, telemetry, isAuto);
         poleAligner = new PoleAligner(hwMap, telemetry, stateMap);
 
 
