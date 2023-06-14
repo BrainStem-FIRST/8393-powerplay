@@ -162,12 +162,12 @@ public class AutoExtension implements Subsystem {
                 break;
             }
             case AUTO_EXTENSION_COLLECT_RIGHT: {
-                extendInAuto(0.64);
+                extendInAuto(0.67);
                 telemetry.addData("0.8", "true");
                 break;
             }
             case AUTO_EXTENSION_COLLECT_LEFT: {
-                extendInAuto(0.64);
+                extendInAuto(0.67);
                 telemetry.addData("0.8", "true");
                 break;
             }
