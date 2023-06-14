@@ -26,8 +26,7 @@ public class Extension implements Subsystem {
 
 
     // Servo Positions
-
-    public final double EXTENSION_POSITION_HOME = 1880;
+    public final double EXTENSION_POSITION_HOME = 1900;
     public double EXTENSION_POSITION_MAX  = 2372;
 
     public double EXTENSION_EDITABLE_POSITION = 0.5;
