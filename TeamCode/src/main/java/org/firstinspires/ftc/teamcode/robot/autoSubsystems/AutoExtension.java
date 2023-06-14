@@ -27,10 +27,10 @@ public class AutoExtension implements Subsystem {
 
     // Servo Positions
 
-    public final double EXTENSION_POSITION_HOME = 1900;
-    public double EXTENSION_POSITION_MAX = 2372;
+    public final double EXTENSION_POSITION_HOME = 1920;
+    public double EXTENSION_POSITION_MAX = 2297;
 
-    public double EXTENSION_EDITABLE_POSITION = 0.4;
+    public double EXTENSION_EDITABLE_POSITION = 1;
     // extension statemap values
     public final String SYSTEM_NAME = "EXTENSION"; //statemap key
     public final String DEFAULT_VALUE = "RETRACTED";

@@ -14,9 +14,9 @@ import java.util.Map;
 public class AutoPoleAligner implements Subsystem {
 
     private static final class PoleAlignerConstants {
-        private static final int UP_POSITION = (int)(740*1.04);
+        private static final int UP_POSITION = 1045;
         private static final int INIT_POSITION = 1191;
-        private static final int DOWN_POSITION = 2260;
+        private static final int DOWN_POSITION = 2520;
     }
 
     private Telemetry telemetry;
