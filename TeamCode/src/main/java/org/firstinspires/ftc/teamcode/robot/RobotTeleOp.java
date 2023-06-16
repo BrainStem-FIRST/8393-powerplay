@@ -390,6 +390,7 @@ public class RobotTeleOp extends LinearOpMode {
                         );
                     }
                 }
+
                 leftFlipperToggleButton.update(gamepad1.left_bumper);
                 rightFlipperToggleButton.update(gamepad1.right_bumper);
 

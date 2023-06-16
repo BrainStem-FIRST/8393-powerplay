@@ -94,6 +94,6 @@ public class Grabber implements Subsystem {
     }
 
     public void close() {
-        grabber.setPosition(0.99);
+        grabber.setPosition(1.0);
     }
 }
