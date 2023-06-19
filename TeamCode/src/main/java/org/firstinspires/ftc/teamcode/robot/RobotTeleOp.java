@@ -284,9 +284,9 @@ public class RobotTeleOp extends LinearOpMode {
                 }
 
                 if (toggleMap.get(GAMEPAD_1_A_STATE) && ((stateMap.get(robot.turret.SYSTEM_NAME) == (robot.turret.LEFT_POSITION)))) {
-                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
+                    robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
                 } else if (toggleMap.get(GAMEPAD_1_A_STATE) && ((stateMap.get(robot.turret.SYSTEM_NAME) == (robot.turret.RIGHT_POSITION)))) {
-                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
+                    robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
                 }
 
                 if ((gamepad1.a && stateMap.get(robot.lift.LIFT_SYSTEM_NAME).equals(robot.lift.LIFT_POLE_GROUND)) ||
