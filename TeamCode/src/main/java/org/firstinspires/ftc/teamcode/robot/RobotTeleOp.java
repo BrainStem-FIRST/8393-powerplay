@@ -259,6 +259,9 @@ public class RobotTeleOp extends LinearOpMode {
                     }
                 }
 
+
+
+
                 if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                     slowMode = true;
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
@@ -278,6 +281,12 @@ public class RobotTeleOp extends LinearOpMode {
                 }
                 if(gamepad1.a && !stateMap.get(robot.lift.LIFT_SYSTEM_NAME).equals(robot.lift.LIFT_POLE_GROUND)){
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+                }
+
+                if (toggleMap.get(GAMEPAD_1_A_STATE) && ((stateMap.get(robot.turret.SYSTEM_NAME) == (robot.turret.LEFT_POSITION)))) {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
+                } else if (toggleMap.get(GAMEPAD_1_A_STATE) && ((stateMap.get(robot.turret.SYSTEM_NAME) == (robot.turret.RIGHT_POSITION)))) {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
                 }
 
                 if ((gamepad1.a && stateMap.get(robot.lift.LIFT_SYSTEM_NAME).equals(robot.lift.LIFT_POLE_GROUND)) ||
@@ -390,6 +399,8 @@ public class RobotTeleOp extends LinearOpMode {
                         );
                     }
                 }
+
+
 
                 leftFlipperToggleButton.update(gamepad1.left_bumper);
                 rightFlipperToggleButton.update(gamepad1.right_bumper);
