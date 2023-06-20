@@ -243,10 +243,12 @@ public class RobotTeleOp extends LinearOpMode {
                     if (liftDelay.seconds() > 0.05 && liftDelay.seconds() <= 0.2) {
                         stateMap.put(robot.turret.SYSTEM_NAME, robot.turret.CENTER_POSITION);
                         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
+                        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                     }
 
                     if (liftDelay.seconds() > 0.2) {
                         stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.OPEN_STATE);
+                        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                     }
 
                     if (liftDelay.seconds() > 0.15 && robot.lift.getAvgLiftPosition() > 750) {
