@@ -368,6 +368,10 @@ public class RobotTeleOp extends LinearOpMode {
 
                 }
 
+                if (robot.lift.getPosition() > 500) {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
+                }
+
                 if (gamepad2.right_bumper && robot.lift.getPosition() > 600) {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
                     if ((robot.arm.EXTENSION_EDITABLE_POSITION < 0.15)) {
