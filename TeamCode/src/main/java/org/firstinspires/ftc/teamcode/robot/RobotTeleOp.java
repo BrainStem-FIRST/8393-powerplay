@@ -103,6 +103,8 @@ public class RobotTeleOp extends LinearOpMode {
     private boolean gamepad2RightTriggerPressed = false;
     private boolean gamepad2LeftTriggerPressed = false;
 
+    private double last_extension_pose = 0.5;
+
     Constants constants = new Constants();
 
     Map<String, Boolean> toggleMap = new HashMap<String, Boolean>() {{
@@ -210,6 +212,10 @@ public class RobotTeleOp extends LinearOpMode {
                 resetComplete = true;
                 resetDelay.reset();
 
+                if (gamepad1.a && robot.lift.getPosition() < 200) {
+                    robot.arm.EXTENSION_EDITABLE_POSITION = last_extension_pose;
+                }
+
                 if (stateMap.get(robot.lift.LIFT_SYSTEM_NAME) != robot.lift.LIFT_POLE_GROUND) {
                     if (gamepad1.right_trigger > 0.05 && gamepad1.right_trigger < 0.9) {
                         robot.lift.setSubheight(gamepad1.right_trigger);
@@ -218,8 +224,10 @@ public class RobotTeleOp extends LinearOpMode {
                         stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                         robot.arm.extendHome();
                         robot.grabber.open();
+                        robot.arm.EXTENSION_EDITABLE_POSITION = 0.15;
                         liftDelay.reset();
                         bringLiftDownBoolean = true;
+
                     } else {
                         robot.lift.setSubheight(0);
                     }
@@ -267,12 +275,15 @@ public class RobotTeleOp extends LinearOpMode {
                 if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                     slowMode = true;
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
-                    robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
+                    if(!(gamepad1.right_trigger > 0.9)){
+                        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
+                    } else {
+                        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
+                    }
                     if(bringLiftDownBoolean) {
                     } else {
-                        stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
+                        stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                         stateMap.put(robot.turret.SYSTEM_NAME, TURRET_POS);
-
                     }
                 } else {
                     slowMode = false;
@@ -285,9 +296,9 @@ public class RobotTeleOp extends LinearOpMode {
                     stateMap.put(robot.grabber.SYSTEM_NAME, robot.grabber.CLOSED_STATE);
                 }
 
-                if (toggleMap.get(GAMEPAD_1_A_STATE) && ((stateMap.get(robot.turret.SYSTEM_NAME) == (robot.turret.LEFT_POSITION)))) {
+                if (toggleMap.get(GAMEPAD_1_A_STATE) && ((stateMap.get(robot.turret.SYSTEM_NAME) == (robot.turret.LEFT_POSITION))) && (gamepad1.right_trigger < 0.9) && !bringLiftDownBoolean) {
                     robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
-                } else if (toggleMap.get(GAMEPAD_1_A_STATE) && ((stateMap.get(robot.turret.SYSTEM_NAME) == (robot.turret.RIGHT_POSITION)))) {
+                } else if (toggleMap.get(GAMEPAD_1_A_STATE) && ((stateMap.get(robot.turret.SYSTEM_NAME) == (robot.turret.RIGHT_POSITION))) && (gamepad1.right_trigger < 0.9) && !bringLiftDownBoolean) {
                     robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
                 }
 
@@ -363,15 +374,18 @@ public class RobotTeleOp extends LinearOpMode {
                     if ((robot.arm.EXTENSION_EDITABLE_POSITION > 0.9)) {
                         robot.arm.extension.setPosition(0.9);
                     } else {
-                        robot.arm.EXTENSION_EDITABLE_POSITION += 0.027;
+                        last_extension_pose += 0.027;
+                        robot.arm.EXTENSION_EDITABLE_POSITION = last_extension_pose;
                         robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
                         robot.arm.extendToTarget();
                     }
 
                 }
 
-                if (robot.lift.getPosition() > 500) {
+                if (robot.lift.getPosition() > 500 && !(gamepad1.right_trigger > 0.9) && !bringLiftDownBoolean) {
                     stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
+                } else {
+                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.DEFAULT_VALUE);
                 }
 
                 if (gamepad2.right_bumper && robot.lift.getPosition() > 600) {
@@ -379,7 +393,8 @@ public class RobotTeleOp extends LinearOpMode {
                     if ((robot.arm.EXTENSION_EDITABLE_POSITION < 0.15)) {
                         robot.arm.extension.setPosition(0.15);
                     } else {
-                        robot.arm.EXTENSION_EDITABLE_POSITION -= 0.027;
+                        last_extension_pose -= 0.027;
+                        robot.arm.EXTENSION_EDITABLE_POSITION = last_extension_pose;
                         robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
 
                     }
@@ -430,6 +445,8 @@ public class RobotTeleOp extends LinearOpMode {
 
 
 
+
+                telemetry.addData("extension :", stateMap.get(robot.arm.SYSTEM_NAME));
                 telemetry.addData("Extension PWM Position: ", robot.arm.EXTENSION_EDITABLE_POSITION);
                 telemetry.addData("Lift Positions: ", robot.lift.getLiftPositions());
                 telemetry.addData("Lift powers: ", robot.lift.getLiftMotorPowers());
