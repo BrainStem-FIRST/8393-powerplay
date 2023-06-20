@@ -267,7 +267,7 @@ public class RobotTeleOp extends LinearOpMode {
                 if (toggleMap.get(GAMEPAD_1_A_STATE)) {
                     slowMode = true;
                     stateMap.put(robot.lift.LIFT_SYSTEM_NAME, stateMap.get(robot.lift.LIFT_TARGET_HEIGHT));
-                    stateMap.put(robot.arm.SYSTEM_NAME, robot.arm.TELE_EXTENSION);
+                    robot.arm.extension.setPosition(robot.arm.EXTENSION_EDITABLE_POSITION);
                     if(bringLiftDownBoolean) {
                     } else {
                         stateMap.put(robot.arm.SYSTEM_NAME, EXTENSION_POS);
