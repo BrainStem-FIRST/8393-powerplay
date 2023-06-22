@@ -129,6 +129,7 @@ public class AutoExtension implements Subsystem {
 
     public void setState(String desiredState, AutoLift lift) {
         selectTransition(desiredState);
+        telemetry.addData("Extension Position", getExtensionPosition());
     }
 
     private void selectTransition(String desiredLevel) {
